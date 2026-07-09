@@ -4,7 +4,15 @@ console.log('Happy developing ✨')
 
 testarConexao();
 
+
+
 async function testarConexao() {
+    // // const result = await listarLivros()
+    // // const result = await buscarLivroPorTitulo("o amor")
+    // const result = await criaLivro("Teste Titulo 6", "12345e", 1953, 3 ,12)
+    // console.log(result);
+
+
     try {
         const resultado = await pool.query('SELECT NOW();');
         console.log('🎉 Conexão com o banco realizada com sucesso!');
