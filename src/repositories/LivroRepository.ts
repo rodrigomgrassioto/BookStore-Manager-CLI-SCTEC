@@ -58,31 +58,31 @@ export async function buscarLivroPorTitulo(titulo:string): Promise<LivroCompleto
 
 export async function criaLivro(
     titulo: string,isbn: string, ano_publicacao: number, quantidade_estoque: number, id_autor: number)
-    :Promise<LivroCompletoModel > {
+    :Promise<LivroModel> {
     const sql = `
         INSERT INTO livros (titulo,isbn, ano_publicacao, quantidade_estoque, id_autor)
         VALUES ($1, $2, $3, $4, $5)
         returning *`;
 
-    const result = await pool.query<LivroCompletoModel>(sql, [titulo,isbn, ano_publicacao, quantidade_estoque, id_autor]);
-    return result.rows[0] ?? 'não criado';
+    const result = await pool.query<LivroModel>(sql, [titulo,isbn, ano_publicacao, quantidade_estoque, id_autor]);
+    return result.rows[0] ?? null;
 }
 
-// export async function atualizarLivro(
-//     id_livro: number, titulo: string, isbn: string, ano_publicacao: number, quantidade_estoque:number, id_autor: number):Promise<Aluno | null> {
-//     const sql = `
-//         UPDATE livros
-//         SET titulo = $2
-//         SET isbn = $3
-//         SET ano_publicacao = $4
-//         SET quantidade_estoque = $5
-//         SET id_autor = $6
-//         WHERE ID = $1
-//         RETURNING *`;
-//
-//     const result = await pool.query<Aluno>(sql, [id_livro, titulo, isbn, ano_publicacao, quantidade_estoque, id_autor]);
-//     return result.rows[0] ?? null;
-// }
+export async function atualizarLivro(
+    id_livro: number, titulo: string, isbn: string, ano_publicacao: number, quantidade_estoque:number, id_autor: number):Promise<LivroModel | null> {
+    const sql = `
+        UPDATE livros
+        SET titulo = $2,
+            isbn = $3,
+            ano_publicacao = $4,
+            quantidade_estoque = $5,
+            id_autor = $6
+        WHERE id_livro = $1
+        RETURNING *`;
+
+    const result = await pool.query<LivroModel>(sql, [id_livro, titulo, isbn, ano_publicacao, quantidade_estoque, id_autor]);
+    return result.rows[0] ?? null;
+}
 
 // export async function deletarAluno(
 //     id: number):Promise<boolean> {
