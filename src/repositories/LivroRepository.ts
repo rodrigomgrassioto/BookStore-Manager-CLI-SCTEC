@@ -38,7 +38,7 @@ export async function buscarLivroPorTitulo(titulo:string): Promise<LivroCompleto
         WHERE l.titulo ILIKE $1
     `;
 
-    const result = await pool.query(sql, [titulo+'%']);
+    const result = await pool.query(sql, ['%'+titulo+'%']);
 
     return result.rows.map((row) => ({
         id_livro: row.id_livro,
@@ -57,14 +57,14 @@ export async function buscarLivroPorTitulo(titulo:string): Promise<LivroCompleto
 }
 
 export async function criaLivro(
-    titulo: string,isbn: string, ano_publicacao: number, quantidade_estoque: number, id_autor: number)
+    titulo: string,isbn: string, quantidade_estoque: number, id_autor: number, ano_publicacao?: number)
     :Promise<LivroModel> {
     const sql = `
         INSERT INTO livros (titulo,isbn, ano_publicacao, quantidade_estoque, id_autor)
         VALUES ($1, $2, $3, $4, $5)
         returning *`;
 
-    const result = await pool.query<LivroModel>(sql, [titulo,isbn, ano_publicacao, quantidade_estoque, id_autor]);
+    const result = await pool.query<LivroModel>(sql, [titulo,isbn, ano_publicacao ?? null, quantidade_estoque, id_autor]);
     return result.rows[0] ?? null;
 }
 
@@ -80,7 +80,7 @@ export async function atualizarLivro(
         WHERE id_livro = $1
         RETURNING *`;
 
-    const result = await pool.query<LivroModel>(sql, [id_livro, titulo, isbn, ano_publicacao, quantidade_estoque, id_autor]);
+    const result = await pool.query<LivroModel>(sql, [id_livro, titulo, isbn, ano_publicacao ?? null, quantidade_estoque, id_autor]);
     return result.rows[0] ?? null;
 }
 
