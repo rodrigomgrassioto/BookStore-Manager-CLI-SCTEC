@@ -84,12 +84,12 @@ export async function atualizarLivro(
     return result.rows[0] ?? null;
 }
 
-// export async function deletarAluno(
-//     id: number):Promise<boolean> {
-//     const sql = `
-//         DELETE FROM alunos
-//         WHERE ID = $1`;
-//
-//     const result = await pool.query<Aluno>(sql, [id]);
-//     return (result.rowCount ?? 0) > 0;
-// }
+export async function deletarLivro(
+    id: number):Promise<boolean> {
+    const sql = `
+        DELETE FROM livros
+        WHERE id_livro = $1`;
+
+    const result = await pool.query<LivroModel>(sql, [id]);
+    return (result.rowCount ?? 0) > 0;
+}
