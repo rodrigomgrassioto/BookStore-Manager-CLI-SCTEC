@@ -4,3 +4,8 @@ export interface AutorModel {
     nacionalidade: string;
     data_cadastro: Date;      
 };
+
+export interface AutorCadastro {
+    nome: string;
+    nacionalidade?: string;
+};
