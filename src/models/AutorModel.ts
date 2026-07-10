@@ -1,7 +1,7 @@
 export interface AutorModel {
     readonly id_autor: number;
     nome: string;
-    nacionalidade: string;
+    nacionalidade: string | null;
     data_cadastro: Date;      
 };
 
