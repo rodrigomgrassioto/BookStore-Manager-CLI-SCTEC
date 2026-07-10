@@ -1,7 +1,7 @@
 export interface LivroModel {
     readonly titulo: string;
     isbn: string;
-    ano_publicacao: number;
+    ano_publicacao?: number;
     quantidade_estoque: number;
     id_autor: number;
 }
