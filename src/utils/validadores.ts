@@ -25,3 +25,56 @@ export function validarISBN(isbn: string): boolean {
     // Retorna true se a conta bater com o último dígito do código enviado
     return digitoVerificadorEsperado === digitoVerificadorReal;
 }
+
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+//////////// validadores para cadastro de clientes ////////////
+///////////////////////////////////////////////////////////////
+
+export function emailValido(email: string): boolean {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+export function telefoneValido(telefone: string): boolean {
+    return /^\d{10,11}$/.test(telefone);
+}
+
+export function nomeValido(nome: string): boolean {
+    return /^[A-Za-zÀ-ÿ\s]+$/.test(nome);
+}
+
+export function dataNascimentoValida(data: Date): boolean {
+    // Garante que a data não está no futuro e é uma data real/válida
+    return data <= new Date() && !isNaN(data.getTime());
+}
+
+export function dataNascimentoMaior18Anos(data: Date): boolean {
+    if (!dataNascimentoValida(data)) return false;
+    const hoje = new Date();
+    const data18AnosAtras = new Date(hoje.getFullYear() - 18, hoje.getMonth(), hoje.getDate());
+    return data <= data18AnosAtras;
+}
+
+export function clienteValidoParaBusca(nome: string): boolean {
+    return nome !== undefined && nome.trim().length > 0 && nomeValido(nome);
+}
+
+export function clienteValidoParaExclusao(id_cliente: number): boolean {
+    return id_cliente !== undefined && id_cliente > 0 && Number.isInteger(id_cliente);
+}
+
+export function camposObrigatoriosPreenchidos(nome: string, email: string, telefone: string, data_nascimento: Date): boolean {
+    return (
+        !!nome && nome.trim().length > 0 &&
+        !!email && email.trim().length > 0 &&
+        !!telefone && telefone.trim().length > 0 &&
+        !!data_nascimento
+    );
+}
+
+//////////////////////////////////////////////////
+////////////           FIM            ////////////
+//////////////////////////////////////////////////
