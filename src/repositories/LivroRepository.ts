@@ -2,7 +2,7 @@ import {LivroCompletoModel, LivroModel} from "../models/LivroModel";
 import {pool} from "../database/connection";
 
 // query tipada
-export async function listarLivros(): Promise<LivroCompletoModel[]> {
+export async function listarLivrosRP(): Promise<LivroCompletoModel[]> {
     const sql = `
         SELECT
             l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.id_autor, l.data_cadastro,
@@ -28,7 +28,7 @@ export async function listarLivros(): Promise<LivroCompletoModel[]> {
     }));
 }
 
-export async function buscarLivroPorTitulo(titulo:string): Promise<LivroCompletoModel[]> {
+export async function buscarLivroPorTituloRP(titulo:string): Promise<LivroCompletoModel[]> {
     const sql = `
         SELECT
             l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.id_autor, l.data_cadastro,
@@ -56,7 +56,7 @@ export async function buscarLivroPorTitulo(titulo:string): Promise<LivroCompleto
     }));
 }
 
-export async function criaLivro(
+export async function criaLivroRP(
     titulo: string,isbn: string, quantidade_estoque: number, id_autor: number, ano_publicacao?: number)
     :Promise<LivroModel> {
     const sql = `
@@ -68,8 +68,8 @@ export async function criaLivro(
     return result.rows[0] ?? null;
 }
 
-export async function atualizarLivro(
-    id_livro: number, titulo: string, isbn: string, ano_publicacao: number, quantidade_estoque:number, id_autor: number):Promise<LivroModel | null> {
+export async function atualizarLivroRP(
+    id_livro: number, titulo: string, isbn: string, quantidade_estoque:number, id_autor: number, ano_publicacao?: number):Promise<LivroModel | null> {
     const sql = `
         UPDATE livros
         SET titulo = $2,
@@ -84,7 +84,7 @@ export async function atualizarLivro(
     return result.rows[0] ?? null;
 }
 
-export async function deletarLivro(
+export async function deletarLivroRP(
     id: number):Promise<boolean> {
     const sql = `
         DELETE FROM livros
