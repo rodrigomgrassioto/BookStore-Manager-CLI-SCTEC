@@ -1,12 +1,17 @@
 import { TerminalController } from './controllers/TerminalController.js'
 import {
-    atualizarLivroRP,
+    atualizarLivroRP, buscarLivroPorIdRP,
     buscarLivroPorTituloRP,
     criaLivroRP,
     deletarLivroRP,
     listarLivrosRP
 } from "./repositories/LivroRepository";
-import {atualizarLivroServ, criarLivroServ, listarLivrosServ} from './services/LivroService'
+import {atualizarLivroServ, criarLivroServ, deletarLivroServ, listarLivrosServ} from './services/LivroService'
+import {
+    buscarEmprestimoPorIdRP,
+    livroJaFoiEmprestadoRP
+} from "./repositories/EmprestimoRepository";
+import {livroControllerCriar} from "./controllers/LivroController";
 
 async function main() {
     const terminalController = new TerminalController();
@@ -24,21 +29,46 @@ testes();
  */
 async function testes() {
     // const resultListar = await listarLivros()
-    // const resultBuscar = await buscarLivroPorTitulo("o amor")
-    // const resultCriar = await criaLivro("Teste Titulo 6", "12345f", 1953, 3 ,12)
-    // const resultAtualizar = await atualizarLivro(3,"Teste Atualização 2", "12345e", 1953, 3 ,12)
-    // const resultDeletar = await deletarLivro(32);
-    // const listarLivrosComService = await listarLivrosServ()
-    // const criarLivroComService = await criarLivroServ('Livro com validador de isbn','978535912432', 5, 2, -350)
-    const atualizarLivroComService = await atualizarLivroServ(1,'Dom Casmurro','9788594318602', 1899, 5, 1)
     // console.log(resultListar);
+
+    // const resultBuscarId = await buscarLivroPorIdRP(5)
+    // console.log(resultBuscarId);
+
+    // const resultBuscar = await buscarLivroPorTitulo("o amor")
     // console.log(resultBuscar);
+
+    // const resultCriar = await criaLivro("Teste Titulo 6", "12345f", 1953, 3 ,12)
     // console.log(resultCriar);
+
+    // const resultAtualizar = await atualizarLivro(3,"Teste Atualização 2", "12345e", 1953, 3 ,12)
     // console.log(resultAtualizar);
+
+    // const resultDeletar = await deletarLivro(32);
     // console.log(resultDeletar);
+
+    // const listarLivrosComService = await listarLivrosServ()
     // console.log(listarLivrosComService);
+
+    // const criarLivroComService = await criarLivroServ('Livro com validador de isbn','978535912432', 5, 2, -350)
     // console.log(criarLivroComService);
-    console.log(atualizarLivroComService);
+
+    // const atualizarLivroComService = await atualizarLivroServ(1,'Dom Casmurro','9788594318602', 1899, 5, 1)
+    // console.log(atualizarLivroComService);
+
+    // const buscarEmprestimoPorIdRp = await buscarEmprestimoPorIdRP(33)
+    // console.dir(buscarEmprestimoPorIdRp, { depth: 3 });
+
+    // const livroJaFoiEmprestadoNoRP = await livroJaFoiEmprestadoRP(136);
+    // console.log(livroJaFoiEmprestadoNoRP)
+
+    // const deletarLivroSr  = await deletarLivroServ(13);
+    // console.log(deletarLivroSr);
+
+    // console.log(consultarSeLivroJaFoiEmprestadoRP);
+
+    livroControllerCriar();
+
+
 
 //     try {
 //         const resultado = await pool.query('SELECT NOW();');
