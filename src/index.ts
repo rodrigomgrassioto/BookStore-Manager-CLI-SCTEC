@@ -11,6 +11,7 @@ import {
     buscarEmprestimoPorIdRP,
     livroJaFoiEmprestadoRP
 } from "./repositories/EmprestimoRepository";
+import {livroControllerCriar} from "./controllers/LivroController";
 
 async function main() {
     const terminalController = new TerminalController();
@@ -60,10 +61,12 @@ async function testes() {
     // const livroJaFoiEmprestadoNoRP = await livroJaFoiEmprestadoRP(136);
     // console.log(livroJaFoiEmprestadoNoRP)
 
-    const deletarLivroSr  = await deletarLivroServ(13);
-    console.log(deletarLivroSr);
+    // const deletarLivroSr  = await deletarLivroServ(13);
+    // console.log(deletarLivroSr);
 
     // console.log(consultarSeLivroJaFoiEmprestadoRP);
+
+    livroControllerCriar();
 
 
 
