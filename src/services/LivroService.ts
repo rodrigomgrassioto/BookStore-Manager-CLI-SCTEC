@@ -1,16 +1,29 @@
 import {LivroCompletoModel, LivroModel} from "../models/LivroModel";
 import {
-    atualizarLivroRP,
+    listarLivrosRP,
+    buscarLivroPorIdRP,
+    buscarLivroPorIsbnRP,
     buscarLivroPorTituloRP,
     criaLivroRP,
-    deletarLivroRP,
-    listarLivrosRP
+    atualizarLivroRP,
+    deletarLivroRP
 } from "../repositories/LivroRepository";
 import {validarISBN} from "../utils/validadores";
 import {livroJaFoiEmprestadoRP} from "../repositories/EmprestimoRepository";
 
 export async function listarLivrosServ(): Promise<LivroCompletoModel[]>  {
     return await listarLivrosRP();
+}
+export async function buscarLivroPorIdServ(id: number): Promise<LivroCompletoModel[]>  {
+    if (!id)
+        throw new Error("❌ Necessário informar ID.");
+    return await buscarLivroPorIdRP(id);
+}
+
+export async function buscarLivroPorIsbnServ(isbn: string): Promise<LivroCompletoModel[]>  {
+    if (!isbn)
+        throw new Error("❌ Necessário informar ISBN.");
+    return await buscarLivroPorIsbnRP(isbn);
 }
 
 export async function buscarLivroPorTituloServ (titulo:string): Promise<LivroCompletoModel[]>{
