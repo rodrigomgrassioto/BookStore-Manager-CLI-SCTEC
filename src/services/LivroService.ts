@@ -15,8 +15,9 @@ export async function listarLivrosServ(): Promise<LivroCompletoModel[]>  {
     return await listarLivrosRP();
 }
 export async function buscarLivroPorIdServ(id: number): Promise<LivroCompletoModel[]>  {
-    if (!id)
-        throw new Error("❌ Necessário informar ID.");
+    if (!id) throw new Error("❌ Necessário informar ID.");
+    if (!Number.isInteger(id)) throw new Error("❌ Id ser um número inteiro.");
+
     return await buscarLivroPorIdRP(id);
 }
 
