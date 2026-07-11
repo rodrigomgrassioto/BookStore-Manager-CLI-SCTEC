@@ -1,3 +1,7 @@
+////////////////////////////////////////////////
+//////////// Validadores para Livros ///////////
+////////////////////////////////////////////////
+
 // Função de validação do ISBN do livro
 export function validarISBN(isbn: string): boolean {
     // 1. Remove hifens, espaços ou letras (mantém só números)
@@ -26,12 +30,9 @@ export function validarISBN(isbn: string): boolean {
     return digitoVerificadorEsperado === digitoVerificadorReal;
 }
 
-
-
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
-//////////// validadores para cadastro de clientes ////////////
-///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////
+//////////// Validadores para Clientes ////////////
+///////////////////////////////////////////////////
 
 export function emailValido(email: string): boolean {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -74,6 +75,42 @@ export function camposObrigatoriosPreenchidos(nome: string, email: string, telef
         !!data_nascimento
     );
 }
+
+//////////////////////////////////////////////////////////
+//////////////  Validadores para Autores  ////////////////
+//////////////////////////////////////////////////////////
+
+export function nomeAutorValido(nome: string): void {
+    
+    if (!nome || !nome.trim()) {
+        throw new Error("O campo 'nome' é obrigatório.");
+    };
+    
+    if (!/^[A-Za-zÀ-ÿ\s]+$/.test(nome)) {
+        throw new Error("Nome inválido. O nome deve conter apenas letras.");
+    };
+};
+
+export function idAutorValido(id_autor: number): void {
+     if (!id_autor || id_autor <= 0) {
+        throw new Error("Necessário informar um ID válido.");
+    };
+        
+    if (!Number.isInteger(id_autor)) {
+        throw new Error("O ID do autor deve ser um número inteiro.");
+    };
+};
+
+export function autorValidoParaAtualizacao(id_autor: number, nome: string): void {
+    idAutorValido(id_autor);
+    nomeAutorValido(nome);
+};
+   
+
+export function autorValidoParaExclusao(id_autor: number): void {
+    idAutorValido(id_autor);
+};
+
 
 //////////////////////////////////////////////////
 ////////////           FIM            ////////////
