@@ -1,24 +1,32 @@
 import * as readline from 'readline';
 import { criarLivroServ } from '../services/LivroService';
+import {fazerPergunta} from "../utils/readlineUtil";
 
 
 export async function livroControllerCriar(): Promise<void> {
     console.log("\n=== CADASTRO DE NOVO LIVRO ===");
 
     // 1 Dados do usuário
-    const titulo = this.rl.question("Título do livro: ",(resp) => resolve(resp) );
-    const isbn = this.rl.question("Código ISBN: ");
-    const qtdEstoqueStr = this.rl.question("Quantidade em estoque: ");
-    const idAutorStr = rl.question("ID do Autor: ");
-    const anoPublicacaoStr = this.rl.question("Ano de publicação (Opcional): ");
+    console.log('entrou');
+    const titulo = await fazerPergunta("Título do livro: ");
+    console.log("Titulo é: "+titulo);
+    console.log('passou');
+    const isbn = await fazerPergunta("Código ISBN: ");
+    const qtdEstoqueStr = await fazerPergunta("Quantidade em estoque: ");
+    const idAutorStr = await fazerPergunta("ID do Autor: ");
+    const anoPublicacaoStr = await fazerPergunta("Ano de publicação (Opcional): ", {aceitarVazio: true});
 
-    try {
-        const novoLivro = await criarLivroServ(titulo, isbn, quantidade_estoque, id_autor, ano_publicacao);
+    console.log("\n=== CADASTRO DE LIVRO ===");
+    console.log(titulo)
+    console.log("\n=== CADASTRO DE LIVRO ===");
+    console.log(isbn)
+    console.log("\n=== CADASTRO DE LIVRO ===");
+    console.log(qtdEstoqueStr)
+    console.log("\n=== CADASTRO DE LIVRO ===");
+    console.log(idAutorStr)
+    console.log("\n=== CADASTRO DE LIVRO ===");
+    console.log(anoPublicacaoStr)
 
-        // sucesso:
-        console.log(`\n✅ Livro "${novoLivro.titulo}" cadastrado com sucesso com o ID: ${novoLivro.id_livro}!`);
+    console.log("\n=== FIM ===");
 
-    } catch (error: any) {
-        console.error(`\n${error.message}`);
-    }
 }
