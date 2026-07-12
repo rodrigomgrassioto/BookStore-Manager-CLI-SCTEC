@@ -1,6 +1,45 @@
-import { criarLivroServ } from '../services/LivroService';
+import {
+    buscarLivroPorIdServ,
+    buscarLivroPorTituloServ,
+    criarLivroServ,
+    listarLivrosServ
+} from '../services/LivroService';
 import {fazerPergunta, rl} from "../utils/readlineUtil";
 import {validarISBN} from "../utils/validadores";
+import {listarAutoresServ} from "../services/AutorService";
+
+export async function livroControllerListar(): Promise<void> {
+    try {
+        const lista = await listarLivrosServ()
+        console.table(lista)
+    } catch (error: any){
+        console.log("\n========================================");
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        console.log("========================================\n");
+    }
+}
+
+export async function livroControllerProcurarPorNome(): Promise<void> {
+    const livroNome = await fazerPergunta("Nome do livro: ")
+    try {
+        const lista = await buscarLivroPorTituloServ(livroNome)
+        console.table(lista)
+    } catch (error: any){
+        console.log("\n========================================");
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        console.log("========================================\n");
+    }
+
+}
+
 
 export async function livroControllerCriar(): Promise<void> {
     console.log("\n=== CADASTRO DE NOVO LIVRO ===");
@@ -15,6 +54,48 @@ export async function livroControllerCriar(): Promise<void> {
         if (!validarISBN(isbn)) console.error("❌ Código ISBN inválido")
     } while (!validarISBN(isbn))
     const quantidade_estoque = await fazerPergunta("Quantidade em estoque: ", {tipoRetorno: 'i_zero'});
+    console.log("\n========================================");
+    console.log(  "=========== Lista de autores: ==========")
+    console.log("========================================\n");
+    console.table(await listarAutoresServ())
+    const id_autor = await fazerPergunta("ID do Autor: ", {tipoRetorno: 'i_zero'});
+    const ano_publicacao = await fazerPergunta("Ano de publicação (Opcional): ", {aceitarVazio: true, tipoRetorno: 'i_null'});
+
+    try {
+        const novoLivro = await criarLivroServ(titulo,isbn,quantidade_estoque,id_autor,ano_publicacao);
+        console.log(`\n🎉 Livro "${novoLivro.titulo}" cadastrado com sucesso!`);
+
+    } catch (error: any){
+        console.log("\n========================================");
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        console.log("========================================\n");
+    }
+}
+
+export async function livroControllerAtualizar(): Promise<void> {
+    const id = await fazerPergunta("Numero do id do livro: ", {tipoRetorno: 'i_zero'});
+    const livroNoDb = await buscarLivroPorIdServ(id)
+    console.table(livroNoDb);
+    let titulo = livroNoDb[0].titulo
+    console.log('Antes: '+titulo)
+    titulo = await fazerPergunta("Título do livro: ", {valorOriginal: titulo});
+    console.log('Dps: '+titulo)
+    let isbn: string;
+    do {
+        // usei Number pois ele já limpa de 978-1-349-075-37-9 para 9781349075379
+        const isbnNumber = await fazerPergunta("Código ISBN: ", {tipoRetorno:"i_zero", aceitarVazio: false});
+        isbn = String(isbnNumber ?? ""); // Convert para string, se for null fica como ""
+        if (!validarISBN(isbn)) console.error("❌ Código ISBN inválido")
+    } while (!validarISBN(isbn))
+    const quantidade_estoque = await fazerPergunta("Quantidade em estoque: ", {tipoRetorno: 'i_zero'});
+    console.log("\n========================================");
+    console.log(  "=========== Lista de autores: ==========")
+    console.log("========================================\n");
+    console.table(await listarAutoresServ())
     const id_autor = await fazerPergunta("ID do Autor: ", {tipoRetorno: 'i_zero'});
     const ano_publicacao = await fazerPergunta("Ano de publicação (Opcional): ", {aceitarVazio: true, tipoRetorno: 'i_null'});
 
