@@ -1,5 +1,5 @@
 export interface LivroModel {
-    readonly titulo: string;
+    titulo: string;
     isbn: string;
     ano_publicacao?: number;
     quantidade_estoque: number;
