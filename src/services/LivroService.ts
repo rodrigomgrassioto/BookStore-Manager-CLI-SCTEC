@@ -35,7 +35,7 @@ export async function buscarLivroPorTituloServ (titulo:string): Promise<LivroCom
 
 export async function criarLivroServ(
     titulo: string, isbn: string, quantidade_estoque: number,
-    id_autor: number, ano_publicacao?: number): Promise<LivroModel> {
+    id_autor: number, ano_publicacao?: number | null): Promise<LivroModel> {
     // Não permitir campos vazios
     if (!titulo || !titulo.trim() || !isbn || !isbn.trim() || !quantidade_estoque || !id_autor)
         throw new Error("❌ Os campos (título, isbn, quantidade em estoque, e id do Autor) são obrigatórios.");
@@ -47,8 +47,8 @@ export async function criarLivroServ(
 }
 
 export async function atualizarLivroServ(
-    id_livro: number, titulo: string, isbn: string, ano_publicacao: number,
-    quantidade_estoque:number, id_autor: number):Promise<LivroModel> {
+    id_livro: number, titulo: string, isbn: string, quantidade_estoque:number,
+    id_autor: number, ano_publicacao?: number|null):Promise<LivroModel> {
 
     if (!id_livro || !titulo || !titulo.trim() || !isbn || !isbn.trim() || !quantidade_estoque || !id_autor)
         throw new Error("❌ Os campos (Id do livro, título, isbn, quantidade em estoque, e id do Autor) são obrigatórios.");
