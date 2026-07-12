@@ -7,8 +7,26 @@ export const rl = readline.createInterface({
 
 interface OpcoesPergunta {
     aceitarVazio?: boolean;
-    tipoRetorno?: 's' | 'i';
+    tipoRetorno?: 's' | 'i_zero' | 'i_null';
 }
+
+// 1. Assinatura para quando pedir STRING ("s")
+export async function fazerPergunta(
+    enunciado: string,
+    opcoes?: { aceitarVazio?: boolean; tipoRetorno?: 's' }
+): Promise<string>;
+
+// 2. Assinatura para quando pedir NÚMERO INTEIRO com Zero quando receber "" ("i_zero")
+export async function fazerPergunta(
+    enunciado: string,
+    opcoes: { aceitarVazio?: boolean; tipoRetorno: 'i_zero' }
+): Promise<number>;
+
+// 3. Assinatura para quando pedir NÚMERO INTEIRO com null ("i_null")
+export async function fazerPergunta(
+    enunciado: string,
+    opcoes: { aceitarVazio?: boolean; tipoRetorno: 'i_null' }
+): Promise<number | null>;
 
 /**
  * Faz uma pergunta no terminal. Por padrão, o campo é obrigatório.
@@ -24,24 +42,26 @@ export async function fazerPergunta(
     while (true) {
         // Cria a Promise para ler a linha do terminal
         const resposta = await new Promise<string>((resolve) => {
-            rl.question(enunciado, (resposta) => resolve(resposta));
+            // rl.question(enunciado, (resposta) => resolve(resposta));
+            rl.question(enunciado, resolve);
         });
 
         let respostaLimpa = resposta.trim();
 
-        // Se não aceita vazio e usuário deixou em branco
         if (respostaLimpa === "") {
             if (aceitarVazio) {
-                return tipoRetorno === "i" ? null : ""; // Evita NaN
+                if (tipoRetorno === "i_null") return null;
+                if (tipoRetorno === "i_zero") return 0;
+                return "";
             }
             console.error("❌ Campo é obrigatório.");
             continue;
         }
 
-        if (tipoRetorno == "s") return respostaLimpa
+        if (tipoRetorno === "s") return respostaLimpa
 
         // Se entrar "R$ 1.234,56" vai sair 123456
-        if (tipoRetorno == "i") {
+        if (tipoRetorno == "i_zero" || tipoRetorno == "i_null") {
             const apenasNumeros = respostaLimpa.replace(/\D/g, ''); // mantém apenas números
             if (apenasNumeros === "") {
                 console.error("❌ Digite um número válido.");
