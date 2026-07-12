@@ -12,3 +12,5 @@ para executar projeto em ambiente dev: npm run dev
 
 ***********
 
+melhorias em livroControllerListar -> exibir autor na tabala
+
