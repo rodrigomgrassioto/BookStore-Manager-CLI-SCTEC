@@ -30,7 +30,11 @@ export async function buscarLivroPorIsbnServ(isbn: string): Promise<LivroComplet
 export async function buscarLivroPorTituloServ (titulo:string): Promise<LivroCompletoModel[]>{
     if (!titulo || !titulo.trim())
         throw new Error("❌ Necessário informar título.");
-    return await buscarLivroPorTituloRP(titulo);
+
+    const livros = await buscarLivroPorTituloRP(titulo);
+    if (livros.length === 0) throw new Error(`❌ Nenhum resulto pelo termo: ${titulo}.`);
+    return livros;
+
 }
 
 export async function criarLivroServ(
@@ -40,8 +44,7 @@ export async function criarLivroServ(
     if (!titulo || !titulo.trim() || !isbn || !isbn.trim() || !quantidade_estoque || !id_autor)
         throw new Error("❌ Os campos (título, isbn, quantidade em estoque, e id do Autor) são obrigatórios.");
 
-    if(!validarISBN(isbn))
-        throw new Error("❌ Código ISBN inválido.");
+    if(!validarISBN(isbn)) throw new Error("❌ Código ISBN inválido.");
 
     return await criaLivroRP(titulo, isbn, quantidade_estoque, id_autor, ano_publicacao);
 }
