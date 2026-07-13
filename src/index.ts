@@ -11,7 +11,7 @@ import { buscarEmprestimoPorIdRP, livroJaFoiEmprestadoRP} from "./repositories/E
 import {livroControllerCriar} from "./controllers/LivroController";
 import {InicioMenu} from "./menus/InicioMenu";
 import { cadastrarAutor, listarAutores, atualizarAutor, deletarAutor } from "./repositories/AutorRepository";
-import { cadastrarAutorServ, listarAutoresServ, atualizarAutorServ, deletarAutorServ } from "./services/AutorService";
+import { cadastrarAutorServ, listarAutoresServ, atualizarAutorServ, deletarAutorServ, buscarAutorPorIdServ } from "./services/AutorService";
 import { autorControlerBuscarPorId, autorControllerAtualizar, autorControllerCadastrar, autorControllerDeletar, autorControllerListar,  } from "./controllers/AutorController";
 
 async function main() {
@@ -19,16 +19,16 @@ async function main() {
     inicioMenu.iniciarMenu()
 }
 
-//main();
-testes();
+main();
+//testes();
 /**
  * Forma SIMPLES de testar os repositórios.
  *
- * OBS: Tem que comentar a linha 22 main() e des-comentar a linha 23 - testes()
+ * OBS: Tem que comentar a linha 22 main() e des-comentar a linha 23 testes()
  * e o item abaixo a result... ser testado e também o console.log respectivo.
  */
 async function testes() {
-
+////////////////////////////////////////////////
 // ***** Testes referente a Entidade Autor *****
 
     // *** Controllers:
@@ -48,11 +48,22 @@ async function testes() {
         //console.log(resultBuscarId);
 
     // *** Services
-        //const resultCadastrar = await cadastrarAutorServ("Autor Teste", "Nacionalidade Teste");
+        //const resultCadastrar = await cadastrarAutorServ("Autor Teste Três", "Nacionalidade Teste 3");
         //console.log(resultCadastrar);
 
+        //const resultListar = await listarAutoresServ();
+        //console.log(resultListar);
 
+        //const resultBuscarId = await buscarAutorPorIdServ(-1)
+        //console.log(resultBuscarId);
 
+        //const resultAtualizar = await atualizarAutorServ(25, "Autor Teste Atualizado", "Nacionalidade Teste Atualizada");
+        //console.log(resultAtualizar);
+        
+        //const resultDeletar = await deletarAutorServ(26);
+        //console.log(resultDeletar);
+
+////////////////////////////////////////////////
 // ***** Testes referente a Entidade Livro *****
 
     // const resultListar = await listarLivros()
