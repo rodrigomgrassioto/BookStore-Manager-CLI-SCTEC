@@ -1,4 +1,4 @@
-import { TerminalController } from './controllers/TerminalController.js'
+import { TerminalController } from './controllers/TerminalController.js';
 import {
     atualizarLivroRP, buscarLivroPorIdRP,
     buscarLivroPorTituloRP,
@@ -7,29 +7,57 @@ import {
     listarLivrosRP
 } from "./repositories/LivroRepository";
 import {atualizarLivroServ, criarLivroServ, deletarLivroServ, listarLivrosServ} from './services/LivroService'
-import {
-    buscarEmprestimoPorIdRP,
-    livroJaFoiEmprestadoRP
-} from "./repositories/EmprestimoRepository";
+import { buscarEmprestimoPorIdRP, livroJaFoiEmprestadoRP} from "./repositories/EmprestimoRepository";
 import {livroControllerCriar} from "./controllers/LivroController";
+import {InicioMenu} from "./menus/InicioMenu";
+import { cadastrarAutor, listarAutores, atualizarAutor, deletarAutor } from "./repositories/AutorRepository";
+import { cadastrarAutorServ, listarAutoresServ, atualizarAutorServ, deletarAutorServ } from "./services/AutorService";
+import { autorControlerBuscarPorId, autorControllerAtualizar, autorControllerCadastrar, autorControllerDeletar, autorControllerListar,  } from "./controllers/AutorController";
 
 async function main() {
-    const terminalController = new TerminalController();
-    // Inicia o loop do menu
-    await terminalController.iniciarMenu();
+    const inicioMenu = new InicioMenu();
+    inicioMenu.iniciarMenu()
 }
 
-// main();
+//main();
 testes();
 /**
  * Forma SIMPLES de testar os repositórios.
  *
- * OBS: Tem que comentar a linha 10 main() e des-comentar a linha 11 - testes()
+ * OBS: Tem que comentar a linha 22 main() e des-comentar a linha 23 - testes()
  * e o item abaixo a result... ser testado e também o console.log respectivo.
  */
 async function testes() {
+
+// ***** Testes referente a Entidade Autor *****
+
+    // *** Controllers:
+        //const resultCadastrar = await autorControllerCadastrar();
+        //const resultListar = await autorControllerListar();
+        //const resultBuscarPorId = await autorControlerBuscarPorId();
+        //const resultAtualizar = await autorControllerAtualizar();
+        //const resultDeletar = await autorControllerDeletar();
+
+    // *** Menus:
+
+    // *** Repositories:
+        //const resultListar = await listarAutores()
+        //console.table(resultListar);
+
+        //const resultBuscarId = await buscarAutorPorId(1)
+        //console.log(resultBuscarId);
+
+    // *** Services
+        //const resultCadastrar = await cadastrarAutorServ("Autor Teste", "Nacionalidade Teste");
+        //console.log(resultCadastrar);
+
+
+
+// ***** Testes referente a Entidade Livro *****
+
     // const resultListar = await listarLivros()
     // console.log(resultListar);
+
 
     // const resultBuscarId = await buscarLivroPorIdRP(5)
     // console.log(resultBuscarId);
@@ -66,9 +94,7 @@ async function testes() {
 
     // console.log(consultarSeLivroJaFoiEmprestadoRP);
 
-    livroControllerCriar();
-
-
+    // livroControllerCriar();
 
 //     try {
 //         const resultado = await pool.query('SELECT NOW();');
