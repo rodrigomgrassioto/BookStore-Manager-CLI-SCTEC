@@ -12,15 +12,15 @@ import {
     livroJaFoiEmprestadoRP
 } from "./repositories/EmprestimoRepository";
 import {livroControllerCriar} from "./controllers/LivroController";
+import {InicioMenu} from "./menus/InicioMenu";
 
 async function main() {
-    const terminalController = new TerminalController();
-    // Inicia o loop do menu
-    await terminalController.iniciarMenu();
+    const inicioMenu = new InicioMenu();
+    inicioMenu.iniciarMenu()
 }
 
-// main();
-testes();
+main();
+// testes();
 /**
  * Forma SIMPLES de testar os repositórios.
  *
@@ -66,9 +66,7 @@ async function testes() {
 
     // console.log(consultarSeLivroJaFoiEmprestadoRP);
 
-    livroControllerCriar();
-
-
+    // livroControllerCriar();
 
 //     try {
 //         const resultado = await pool.query('SELECT NOW();');
