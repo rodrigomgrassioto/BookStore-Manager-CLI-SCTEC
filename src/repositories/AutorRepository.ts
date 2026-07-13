@@ -25,7 +25,7 @@ export async function listarAutores(): Promise<AutorModel[]> {
 export async function buscarAutorPorId(id_autor: number): Promise<AutorModel | null> {
     const sql = 
     `SELECT * FROM autores 
-     WHERE id_cliente = $1`;
+     WHERE id_autor = $1`;
 
     const result = await pool.query<AutorModel>(sql, [id_autor]);
     return result.rows[0] || null;
@@ -36,7 +36,7 @@ export async function atualizarAutor(id_autor: number, nome: string, nacionalida
     `UPDATE autores 
      SET nome = $2, 
          nacionalidade = $3 
-     WHERE id_cliente = $1 
+     WHERE id_autor = $1 
      RETURNING *`;
 
     const result = await pool.query<AutorModel>(sql, [id_autor, nome, nacionalidade ?? null]);
@@ -46,7 +46,7 @@ export async function atualizarAutor(id_autor: number, nome: string, nacionalida
 export async function deletarAutor(id_autor: number): Promise<boolean> {
     const sql = 
     `DELETE FROM autores 
-     WHERE id_cliente = $1`;
+     WHERE id_autor = $1`;
 
      const result = await pool.query(sql, [id_autor]);
      return (result.rowCount ?? 0) > 0;
