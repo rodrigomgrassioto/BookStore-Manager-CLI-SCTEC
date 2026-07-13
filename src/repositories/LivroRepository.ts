@@ -113,7 +113,7 @@ export async function buscarLivroPorTituloRP(titulo:string): Promise<LivroComple
 }
 
 export async function criaLivroRP(
-    titulo: string,isbn: string, quantidade_estoque: number, id_autor: number, ano_publicacao?: number)
+    titulo: string,isbn: string, quantidade_estoque: number, id_autor: number, ano_publicacao?: number | null)
     :Promise<LivroModel> {
     const sql = `
         INSERT INTO livros (titulo,isbn, ano_publicacao, quantidade_estoque, id_autor)
@@ -125,7 +125,7 @@ export async function criaLivroRP(
 }
 
 export async function atualizarLivroRP(
-    id_livro: number, titulo: string, isbn: string, quantidade_estoque:number, id_autor: number, ano_publicacao?: number):Promise<LivroModel | null> {
+    id_livro: number, titulo: string, isbn: string, quantidade_estoque:number, id_autor: number, ano_publicacao?: number | null):Promise<LivroModel | null> {
     const sql = `
         UPDATE livros
         SET titulo = $2,
