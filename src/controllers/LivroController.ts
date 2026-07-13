@@ -1,7 +1,9 @@
 import {
+    atualizarLivroServ,
     buscarLivroPorIdServ,
     buscarLivroPorTituloServ,
     criarLivroServ,
+    deletarLivroServ,
     listarLivrosServ
 } from '../services/LivroService';
 import {fazerPergunta, rl} from "../utils/readlineUtil";
@@ -53,13 +55,26 @@ export async function livroControllerCriar(): Promise<void> {
         isbn = String(isbnNumber ?? ""); // Convert para string, se for null fica como ""
         if (!validarISBN(isbn)) console.error("❌ Código ISBN inválido")
     } while (!validarISBN(isbn))
-    const quantidade_estoque = await fazerPergunta("Quantidade em estoque: ", {tipoRetorno: 'i_zero'});
+    const quantidade_estoque = await fazerPergunta("Quantidade em estoque: ", {
+        aceitarVazio: true, tipoRetorno: 'i_zero'});
     console.log("\n========================================");
     console.log(  "=========== Lista de autores: ==========")
     console.log("========================================\n");
-    console.table(await listarAutoresServ())
+    try {
+        console.table(await listarAutoresServ())
+    } catch (error: any) {
+        console.log("\n========================================");
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        console.log("========================================\n");
+        return
+    }
     const id_autor = await fazerPergunta("ID do Autor: ", {tipoRetorno: 'i_zero'});
-    const ano_publicacao = await fazerPergunta("Ano de publicação (Opcional): ", {aceitarVazio: true, tipoRetorno: 'i_null'});
+    const ano_publicacao = await fazerPergunta("Ano de publicação (Opcional): ",
+        {aceitarVazio: true, tipoRetorno: 'i_null'});
 
     try {
         const novoLivro = await criarLivroServ(titulo,isbn,quantidade_estoque,id_autor,ano_publicacao);
@@ -78,31 +93,101 @@ export async function livroControllerCriar(): Promise<void> {
 
 export async function livroControllerAtualizar(): Promise<void> {
     const id = await fazerPergunta("Numero do id do livro: ", {tipoRetorno: 'i_zero'});
-    const livroNoDb = await buscarLivroPorIdServ(id)
+    let livroNoDb
+    try {
+        livroNoDb = await buscarLivroPorIdServ(id)
+    } catch (error: any) {
+        console.log("\n========================================");
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        console.log("========================================\n");
+        return ;
+    }
     console.table(livroNoDb);
-    let titulo = livroNoDb[0].titulo
-    console.log('Antes: '+titulo)
-    titulo = await fazerPergunta("Título do livro: ", {valorOriginal: titulo});
-    console.log('Dps: '+titulo)
+    const titulo = await fazerPergunta("Título do livro: ", {valorOriginal: livroNoDb[0].titulo});
     let isbn: string;
     do {
         // usei Number pois ele já limpa de 978-1-349-075-37-9 para 9781349075379
-        const isbnNumber = await fazerPergunta("Código ISBN: ", {tipoRetorno:"i_zero", aceitarVazio: false});
+        const isbnNumber = await fazerPergunta("Código ISBN: ", {
+            tipoRetorno:"i_zero", aceitarVazio: false, valorOriginal: livroNoDb[0].isbn});
         isbn = String(isbnNumber ?? ""); // Convert para string, se for null fica como ""
         if (!validarISBN(isbn)) console.error("❌ Código ISBN inválido")
     } while (!validarISBN(isbn))
-    const quantidade_estoque = await fazerPergunta("Quantidade em estoque: ", {tipoRetorno: 'i_zero'});
+    const quantidade_estoque = await fazerPergunta("Quantidade em estoque: ", {
+        aceitarVazio: true, tipoRetorno: 'i_zero', valorOriginal: livroNoDb[0].quantidade_estoque ?? 0});
     console.log("\n========================================");
     console.log(  "=========== Lista de autores: ==========")
     console.log("========================================\n");
-    console.table(await listarAutoresServ())
-    const id_autor = await fazerPergunta("ID do Autor: ", {tipoRetorno: 'i_zero'});
-    const ano_publicacao = await fazerPergunta("Ano de publicação (Opcional): ", {aceitarVazio: true, tipoRetorno: 'i_null'});
 
     try {
-        const novoLivro = await criarLivroServ(titulo,isbn,quantidade_estoque,id_autor,ano_publicacao);
-        console.log(`\n🎉 Livro "${novoLivro.titulo}" cadastrado com sucesso!`);
+        console.table(await listarAutoresServ())
+    }catch (error: any) {
+        console.log("\n========================================");
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
 
+        // Erro do service
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        console.log("========================================\n");
+        return ;
+    }
+    const id_autor = await fazerPergunta("ID do Autor: ", {
+        tipoRetorno: 'i_zero', valorOriginal: livroNoDb[0].id_autor});
+    const ano_publicacao = await fazerPergunta("Ano de publicação (Opcional): ", {
+        aceitarVazio: true, tipoRetorno: 'i_null', valorOriginal: livroNoDb[0].ano_publicacao ?? null});
+
+    try {
+        const novoLivro = await atualizarLivroServ(id, titulo,isbn,quantidade_estoque,id_autor,ano_publicacao);
+        console.log(`\n🎉 Livro "${novoLivro.titulo}" atualizado com sucesso!`);
+
+    } catch (error: any){
+        console.log("\n========================================");
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        console.log("========================================\n");
+    }
+}
+
+export async function livroControllerDeletar(): Promise<void> {
+    console.error("========================================\n");
+    console.error("============== D E L E T A R============\n");
+    console.error("========================================\n");
+    const id = await fazerPergunta("Numero do id do livro: ", {tipoRetorno: 'i_zero'});
+    let livroNoDb ;
+    try {
+        livroNoDb = await buscarLivroPorIdServ(id)
+    }catch (error: any){
+        console.log("\n========================================");
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        console.log("========================================\n");
+        return
+    }
+
+    if (livroNoDb.length <= 0 ){
+        console.log("Livro não encontrado")
+        return
+    }
+
+    console.error("========================================\n");
+    console.error("============== D E L E T A R============\n");
+    console.error("========================================\n");
+    console.table(livroNoDb);
+    const confimacao = await fazerPergunta("Excluir livor? (S/N): ", {valorOriginal: 'N'});
+    if (confimacao.toLowerCase() !== 's') return
+    try {
+        const result = await deletarLivroServ(id);
+        if (!result) throw new Error("❌ Erro desconhecido.",);
+        console.log(`\n🎉 Livro "${livroNoDb[0].titulo}" excluído com sucesso!`);
     } catch (error: any){
         console.log("\n========================================");
         // Erro no PostgreSQL

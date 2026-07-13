@@ -2,6 +2,7 @@ import {fazerPergunta} from "../utils/readlineUtil";
 import {
     livroControllerAtualizar,
     livroControllerCriar,
+    livroControllerDeletar,
     livroControllerListar,
     livroControllerProcurarPorNome
 } from "../controllers/LivroController";
@@ -51,7 +52,7 @@ export class LivroMenu {
                 case '5':
                     console.clear()
                     console.log('\n🟦 --- Excluir livro --- 🟦');
-                    // await
+                    await livroControllerDeletar()
                     break;
 
                 case '0':
