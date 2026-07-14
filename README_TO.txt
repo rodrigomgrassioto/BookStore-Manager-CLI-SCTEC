@@ -14,7 +14,7 @@ para executar projeto em ambiente dev: npm run dev
 
 - melhorias em livroControllerListar -> exibir autor na tabela
 - melhorias no tratamento de erro do banco de dados: evitar uso do tipo any, usando o tipo unknown
-
+- implementar busca do autor por nome caso sobre tempo
 
 *** conferencia antes de enviar push ***
 nos controllers toda chamada de Service deve estar dentro de try -> cath
