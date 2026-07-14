@@ -87,7 +87,6 @@ Atualmente o projeto encontra-se em desenvolvimento, com os módulos de Autores,
 - PostgreSQL
 - SQL
 - Biblioteca pg
-- dotenv
 - Git
 - GitHub
 - GitHub Pull Requests
@@ -131,7 +130,7 @@ cd BookStore-Manager-CLI-SCTEC
 npm install
 ```
 
-> O comando acima instalará automaticamente todas as dependências definidas no arquivo `package.json`, incluindo bibliotecas como `pg` e `dotenv`.
+> O comando acima instalará automaticamente todas as dependências definidas no arquivo `package.json`, incluindo a biblioteca como `pg`.
 
 ---
 
