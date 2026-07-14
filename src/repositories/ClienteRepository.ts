@@ -1,3 +1,4 @@
+/* PRIMEIRA VERSÃO DO CÓDIGO */
 /* import { ClienteModel, ClienteCadastro } from '../models/ClienteModel';
 import { pool } from '../database/connection';
 
@@ -61,12 +62,6 @@ import { ClienteModel, ClienteCadastro } from '../models/ClienteModel';
 import { pool } from '../database/connection';
 
 // Cadastro novo cliente - Retorna ClienteModel (completo)
-/* export async function criarClienteRP(nome: string, email: string, telefone: string, data_nascimento: Date): Promise<ClienteModel> {
-        const sql = `INSERT INTO clientes (nome, email, telefone, data_nascimento) VALUES ($1, $2, $3, $4) RETURNING *`;
-        const r = await pool.query<ClienteModel>(sql, [nome, email, telefone, data_nascimento]);
-        return r.rows[0];
-} */
-
 export async function criarClienteRP(nome: string, email: string, telefone: string, data_nascimento: Date): Promise<ClienteModel> {
     const sql = `INSERT INTO clientes (nome, email, telefone, data_nascimento) VALUES ($1, $2, $3, $4) RETURNING *`;
     const r = await pool.query<ClienteModel>(sql, [nome, email, telefone, data_nascimento]);
@@ -77,6 +72,7 @@ export async function criarClienteRP(nome: string, email: string, telefone: stri
     
     return r.rows[0];
 }
+
 
 // Listar todos os clientes cadastrados
 export async function listarClientesRP(): Promise<ClienteModel[]> {
