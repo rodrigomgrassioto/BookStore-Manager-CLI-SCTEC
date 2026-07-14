@@ -1,6 +1,7 @@
 import * as readline from "readline";
 import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {LivroMenu} from "./LivroMenu";
+import {AutorMenu} from "./AutorMenu";
 
 export class InicioMenu {
     // private rl: readline.Interface;
@@ -20,9 +21,10 @@ export class InicioMenu {
     // Menu
     async iniciarMenu(): Promise<void> {
         const livroMenu = new LivroMenu();
+        const autorMenu = new AutorMenu();
         let continuar = true;
 
-        console.clear()
+        console.clear();
         while (continuar) {
             console.log('\n🟦 --- BookStore Manager --- 🟦');
             console.log('1. Autor');
@@ -34,15 +36,14 @@ export class InicioMenu {
 
             // const opcao = await this.perguntar('Escolha uma opção: ');
             const opcao = await fazerPergunta('Escolha uma opção: ');
-            switch (opcao.toLowerCase()) {
-                // case '1':
-                //     continuar = false;
-                //     console.clear()
-                //     this.subMenuAutor();
-                //     break;
+            switch (opcao) {
+                case '1':
+                    console.clear();
+                    await autorMenu.subMenuAutor();
+                    break;
 
                 case '2':
-                    console.clear()
+                    console.clear();
                     await livroMenu.subMenuLivro()
                     break;
 
@@ -53,17 +54,17 @@ export class InicioMenu {
                 //     break;
 
                 case '0':
-                    console.clear()
+                    console.clear();
                     console.log('👋 👋 👋  Até mais!');
                     continuar = false;
                     rl.close(); // Fecha a interface do terminal
                     break;
 
                 default:
-                    console.clear()
+                    console.clear();
                     console.log('❌ Opção inválida! Tente novamente.');
                     break;
-            }
-        }
-    }
-}
+            };
+        };
+    };
+};
