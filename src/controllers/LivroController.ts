@@ -6,7 +6,7 @@ import {
     deletarLivroServ,
     listarLivrosServ
 } from '../services/LivroService';
-import {fazerPergunta, rl} from "../utils/readlineUtil";
+import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {validarISBN} from "../utils/validadores";
 import {listarAutoresServ} from "../services/AutorService";
 
