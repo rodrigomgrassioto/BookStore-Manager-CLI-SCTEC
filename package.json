@@ -6,7 +6,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx --env-file=.env src/index.ts",
-    "start": "node --env-file=.env dist/index.js"
+    "start": "node --env-file=.env dist/index.js",
+    "db:schemas": "tsx --env-file=.env src/database/RunSchemas.ts",
+    "db:seed": "tsx --env-file=.env src/database/DatabaseSeeder.ts"
   },
   "dependencies": {
     "pg": "^8.22.0"
