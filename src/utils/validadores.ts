@@ -80,38 +80,40 @@ export function camposObrigatoriosPreenchidos(nome: string, email: string, telef
 //////////////  Validadores para Autores  ////////////////
 //////////////////////////////////////////////////////////
 
-export function nomeAutorValido(nome: string): void {
-    
-    if (!nome || !nome.trim()) {
+export function validarNomeAutor(nome: string): void {
+    const nomeNormalizado = nome?.trim();
+
+    if (!nomeNormalizado) {
         throw new Error("O campo 'nome' é obrigatório.");
     };
     
-    if (!/^[A-Za-zÀ-ÿ\s]+$/.test(nome)) {
-        throw new Error("Nome inválido. O nome deve conter apenas letras.");
+    if (!/^[A-Za-zÀ-ÿ\s.'-]+$/.test(nomeNormalizado)) {
+        throw new Error("Nome inválido. Use apenas letras, espaços, apóstrofos e hífens.");
+    };
+
+    if(nomeNormalizado.length > 100) {
+        throw new Error("Nome do autor deve possuir no máximo 100 caracteres.");
     };
 };
 
-export function idAutorValido(id_autor: number): void {
-     if (!id_autor || id_autor <= 0) {
-        throw new Error("Necessário informar um ID válido.");
+export function validarNacionalidadeAutor(nacionalidade?: string): void {
+    const nacionalidadeNormalizada = nacionalidade?.trim() || null;
+
+    if (nacionalidadeNormalizada !== null) {
+        if (!/^[A-Za-zÀ-ÿ\s.'-]+$/.test(nacionalidadeNormalizada)) {
+            throw new Error("Nacionalidade inválida. Use apenas letras, espaços, apóstrofos e hífens.");
+        };
+        if (nacionalidadeNormalizada.length> 50) {
+        throw new Error("Nacionalidade do autor deve possuir no máximo 50 caracteres.");
+        };
     };
-        
-    if (!Number.isInteger(id_autor)) {
-        throw new Error("O ID do autor deve ser um número inteiro.");
+};
+
+export function validarIdAutor(id_autor: number): void {        
+    if (!Number.isInteger(id_autor) || id_autor <= 0) {
+        throw new Error("O ID do autor deve ser um número inteiro positivo.");
     };
 };
-
-export function autorValidoParaAtualizacao(id_autor: number, nome: string): void {
-    idAutorValido(id_autor);
-    nomeAutorValido(nome);
-};
-   
-
-export function autorValidoParaExclusao(id_autor: number): void {
-    idAutorValido(id_autor);
-};
-
-
 //////////////////////////////////////////////////
 ////////////           FIM            ////////////
 //////////////////////////////////////////////////
