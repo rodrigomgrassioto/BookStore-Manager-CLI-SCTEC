@@ -1,4 +1,4 @@
-import { fazerPergunta } from "../utils/readlineUtil";
+import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import { autorControllerCadastrar, 
          autorControllerListar, 
          autorControlerBuscarPorId, 
