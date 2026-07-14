@@ -5,91 +5,157 @@ import {
     atualizarClienteServ,
     deletarClienteServ
 } from '../services/ClienteService';
+
+import { fazerPergunta } from '../utils/readlineUtil';
 import { ClienteModel, ClienteCadastro } from '../models/ClienteModel';
-import {fazerPergunta} from "../utils/readlineUtil";
 
 
-export class ClienteController {
-    private clienteService: ClienteService;
 
-    constructor() {
-        this.clienteService = new ClienteService();
+// 1. Cadastrar Cliente
+export async function clienteControllerCriar(): Promise<void> {
+    console.log("\n=== CADASTRO DE NOVO CLIENTE ===");
+
+    
+    const nome = await fazerPergunta("Nome do Cliente: ");
+    const email = await fazerPergunta("E-mail do Cliente: ");
+    const telefone = await fazerPergunta("Telefone do Cliente: ");
+    const data_nascimento = await fazerPergunta("Data de Nascimento do Cliente (YYYY-MM-DD): ");
+
+    try {
+
+        await criarClienteServ(nome, email, telefone, data_nascimento);
+        console.log(`\n🎉 Cliente "${nome}" cadastrado com sucesso!`);
+
+    } catch (error: any) {
+        console.log("\n========================================");
+        if (error.code) tratarErroBanco(error);
+
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o cliente.");
+        console.log("========================================\n");
     }
+}
 
-    // 1. Método para Cadastrar um Cliente
-    async criar(): Promise<void> {
-        console.log('\n--- CADASTRO DE CLIENTE ---');
+// 2. Listar Clientes
+export async function clienteControllerListar(): Promise<void> {
+    console.log("\n=== LISTAR CLIENTES ===");
+
+    try {
+        const lista = await listarClientesServ();
+        console.table(lista);
+    } catch (error: any) {
+        console.log("\n========================================");
+        if (error.code) tratarErroBanco(error);
         
-        // Coleta de dados do terminal
-        const nome = await fazerPergunta('Nome do Cliente: ');
-        const email = await fazerPergunta('E-mail do Cliente: ');
-        const telefone = await fazerPergunta('Telefone: ');
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao listar os clientes.");
+        console.log("========================================\n");
+    }
+}
 
-        // Criando o objeto com base na interface ClienteCadastro
-        const dadosCliente: ClienteCadastro = {
-            nome,
-            email,
-            telefone
-        };
+// 3. Atualizar Cliente
+export async function clienteControllerAtualizar(): Promise<void> {
+    console.log("\n=== ATUALIZAR CLIENTE ===");
+    
+    const id_cliente = await fazerPergunta("Número do ID do cliente: ", { tipoRetorno: 'i_zero' });
 
-        try {
-            // Chama o serviço passando a interface como parâmetro
-            const novoCliente = await this.clienteService.criarClienteServ(dadosCliente);
-            console.log(`\nCliente [${novoCliente.nome}] cadastrado com sucesso! ID: ${novoCliente.id_cliente}`);
-        } catch (error: any) {
-            // Tratamento de erro para impedir o fechamento do CLI
-            console.log(`\nErro ao cadastrar cliente: ${error.message}`);
-        }
+
+    let clienteNoDb;
+    try {
+        clienteNoDb = await buscarClienteServ(id_cliente);
+    } catch (error: any) {
+        console.log("\n========================================");
+        if (error.code) tratarErroBanco(error);
+        
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao buscar o cliente.");
+        console.log("========================================\n");
+        return;
     }
 
-    // 2. Método para Atualizar um Cliente
-    async atualizar(): Promise<void> {
-        console.log('\n--- ATUALIZAÇÃO DE CLIENTE ---');
-
-        const idInput = await fazerPergunta('Digite o ID do cliente que deseja atualizar: ');
-        const id = parseInt(idInput);
-
-        if (isNaN(id)) {
-            console.log('\nID inválido!');
-            return;
-        }
-
-        // Captura os novos dados (parciais ou totais)
-        console.log('(Deixe em branco para manter o valor atual)');
-        const nome = await fazerPergunta('Novo Nome: ');
-        const email = await fazerPergunta('Novo E-mail: ');
-        const telefone = await fazerPergunta('Novo Telefone: ');
-
-        // Monta os dados apenas com o que foi preenchido (ou trate no Service se preferir)
-        const dadosAtualizacao: Partial<ClienteCadastro> = {};
-        if (nome) dadosAtualizacao.nome = nome;
-        if (email) dadosAtualizacao.email = email;
-        if (telefone) dadosAtualizacao.telefone = telefone;
-
-        try {
-            await this.clienteService.atualizarClienteServ(id, dadosAtualizacao);
-            console.log('\nCliente atualizado com sucesso!');
-        } catch (error: any) {
-            console.log(`\nErro ao atualizar cliente: ${error.message}`);
-        }
+    if (!clienteNoDb) {
+        console.log("\n========================================");
+        console.log("❌ Cliente não encontrado.");
+        console.log("========================================\n");
+        return;
     }
 
-    // 3. Método para Listar Clientes
-    async listar(): Promise<void> {
-        console.log('\n--- LISTA DE CLIENTES ---');
-        try {
-            const clientes = await this.clienteService.listarClientesServ();
-            
-            if (clientes.length === 0) {
-                console.log('Nenhum cliente cadastrado.');
-                return;
-            }
+    console.table(clienteNoDb);
 
-            clientes.forEach((cliente: ClienteModel) => {
-                console.log(`ID: ${cliente.id_cliente} | Nome: ${cliente.nome}`); // Ajuste os campos conforme seu modelo
-            });
-        } catch (error: any) {
-            console.log(`\nErro ao listar clientes: ${error.message}`);
-        }
+    // Exibe os valores originais no terminal usando o readlineUtil de vocês
+    const nome = await fazerPergunta("Nome do Cliente: ");
+    const email = await fazerPergunta("E-mail do Cliente: ");
+    const telefone = await fazerPergunta("Telefone do Cliente: ");
+    const data_nascimento = await fazerPergunta("Data de Nascimento do Cliente (YYYY-MM-DD): ");
+
+    try {
+        const dadosAtualizacao = await atualizarClienteServ(id_cliente, nome, email, telefone, data_nascimento);
+        console.log(`\n🎉 Cliente "${dadosAtualizacao.nome}" atualizado com sucesso!`);
+
+    } catch (error: any) {
+        console.log("\n========================================");
+        if (error.code) tratarErroBanco(error);
+        
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao atualizar o cliente.");
+        console.log("========================================\n");
+    }
+}
+
+// 4. Deletar Cliente
+export async function clienteControllerDeletar(): Promise<void> {
+    console.log("\n=== DELETAR CLIENTE ===");
+
+    const id_cliente = await fazerPergunta("Número do ID do cliente: ");
+    let clienteNoDb;
+
+    try {
+        clienteNoDb = await buscarClienteServ(id_cliente);
+    } catch (error: any) {
+        console.log("\n========================================");
+        if (error.code) tratarErroBanco(error);
+        
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao buscar o cliente.");
+        console.log("========================================\n");
+        return;
+    }
+
+    if (!clienteNoDb) {
+        console.log("❌ Cliente não encontrado.");
+        return;
+    }
+
+    console.table(clienteNoDb);
+
+    console.log("\n⚠️  ATENÇÃO: Esta ação é irreversível e irá deletar o autor do sistema.\n");
+    const confirmacao = await fazerPergunta("Excluir cliente? (S/N): ");
+    if (confirmacao.toLowerCase() !== 's') {
+           console.log("Operação de exclusão cancelada.");
+           return;
+    }
+
+    try {
+        const result = await deletarClienteServ(id_cliente);
+        if (!result) throw new Error("❌ Erro desconhecido ao deletar.");
+        console.log(`\n🎉 Cliente "${clienteNoDb.id_cliente}" excluído com sucesso!`);
+    } catch (error: any) {
+        console.log("\n========================================");
+        if (error.code) tratarErroBanco(error);
+        
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao excluir o cliente.");
+        console.log("========================================\n");
+    }
+}
+
+// Tratamento de erros de Banco específico para Clientes
+function tratarErroBanco(error: any): void {
+    switch (error.code) {
+        case '23505': // Unique Violation
+            console.error("❌ Já existe um cliente cadastrado com este endereço de e-mail.");
+            break;
+        case '23503': // Foreign Key Violation
+            console.error("❌ O cliente possui empréstimos ativos registrados e não pode ser alterado/excluído.");
+            break;
+        case '23502': // Not Null Violation
+            console.error("❌ Campo obrigatório de cliente não foi preenchido corretamente.");
+            break;
+        default:
+            console.error(`❌ Erro crítico no Banco de Dados ( ${error.code} ): ${error.message}`);
     }
 }
