@@ -221,7 +221,7 @@ As principais entidades serão:
 A estrutura será disponibilizada no arquivo:
 
 ```
-src/database/schema.sql
+src/database/schema_sql-bkp-2026-07-14
 ```
 
 ---
