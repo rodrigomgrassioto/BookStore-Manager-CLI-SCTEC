@@ -6,7 +6,7 @@ import {
     deletarClienteServ
 } from '../services/ClienteService';
 
-import { fazerPergunta } from '../utils/leitorFormadorDeEntradas';
+import { fazerPergunta } from '../utils/leitorFormatadorDeEntradas';
 import { ClienteModel, ClienteCadastro } from '../models/ClienteModel';
 
 

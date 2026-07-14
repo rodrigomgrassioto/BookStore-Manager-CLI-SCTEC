@@ -1,4 +1,4 @@
-import {fazerPergunta} from "../utils/leitorFormadorDeEntradas";
+import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
 import {
     livroControllerAtualizar,
     livroControllerCriar,

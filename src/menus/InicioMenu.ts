@@ -1,5 +1,5 @@
 import * as readline from "readline";
-import {fazerPergunta, rl} from "../utils/leitorFormadorDeEntradas";
+import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {LivroMenu} from "./LivroMenu";
 
 export class InicioMenu {
