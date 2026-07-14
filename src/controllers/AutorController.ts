@@ -1,5 +1,5 @@
 import * as readline from 'readline';
-import { fazerPergunta } from "../utils/readlineUtil";
+import { fazerPergunta } from "../utils/leitorFormadorDeEntradas";
 import * as formatadoresTexto from "../utils/formatadoresTexto";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
 import { atualizarAutorServ, listarAutoresServ, cadastrarAutorServ, deletarAutorServ, buscarAutorPorIdServ } from '../services/AutorService';
