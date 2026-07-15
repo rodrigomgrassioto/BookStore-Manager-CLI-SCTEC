@@ -1,0 +1,5 @@
+{
+  "dias_padrao_emprestimo": 14,
+  "max_livros_por_emprestimo": 3,
+  "permitir_quantidade_livro_disponivel_negativo": false
+}

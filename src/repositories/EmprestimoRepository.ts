@@ -1,6 +1,8 @@
-import {LivroCompletoModel} from "../models/LivroModel";
+import {LivroCompletoModel, LivroModel} from "../models/LivroModel";
 import {pool} from "../database/connection";
 import {CriarEmprestimoModel, EmprestimoCompletoModel} from "../models/EmprestimoModel";
+import configEmpresa from '../configuracoes_empresa.json'; // Se o repo estiver em src/database/ por exemplo
+
 
 export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCompletoModel | null> {
     const sql = `
@@ -73,8 +75,17 @@ export async function livroJaFoiEmprestadoRP(id:number): Promise<boolean>{
     return result.rows.length > 0;
 }
 
+/**
+ * COMO UTILIZAR
+ * const result = await criarEmprestimoRP({
+ *        id_cliente: 1,
+ *        ids_livros: [1, 2],
+ *        dias_para_devolucao: 3
+ *    });
+ *    console.log(result)
+ */
 export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< EmprestimoCompletoModel | null> {
-    const { id_cliente, ids_livros, dias_para_devolucao = 14 } = dados;
+    const { id_cliente, ids_livros, dias_para_devolucao = configEmpresa.dias_padrao_emprestimo } = dados;
 
     // Verifica se tem livro
     if (!ids_livros || ids_livros.length === 0) {
@@ -83,32 +94,54 @@ export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< E
 
     // Conexão exclusiva para gerenciar a transação
     const client = await pool.connect();
-    // Inicia a transação no banco de dados
-    await client.query('BEGIN');
+    try {
+        // Inicia a transação no banco de dados
+        await client.query('BEGIN');
 
-    // Insere o cabeçalho na tabela 'empréstimos'
-    const sqlEmprestimo = `
+        // Insere o cabeçalho na tabela 'empréstimos'
+        const sqlEmprestimo = `
         INSERT INTO emprestimos (id_cliente, data_devolucao_prevista, status)
         VALUES ($1, NOW() + $2 * INTERVAL '1 day', 'ATIVO')
         RETURNING *;
 
     `;
 
-    const resultadoEmprestimo = await client.query(sqlEmprestimo, [id_cliente, dias_para_devolucao]);
-    const id_emprestimo = resultadoEmprestimo.rows[0].id_emprestimo;
+        const resultadoEmprestimo = await client.query(sqlEmprestimo, [id_cliente, dias_para_devolucao]);
+        const id_emprestimo = resultadoEmprestimo.rows[0].id_emprestimo;
 
-    // adiciona livros
-    const sqlPivo = `
+        // adiciona livros
+        const sqlPivo = `
         INSERT INTO emprestimo_livros (id_emprestimo, id_livro)
         VALUES ($1, $2);
     `;
 
-    for (const id_livro of ids_livros) {
-        await client.query(sqlPivo, [id_emprestimo, id_livro]);
+        for (const id_livro of ids_livros) {
+            await client.query(sqlPivo, [id_emprestimo, id_livro]);
+        }
+        // dando certo confirma alterações
+        await client.query('COMMIT');
+        // console.log(resultadoEmprestimo.rows[0]);
+        return  buscarEmprestimoPorIdRP(id_emprestimo) ?? null;        
+    } catch (error: any) {
+        // Em caso de erro, desfaz TUDO
+        await client.query('ROLLBACK');
+        return null
+    } finally {
+        // Libera a conexão do banco de dados
+        client.release();
     }
-    // dando certo confirma alterações
-    await client.query('COMMIT');
-    // console.log(resultadoEmprestimo.rows[0]);
-    return  buscarEmprestimoPorIdRP(id_emprestimo) ?? null;
 }
+export async function devolucaoEmprestimoRP(id_emprestimo: number): Promise< EmprestimoCompletoModel | null> {
+    const sql = `
+        UPDATE emprestimos
+        SET data_devolucao_real = NOW(),
+            status = 'DEVOLVIDO'
+        WHERE id_emprestimo = $1
+        RETURNING *`;
+
+    const resultadoDev = await pool.query<EmprestimoCompletoModel> (sql, [id_emprestimo]);
+    return resultadoDev.rows[0] ?? null;
+}
+
+
 

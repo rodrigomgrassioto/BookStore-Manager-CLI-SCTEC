@@ -7,7 +7,12 @@ import {
     listarLivrosRP
 } from "./repositories/LivroRepository";
 import {atualizarLivroServ, criarLivroServ, deletarLivroServ, listarLivrosServ} from './services/LivroService'
-import { buscarEmprestimoPorIdRP, livroJaFoiEmprestadoRP} from "./repositories/EmprestimoRepository";
+import {
+    buscarEmprestimoPorIdRP,
+    criarEmprestimoRP,
+    devolucaoEmprestimoRP,
+    livroJaFoiEmprestadoRP
+} from "./repositories/EmprestimoRepository";
 import {livroControllerCriar} from "./controllers/LivroController";
 import {InicioMenu} from "./menus/InicioMenu";
 import { cadastrarAutor, listarAutores, atualizarAutor, deletarAutor } from "./repositories/AutorRepository";
@@ -19,8 +24,8 @@ async function main() {
     inicioMenu.iniciarMenu()
 }
 
-main();
-//testes();
+// main();
+testes();
 /**
  * Forma SIMPLES de testar os repositórios.
  *
@@ -28,6 +33,14 @@ main();
  * e o item abaixo a result... ser testado e também o console.log respectivo.
  */
 async function testes() {
+    // const result = await criarEmprestimoRP({
+    //     id_cliente: 5,
+    //     ids_livros: [10, 11],
+    //     dias_para_devolucao: 3
+    // });
+    const result = await devolucaoEmprestimoRP(1);
+    console.log(result)
+
 ////////////////////////////////////////////////
 // ***** Testes referente a Entidade Autor *****
 
