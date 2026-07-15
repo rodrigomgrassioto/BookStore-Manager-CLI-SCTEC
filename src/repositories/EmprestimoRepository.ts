@@ -1,8 +1,8 @@
 import {LivroCompletoModel, LivroModel} from "../models/LivroModel";
 import {pool} from "../database/connection";
 import {CriarEmprestimoModel, EmprestimoCompletoModel} from "../models/EmprestimoModel";
-import configEmpresa from '../configuracoes_empresa.json'; // Se o repo estiver em src/database/ por exemplo
-
+import configEmpresa from '../configuracoes_empresa.json';
+import {buscarLivroPorIdServ} from "../services/LivroService";
 
 export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCompletoModel | null> {
     const sql = `
@@ -88,9 +88,8 @@ export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< E
     const { id_cliente, ids_livros, dias_para_devolucao = configEmpresa.dias_padrao_emprestimo } = dados;
 
     // Verifica se tem livro
-    if (!ids_livros || ids_livros.length === 0) {
+    if (!ids_livros || ids_livros.length === 0)
         throw new Error("❌ Não é possível criar um empréstimo sem pelo menos um livro.");
-    }
 
     // Conexão exclusiva para gerenciar a transação
     const client = await pool.connect();
@@ -116,6 +115,17 @@ export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< E
     `;
 
         for (const id_livro of ids_livros) {
+            const livroArray= await buscarLivroPorIdServ(id_livro)
+
+            if (!livroArray || livroArray.length === 0)
+                throw new Error(`❌ O livro com ID ${id_livro} não foi encontrado no sistema.`);
+
+            const livro = livroArray[0];
+
+            if (!configEmpresa.permitir_quantidade_livro_disponivel_negativo
+                && livro.quantidade_disponivel <= 0)
+                throw new Error(`❌ Estoque indisponível para o livro: "${livro.titulo}".`);
+
             await client.query(sqlPivo, [id_emprestimo, id_livro]);
 
             await client.query(`
