@@ -1,8 +1,7 @@
-export type statusEmprestimo = 'ativo' | 'devolvido';
+export type statusEmprestimo = 'ATIVO' | 'DEVOLVIDO';
 
 export interface EmprestimoModel {
     readonly id_emprestimo: number;
-    id_livro: number;
     id_cliente: number;
     data_emprestimo: Date;
     data_devolucao_prevista: Date;
@@ -11,19 +10,19 @@ export interface EmprestimoModel {
 };
 
 export interface EmprestimoCompletoModel extends EmprestimoModel {
-    livro: {
+    livros: {
         readonly id_livro: number;
         titulo: string;
         isbn: string;
-        ano_publicacao?: number;
-        quantidade_estoque: number;
+        ano_publicacao: number | null;
+        // quantidade_estoque: number;
         autor: {
             readonly id_autor: number;
             nome: string;
             nacionalidade?: string | null;
             data_cadastro: Date;
         };
-    };
+    }[];
     cliente: {
         readonly id_cliente: number;
         nome: string;
