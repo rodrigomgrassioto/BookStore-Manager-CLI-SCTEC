@@ -2,6 +2,7 @@ import * as readline from "readline";
 import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {LivroMenu} from "./LivroMenu";
 import {AutorMenu} from "./AutorMenu";
+import {ClienteMenu} from "./ClienteMenu";
 
 export class InicioMenu {
     // private rl: readline.Interface;
@@ -22,6 +23,7 @@ export class InicioMenu {
     async iniciarMenu(): Promise<void> {
         const livroMenu = new LivroMenu();
         const autorMenu = new AutorMenu();
+        const clienteMenu = new ClienteMenu();
         let continuar = true;
 
         console.clear();
@@ -47,11 +49,10 @@ export class InicioMenu {
                     await livroMenu.subMenuLivro()
                     break;
 
-                // case '3':
-                //     continuar = false;
-                //     console.clear()
-                //     this.subMenuCliente();
-                //     break;
+                case '3':
+                    console.clear();
+                    await clienteMenu.subMenuCliente();
+                    break;
 
                 case '0':
                     console.clear();
