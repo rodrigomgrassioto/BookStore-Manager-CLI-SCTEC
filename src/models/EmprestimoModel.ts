@@ -1,5 +1,12 @@
 export type statusEmprestimo = 'ATIVO' | 'DEVOLVIDO';
 
+export interface CriarEmprestimoModel {
+    id_cliente: number;
+    ids_livros: number[]; // Array com os IDs de todos os livros
+    dias_para_devolucao?: number; // Opcional, padrão 14 dias se não enviado
+}
+
+
 export interface EmprestimoModel {
     readonly id_emprestimo: number;
     id_cliente: number;
