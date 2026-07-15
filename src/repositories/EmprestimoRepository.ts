@@ -1,6 +1,8 @@
-import {LivroCompletoModel} from "../models/LivroModel";
+import {LivroCompletoModel, LivroModel} from "../models/LivroModel";
 import {pool} from "../database/connection";
 import {CriarEmprestimoModel, EmprestimoCompletoModel} from "../models/EmprestimoModel";
+import configEmpresa from '../configuracoes_empresa.json'; // Se o repo estiver em src/database/ por exemplo
+
 
 export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCompletoModel | null> {
     const sql = `
@@ -81,8 +83,9 @@ export async function livroJaFoiEmprestadoRP(id:number): Promise<boolean>{
  *        dias_para_devolucao: 3
  *    });
  *    console.log(result)
- */export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< EmprestimoCompletoModel | null> {
-    const { id_cliente, ids_livros, dias_para_devolucao = 14 } = dados;
+ */
+export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< EmprestimoCompletoModel | null> {
+    const { id_cliente, ids_livros, dias_para_devolucao = configEmpresa.dias_padrao_emprestimo } = dados;
 
     // Verifica se tem livro
     if (!ids_livros || ids_livros.length === 0) {
@@ -127,6 +130,18 @@ export async function livroJaFoiEmprestadoRP(id:number): Promise<boolean>{
         // Libera a conexão do banco de dados
         client.release();
     }
-    
 }
+export async function devolucaoEmprestimoRP(id_emprestimo: number): Promise< EmprestimoCompletoModel | null> {
+    const sql = `
+        UPDATE emprestimos
+        SET data_devolucao_real = NOW(),
+            status = 'DEVOLVIDO'
+        WHERE id_emprestimo = $1
+        RETURNING *`;
+
+    const resultadoDev = await pool.query<EmprestimoCompletoModel> (sql, [id_emprestimo]);
+    return resultadoDev.rows[0] ?? null;
+}
+
+
 
