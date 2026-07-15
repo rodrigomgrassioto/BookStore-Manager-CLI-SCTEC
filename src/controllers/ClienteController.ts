@@ -121,3 +121,19 @@ export async function clienteControllerDeletar(): Promise<void> {
         console.log("========================================\n");
     }
 }
+
+export async function clienteControllerBuscarPorId(): Promise<void> {
+    console.log("\n=== BUSCAR CLIENTE POR ID ===");
+
+    const id_cliente = await fazerPergunta("Digite o número do ID do cliente: ", { tipoRetorno: 'i_zero' });
+
+    try {
+        const cliente = await buscarClientePorIdServ(id_cliente);
+        console.table([cliente]);
+    } catch (error: any) {
+        console.log("\n========================================");
+        if (error.code) tratarErroBanco(error);
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao buscar o cliente.");
+        console.log("========================================\n");
+    }
+}
