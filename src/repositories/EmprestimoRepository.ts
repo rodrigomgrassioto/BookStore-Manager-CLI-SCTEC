@@ -8,7 +8,7 @@ export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCom
     const sql = `
         SELECT
             e.id_emprestimo, e.id_cliente, e.data_emprestimo, e.data_devolucao_prevista, e.data_devolucao_real, e.status,
-            l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.id_autor,
+            l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.quantidade_emprestada, l.quantidade_disponivel, l.id_autor,
             a.nome AS autor_nome, a.nacionalidade AS autor_nacionalidade, a.data_cadastro AS autor_data_cadastro,
             c.nome AS cliente_nome, c.email, c.telefone, c.data_nascimento, c.data_cadastro AS cliente_data_cadastro
         FROM emprestimos e
@@ -33,7 +33,9 @@ export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCom
         titulo: String(row.titulo),
         isbn: String(row.isbn),
         ano_publicacao: row.ano_publicacao ? Number(row.ano_publicacao) : null,
-        // quantidade_estoque: Number(row.quantidade_estoque),
+        quantidade_estoque: Number(row.quantidade_estoque),
+        quantidade_emprestada: Number(row.quantidade_emprestada),
+        quantidade_disponivel: Number(row.quantidade_disponivel),
         autor: {
             id_autor: Number(row.id_autor),
             nome: String(row.autor_nome),
@@ -61,8 +63,6 @@ export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCom
         livros: livros,
     };
 }
-
-
 
 // Uso no teste antes de excluir livro
 export async function livroJaFoiEmprestadoRP(id:number): Promise<boolean>{
@@ -117,6 +117,13 @@ export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< E
 
         for (const id_livro of ids_livros) {
             await client.query(sqlPivo, [id_emprestimo, id_livro]);
+
+            await client.query(`
+            UPDATE livros 
+            SET quantidade_emprestada = quantidade_emprestada + 1, 
+                quantidade_disponivel = quantidade_disponivel - 1 
+            WHERE id_livro = $1
+        `, [id_livro]);
         }
         // dando certo confirma alterações
         await client.query('COMMIT');
@@ -132,15 +139,47 @@ export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< E
     }
 }
 export async function devolucaoEmprestimoRP(id_emprestimo: number): Promise< EmprestimoCompletoModel | null> {
-    const sql = `
-        UPDATE emprestimos
-        SET data_devolucao_real = NOW(),
-            status = 'DEVOLVIDO'
-        WHERE id_emprestimo = $1
-        RETURNING *`;
+    const emprestimoAtual = await buscarEmprestimoPorIdRP(id_emprestimo);
 
-    const resultadoDev = await pool.query<EmprestimoCompletoModel> (sql, [id_emprestimo]);
-    return resultadoDev.rows[0] ?? null;
+    if (!emprestimoAtual) throw new Error("⚠ Empréstimo não encontrado.");
+    if (emprestimoAtual.status === 'DEVOLVIDO') throw new Error("❌ Empréstimo devolvido anteriormente.");
+
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        // Atualiza o status na tab. principal
+        const sqlAtualizarEmprestimo = `
+            UPDATE emprestimos
+            SET data_devolucao_real = NOW(),
+                status = 'DEVOLVIDO'
+            WHERE id_emprestimo = $1;
+        `;
+        await client.query(sqlAtualizarEmprestimo, [id_emprestimo]);
+
+        // Atualizar estoque
+        const sqlAtualizarEstoque = `
+            UPDATE livros 
+            SET quantidade_emprestada = quantidade_emprestada - 1, 
+                quantidade_disponivel = quantidade_disponivel + 1 
+            WHERE id_livro = $1;
+        `;
+
+        for (const livro of emprestimoAtual.livros) {
+            await client.query(sqlAtualizarEstoque, [livro.id_livro]);
+        }
+
+        await client.query('COMMIT');
+
+        // Retorna objeto atualizado
+        return await buscarEmprestimoPorIdRP(id_emprestimo);
+
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
 }
 
 

@@ -3,6 +3,8 @@ export interface LivroModel {
     isbn: string;
     ano_publicacao?: number;
     quantidade_estoque: number;
+    quantidade_emprestada: number;
+    quantidade_disponivel: number;
     id_autor: number;
 }
 
