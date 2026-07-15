@@ -81,10 +81,10 @@ export async function listarClientesRP(): Promise<ClienteModel[]> {
     return r.rows;
 }
 
-// Buscar cliente por aproximação (Usado na busca do Menu)
-export async function buscarClienteRP(nome: string): Promise<ClienteModel | null> {
-    const sql = `SELECT * FROM clientes WHERE nome ILIKE $1`;
-    const r = await pool.query<ClienteModel>(sql, [`%${nome}%`]);
+// Buscar cliente por ID
+export async function buscarClientePorIdRP(id_cliente: number): Promise<ClienteModel | null> {
+    const sql = `SELECT * FROM clientes WHERE id_cliente = $1`;
+    const r = await pool.query<ClienteModel>(sql, [id_cliente]);
     return r.rows[0] || null;
 }
 

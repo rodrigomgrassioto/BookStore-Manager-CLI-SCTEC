@@ -1,7 +1,7 @@
 import { ClienteModel, ClienteCadastro } from '../models/ClienteModel';
 import {
     criarClienteRP,
-    buscarClienteRP,
+    buscarClientePorIdRP,
     atualizarClienteRP,
     deletarClienteRP,
     listarClientesRP
@@ -25,17 +25,19 @@ export async function listarClientesServ(): Promise<ClienteModel[]> {
     return clientes;
 }
 
-export async function buscarClienteServ(nome: string): Promise<ClienteModel> {
-    if (!clienteValidoParaBusca(nome)) {
-        throw new Error("Necessário informar um nome válido para a busca.");
+
+export async function buscarClientePorIdServ(id_cliente: number): Promise<ClienteModel> {
+    if (!clienteValidoParaExclusao(id_cliente)) {
+        throw new Error("Necessário informar um ID válido de cliente.");
     }
 
-    const cliente = await buscarClienteRP(nome);
+    const cliente = await buscarClientePorIdRP(id_cliente);
     if (!cliente) {
         throw new Error("Cliente não encontrado.");
     }
     return cliente;
 }
+
 
 export async function criarClienteServ(
     nome: string, 
@@ -61,11 +63,6 @@ export async function criarClienteServ(
     }
     if (!telefoneValido(telefone)) {
         throw new Error("Telefone inválido. Deve conter apenas números e ter 10 ou 11 dígitos.");
-    }
-
-    const clienteExistente = await buscarClienteRP(nome);
-    if (clienteExistente) {
-        throw new Error("Cliente já cadastrado com este nome.");
     }
 
     return await criarClienteRP(nome, email, telefone, data_nascimento);
