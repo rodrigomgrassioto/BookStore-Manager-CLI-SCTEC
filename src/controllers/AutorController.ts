@@ -1,8 +1,7 @@
-import * as readline from 'readline';
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
-import * as formatadoresTexto from "../utils/formatadoresTexto";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
 import { atualizarAutorServ, listarAutoresServ, cadastrarAutorServ, deletarAutorServ, buscarAutorPorIdServ } from '../services/AutorService';
+import {exibirAutoresTabela} from "../utils/formatadoresTexto";
 
 export async function autorControllerCadastrar(): Promise<void> {
     console.log("\n=== CADASTRAR NOVO AUTOR ===");
@@ -33,7 +32,7 @@ export async function autorControllerListar(): Promise<void> {
     try {
         const autores = await listarAutoresServ();
         // Exibe os autores no console em formato de tabela
-        formatadoresTexto.exibirAutoresTabela(autores)
+        exibirAutoresTabela(autores)
     } catch (error: any){
         console.log("\n========================================");
         // Erro no PostgreSQL
@@ -58,7 +57,7 @@ export async function autorControlerBuscarPorId(): Promise<void> {
             return;
         }
         
-        console.log(formatadoresTexto.exibirAutoresTabela([autor]));
+        exibirAutoresTabela([autor]);
     } catch (error: any){
         console.log("\n========================================");
         // Erro no PostgreSQL
@@ -73,7 +72,7 @@ export async function autorControlerBuscarPorId(): Promise<void> {
 
 export async function autorControllerAtualizar(): Promise<void> {
     console.log("\n=== ATUALIZAR AUTOR ===");
-    console.log(formatadoresTexto.exibirAutoresTabela(await listarAutoresServ()));
+    exibirAutoresTabela(await listarAutoresServ());
     // Imput do usuário
     const id_autor = await fazerPergunta("Digite o número do ID do autor: ", {tipoRetorno: 'i_zero'});
 
@@ -98,10 +97,10 @@ export async function autorControllerAtualizar(): Promise<void> {
         return;
     }
     
-    console.log(formatadoresTexto.exibirAutoresTabela([autoresDB]));
+    exibirAutoresTabela([autoresDB]);
 
     const nome = await fazerPergunta("Digite o nome do autor: ", {valorOriginal: autoresDB.nome});
-    const nacionalidade = await fazerPergunta("Digite a nova nacionalidade do autor: ", {aceitarVazio: true});
+    const nacionalidade = await fazerPergunta("Digite a nova nacionalidade do autor: ", {valorOriginal: autoresDB.nacionalidade, aceitarVazio: true});
 
     try {
         const autorAtualizado = await atualizarAutorServ(id_autor, nome, nacionalidade);
@@ -121,7 +120,7 @@ export async function autorControllerAtualizar(): Promise<void> {
 
 export async function autorControllerDeletar(): Promise<void> {
     console.log("\n=== DELETAR AUTOR ===");
-    console.log(formatadoresTexto.exibirAutoresTabela(await listarAutoresServ()));
+    exibirAutoresTabela(await listarAutoresServ());
 
     // Imput do usuário
     const id_autor = await fazerPergunta("Digite o número do ID do autor que deseja deletar: ", {tipoRetorno: 'i_zero'});
@@ -146,7 +145,7 @@ export async function autorControllerDeletar(): Promise<void> {
         console.log("========================================\n");
         return;
     };
-    console.log(formatadoresTexto.exibirAutoresTabela([autorDb]));
+    exibirAutoresTabela([autorDb]);
     console.log("\n⚠️  ATENÇÃO: Esta ação é irreversível e irá deletar o autor do sistema.\n");
 
     const confirmacao = await fazerPergunta("Deseja realmente excluir este autor? (S/N): ", {aceitarVazio: false});
