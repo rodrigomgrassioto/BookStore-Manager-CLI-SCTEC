@@ -3,6 +3,7 @@ import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {LivroMenu} from "./LivroMenu";
 import {AutorMenu} from "./AutorMenu";
 import {ClienteMenu} from "./ClienteMenu";
+import {EmprestimoMenu} from "./EmprestimoMenu";
 
 export class InicioMenu {
     // private rl: readline.Interface;
@@ -24,6 +25,7 @@ export class InicioMenu {
         const livroMenu = new LivroMenu();
         const autorMenu = new AutorMenu();
         const clienteMenu = new ClienteMenu();
+        const emprestimoMenu = new EmprestimoMenu();
         let continuar = true;
 
         console.clear();
@@ -52,6 +54,11 @@ export class InicioMenu {
                 case '3':
                     console.clear();
                     await clienteMenu.subMenuCliente();
+                    break;
+
+                case '4':
+                    console.clear();
+                    await emprestimoMenu.subMenuEmprestimo()
                     break;
 
                 case '0':
