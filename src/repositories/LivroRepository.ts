@@ -5,10 +5,11 @@ import {pool} from "../database/connection";
 export async function listarLivrosRP(): Promise<LivroCompletoModel[]> {
     const sql = `
         SELECT
-            l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.id_autor, l.data_cadastro,
+            l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.quantidade_emprestada, l.quantidade_disponivel, l.id_autor, l.data_cadastro,
             a.nome AS autor_nome, a.nacionalidade AS autor_nacionalidade, a.data_cadastro AS autor_data_cadastro
         FROM livros l
             JOIN autores a ON l.id_autor = a.id_autor
+        ORDER BY l.id_livro
     `;
     const result =  await pool.query(sql);
 
