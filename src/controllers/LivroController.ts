@@ -9,6 +9,7 @@ import {
 import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {validarISBN} from "../utils/validadores";
 import {listarAutoresServ} from "../services/AutorService";
+import { tratarErroBanco } from '../utils/tratamentosErrosBD';
 
 export async function livroControllerListar(): Promise<void> {
     try {
@@ -168,7 +169,7 @@ export async function livroControllerDeletar(): Promise<void> {
         if (error.code) tratarErroBanco(error);
 
         // Erro do service
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao buscar livro.");
         console.log("========================================\n");
         return
     }
@@ -194,24 +195,7 @@ export async function livroControllerDeletar(): Promise<void> {
         if (error.code) tratarErroBanco(error);
 
         // Erro do service
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao excluir o livro.");
         console.log("========================================\n");
-    }
-}
-
-function tratarErroBanco(error: any): void {
-    switch (error.code) {
-        case '23505': // Unique Violation
-            console.error("❌ Já existe um livro cadastrado com este código ISBN.");
-            break;
-        case '23503': // Foreign Key Violation
-            console.error("❌ ID do Autor informado não existe no sistema.");
-            break;
-        case '23502': // Not Null Violation
-            console.error("❌ Campo obrigatório não foi preenchido corretamente.");
-            break;
-        default:
-            // Exibe a mensagem genérica do banco caso seja outro erro (ex: falha de conexão)
-            console.error(`❌ Erro crítico no Banco de Dados ( ${error.code} ): ${error.message}`);
     }
 }

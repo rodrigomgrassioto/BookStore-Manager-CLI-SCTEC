@@ -18,6 +18,8 @@ export async function listarLivrosRP(): Promise<LivroCompletoModel[]> {
         isbn: row.isbn,
         ano_publicacao: row.ano_publicacao,
         quantidade_estoque: row.quantidade_estoque,
+        quantidade_emprestada: row.quantidade_emprestada,
+        quantidade_disponivel: row.quantidade_disponivel,
         id_autor: row.id_autor,
         data_cadastro: row.data_cadastro,
         autor: {
@@ -31,7 +33,7 @@ export async function listarLivrosRP(): Promise<LivroCompletoModel[]> {
 export async function buscarLivroPorIdRP(id:number): Promise<LivroCompletoModel[]> {
     const sql = `
         SELECT
-            l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.id_autor, l.data_cadastro,
+            l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.quantidade_emprestada, l.quantidade_disponivel, l.id_autor, l.data_cadastro,
             a.nome AS autor_nome, a.nacionalidade AS autor_nacionalidade, a.data_cadastro AS autor_data_cadastro
         FROM livros l
             JOIN autores a ON l.id_autor = a.id_autor
@@ -46,6 +48,8 @@ export async function buscarLivroPorIdRP(id:number): Promise<LivroCompletoModel[
         isbn: row.isbn,
         ano_publicacao: row.ano_publicacao,
         quantidade_estoque: row.quantidade_estoque,
+        quantidade_emprestada: row.quantidade_emprestada,
+        quantidade_disponivel: row.quantidade_disponivel,
         id_autor: row.id_autor,
         data_cadastro: row.data_cadastro,
         autor: {
@@ -74,6 +78,8 @@ export async function buscarLivroPorIsbnRP(isbn:string): Promise<LivroCompletoMo
         isbn: row.isbn,
         ano_publicacao: row.ano_publicacao,
         quantidade_estoque: row.quantidade_estoque,
+        quantidade_emprestada: row.quantidade_emprestada,
+        quantidade_disponivel: row.quantidade_disponivel,
         id_autor: row.id_autor,
         data_cadastro: row.data_cadastro,
         autor: {
@@ -102,6 +108,8 @@ export async function buscarLivroPorTituloRP(titulo:string): Promise<LivroComple
         isbn: row.isbn,
         ano_publicacao: row.ano_publicacao,
         quantidade_estoque: row.quantidade_estoque,
+        quantidade_emprestada: row.quantidade_emprestada,
+        quantidade_disponivel: row.quantidade_disponivel,
         id_autor: row.id_autor,
         data_cadastro: row.data_cadastro,
         autor: {
@@ -116,11 +124,11 @@ export async function criaLivroRP(
     titulo: string,isbn: string, quantidade_estoque: number, id_autor: number, ano_publicacao?: number | null)
     :Promise<LivroModel> {
     const sql = `
-        INSERT INTO livros (titulo,isbn, ano_publicacao, quantidade_estoque, id_autor)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO livros (titulo,isbn, ano_publicacao, quantidade_estoque, quantidade_disponivel, id_autor)
+        VALUES ($1, $2, $3, $4,$5, $6)
         returning *`;
 
-    const result = await pool.query<LivroModel>(sql, [titulo,isbn, ano_publicacao ?? null, quantidade_estoque, id_autor]);
+    const result = await pool.query<LivroModel>(sql, [titulo,isbn, ano_publicacao ?? null, quantidade_estoque, quantidade_estoque, id_autor]);
     return result.rows[0] ?? null;
 }
 
@@ -132,6 +140,7 @@ export async function atualizarLivroRP(
             isbn = $3,
             ano_publicacao = $4,
             quantidade_estoque = $5,
+            quantidade_disponivel = $5 - quantidade_emprestada,
             id_autor = $6
         WHERE id_livro = $1
         RETURNING *`;

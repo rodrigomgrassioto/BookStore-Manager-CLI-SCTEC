@@ -22,7 +22,9 @@ export interface EmprestimoCompletoModel extends EmprestimoModel {
         titulo: string;
         isbn: string;
         ano_publicacao: number | null;
-        // quantidade_estoque: number;
+        quantidade_estoque: number;
+        quantidade_emprestada: number;
+        quantidade_disponivel: number;
         autor: {
             readonly id_autor: number;
             nome: string;
