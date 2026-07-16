@@ -10,7 +10,7 @@ import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {validarISBN} from "../utils/validadores";
 import {listarAutoresServ} from "../services/AutorService";
 import { tratarErroBanco } from '../utils/tratamentosErrosBD';
-import {exibirLivrosTabela} from "../utils/formatadoresTexto";
+import {exibirAutoresTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
 
 export async function livroControllerListar(): Promise<void> {
     try {
@@ -31,7 +31,8 @@ export async function livroControllerProcurarPorNome(): Promise<void> {
     const livroNome = await fazerPergunta("Nome do livro: ")
     try {
         const lista = await buscarLivroPorTituloServ(livroNome)
-        console.table(lista)
+        // console.table(lista)
+        exibirLivrosTabela(lista)
     } catch (error: any){
         console.log("\n========================================");
         // Erro no PostgreSQL
@@ -63,7 +64,8 @@ export async function livroControllerCriar(): Promise<void> {
     console.log(  "=========== Lista de autores: ==========")
     console.log("========================================\n");
     try {
-        console.table(await listarAutoresServ())
+        // console.table(await listarAutoresServ())
+        exibirAutoresTabela(await listarAutoresServ())
     } catch (error: any) {
         console.log("\n========================================");
         // Erro no PostgreSQL
@@ -108,7 +110,8 @@ export async function livroControllerAtualizar(): Promise<void> {
         console.log("========================================\n");
         return ;
     }
-    console.table(livroNoDb);
+    // console.table(livroNoDb);
+    exibirLivrosTabela(livroNoDb);
     const titulo = await fazerPergunta("Título do livro: ", {valorOriginal: livroNoDb[0].titulo});
     let isbn: string;
     do {
@@ -125,7 +128,8 @@ export async function livroControllerAtualizar(): Promise<void> {
     console.log("========================================\n");
 
     try {
-        console.table(await listarAutoresServ())
+        // console.table(await listarAutoresServ())
+        exibirAutoresTabela(await listarAutoresServ())
     }catch (error: any) {
         console.log("\n========================================");
         // Erro no PostgreSQL
