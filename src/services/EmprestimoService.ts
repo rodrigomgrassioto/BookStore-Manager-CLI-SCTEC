@@ -22,6 +22,11 @@ export async function criarEmprestimoServ(dados: CriarEmprestimoModel): Promise<
     if (!dados.ids_livros || dados.ids_livros.length === 0) {
         throw new Error("❌ Necessário informar ao menos um livro para o empréstimo.");
     }
+    
+    const emprestimoMaximo = configEmpresa.max_livros_por_emprestimo;
+    if (dados.ids_livros.length > emprestimoMaximo) {
+        throw new Error(`❌ Limite de livros excedido. O máximo permitido por empréstimo é de ${emprestimoMaximo} livros.`);
+    }
 
     const idsUnicos = new Set(dados.ids_livros);
     if (idsUnicos.size !== dados.ids_livros.length) {
@@ -33,18 +38,22 @@ export async function criarEmprestimoServ(dados: CriarEmprestimoModel): Promise<
 
     // cada livro precisa existir e estar disponível (sem empréstimo ATIVO no momento)
     for (const id_livro of dados.ids_livros) {
-        const livro = await buscarLivroPorIdServ(id_livro);
-        if (!livro || livro.length === 0) {
-            throw new Error(`❌ O livro de ID ${id_livro} não existe.`);
+        const livroArray = await buscarLivroPorIdServ(id_livro);
+        
+        if (!livroArray || livroArray.length === 0) {
+            throw new Error(`❌ O livro com ID ${id_livro} não foi encontrado no sistema.`);
         }
 
-        const estaEmprestado = await livroJaFoiEmprestadoRP(id_livro);
-        if (estaEmprestado) {
-            throw new Error(`❌ O livro de ID ${id_livro} já está emprestado e não está disponível.`);
+        // Obtém o livro retornado pelo array
+        const livro = livroArray[0];
+
+        // 3. Aplica a validação de quantidade disponível baseada na configuração da empresa
+        if (!configEmpresa.permitir_quantidade_livro_disponivel_negativo && livro.quantidade_estoque <= 0) {
+            throw new Error(`❌ Estoque indisponível para o livro: "${livro.titulo}".`);
         }
     }
 
-    // 4. Prazo de devolução
+    // prazo de devolução
     const dias = dados.dias_para_devolucao ?? configEmpresa.dias_padrao_emprestimo;
     if (dias <= 0) {
         throw new Error("❌ O prazo de devolução deve ser maior que zero.");
