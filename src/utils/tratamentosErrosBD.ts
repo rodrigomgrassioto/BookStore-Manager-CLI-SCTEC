@@ -7,6 +7,9 @@ export function tratarErroBanco(error: any): void {
         case '23503': // Foreign Key Violation
             console.error("❌ Operação inválida: o ID referenciado não existe ou este registro está sendo usado por outra tabela.");
             break;
+        case '23001':
+            console.error("❌ Registro não pode ser modificado devido a registro usando em outra tabela.");
+            break;
         case '23502': // Not Null Violation
             console.error("❌ Campo obrigatório não preenchido.");
             break;
