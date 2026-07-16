@@ -33,7 +33,7 @@ export async function autorControllerListar(): Promise<void> {
     try {
         const autores = await listarAutoresServ();
         // Exibe os autores no console em formato de tabela
-        console.log(formatadoresTexto.exibirAutoresTabela(autores));
+        formatadoresTexto.exibirAutoresTabela(autores)
     } catch (error: any){
         console.log("\n========================================");
         // Erro no PostgreSQL
