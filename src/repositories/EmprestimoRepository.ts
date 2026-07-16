@@ -65,9 +65,10 @@ export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCom
 }
 
 // Uso no teste antes de excluir livro
-export async function livroJaFoiEmprestadoRP(id:number): Promise<boolean>{
+export async function livroJaFoiEmprestadoRP(id: number): Promise<boolean> {
     const sql = `
-        SELECT id_emprestimo, id_livro FROM emprestimos
+        SELECT id_livro
+        FROM emprestimo_livros
         WHERE id_livro = $1
     `;
 
