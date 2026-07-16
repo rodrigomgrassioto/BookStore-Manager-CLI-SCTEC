@@ -1,8 +1,9 @@
 import {LivroCompletoModel, LivroModel} from "../models/LivroModel";
 import {pool} from "../database/connection";
-import {CriarEmprestimoModel, EmprestimoCompletoModel} from "../models/EmprestimoModel";
+import {CriarEmprestimoModel, EmprestimoCompletoModel, LivrosPorClienteModel} from "../models/EmprestimoModel";
 import configEmpresa from '../configuracoes_empresa.json';
 import {buscarLivroPorIdServ} from "../services/LivroService";
+import {QueryResult} from "pg";
 
 export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCompletoModel | null> {
     const sql = `
@@ -20,48 +21,7 @@ export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCom
     `;
 
     const result = await pool.query(sql, [id]);
-
-    if (result.rows.length === 0) {
-        return null;
-    }
-
-    const primeiraLinha = result.rows[0];
-
-    // Mapeia as linhas para preencher o array de livros respeitando a interface LivroComAutorModel
-    const livros = result.rows.map((row) => ({
-        id_livro: Number(row.id_livro),
-        titulo: String(row.titulo),
-        isbn: String(row.isbn),
-        ano_publicacao: row.ano_publicacao ? Number(row.ano_publicacao) : null,
-        quantidade_estoque: Number(row.quantidade_estoque),
-        quantidade_emprestada: Number(row.quantidade_emprestada),
-        quantidade_disponivel: Number(row.quantidade_disponivel),
-        autor: {
-            id_autor: Number(row.id_autor),
-            nome: String(row.autor_nome),
-            nacionalidade: row.autor_nacionalidade ? String(row.autor_nacionalidade) : null,
-            data_cadastro: new Date(row.autor_data_cadastro), // Garante que seja um objeto Date
-        },
-    }));
-
-    // Retorna o objeto formatado exatamente como a EmprestimoCompletoModel espera
-    return {
-        id_emprestimo: Number(primeiraLinha.id_emprestimo),
-        id_cliente: Number(primeiraLinha.id_cliente),
-        data_emprestimo: new Date(primeiraLinha.data_emprestimo),
-        data_devolucao_prevista: new Date(primeiraLinha.data_devolucao_prevista),
-        data_devolucao_real: primeiraLinha.data_devolucao_real ? new Date(primeiraLinha.data_devolucao_real) : null,
-        status: primeiraLinha.status as 'ATIVO' | 'DEVOLVIDO', // Type cast para o enum do TS
-        cliente: {
-            id_cliente: Number(primeiraLinha.id_cliente),
-            nome: String(primeiraLinha.cliente_nome),
-            email: String(primeiraLinha.email),
-            telefone: primeiraLinha.telefone ? String(primeiraLinha.telefone) : null,
-            data_nascimento: primeiraLinha.data_nascimento ? new Date(primeiraLinha.data_nascimento) : null,
-            data_cadastro: new Date(primeiraLinha.cliente_data_cadastro),
-        },
-        livros: livros,
-    };
+    return tipaEmprestimoCompleto(result);
 }
 
 // Uso no teste antes de excluir livro
@@ -139,7 +99,7 @@ export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< E
         // dando certo confirma alterações
         await client.query('COMMIT');
         // console.log(resultadoEmprestimo.rows[0]);
-        return  buscarEmprestimoPorIdRP(id_emprestimo) ?? null;        
+        return  buscarEmprestimoPorIdRP(id_emprestimo) ?? null;
     } catch (error: any) {
         // Em caso de erro, desfaz TUDO
         await client.query('ROLLBACK');
@@ -191,6 +151,77 @@ export async function devolucaoEmprestimoRP(id_emprestimo: number): Promise< Emp
     } finally {
         client.release();
     }
+}
+
+export async function buscarLivrosComEmprestimosAtivosPorIdCliente(id_cliente: number): Promise<LivrosPorClienteModel | null> {
+    const sql = `
+        SELECT
+            e.id_emprestimo, e.id_cliente, e.data_emprestimo, e.data_devolucao_prevista, e.data_devolucao_real, e.status,
+            l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.quantidade_emprestada, l.quantidade_disponivel, l.id_autor,
+            a.nome AS autor_nome, a.nacionalidade AS autor_nacionalidade, a.data_cadastro AS autor_data_cadastro,
+            c.id_cliente, c.nome AS cliente_nome, c.email, c.telefone, c.data_nascimento, c.data_cadastro AS cliente_data_cadastro
+        FROM emprestimos e
+                 INNER JOIN emprestimo_livros el ON e.id_emprestimo = el.id_emprestimo
+                 INNER JOIN livros l ON el.id_livro = l.id_livro
+                 INNER JOIN autores a ON l.id_autor = a.id_autor
+                 INNER JOIN clientes c ON e.id_cliente = c.id_cliente
+        WHERE c.id_cliente = $1 AND e.status = 'ATIVO'
+    `;
+
+    const result = await pool.query(sql, [id_cliente]);
+    // const emprestimoCompleto = await tipaEmprestimoCompleto(result);
+    // if (!emprestimoCompleto) return null;
+    const livros = await mapLivros(result);
+    if (!livros) return null
+    return {
+        nome_cliente: result.rows[0].cliente_nome,
+        obs: "Retornando livros com empréstimo ativo por cliente",
+        livros:livros,
+    }
+}
+
+function mapLivros(result: QueryResult): any[] | null {
+    if (result.rows.length === 0) return null;
+    return result.rows.map((row) => ({
+        id_livro: Number(row.id_livro),
+        titulo: String(row.titulo),
+        isbn: String(row.isbn),
+        ano_publicacao: row.ano_publicacao ? Number(row.ano_publicacao) : null,
+        quantidade_estoque: Number(row.quantidade_estoque),
+        quantidade_emprestada: Number(row.quantidade_emprestada),
+        quantidade_disponivel: Number(row.quantidade_disponivel),
+        autor: {
+            id_autor: Number(row.id_autor),
+            nome: String(row.autor_nome),
+            nacionalidade: row.autor_nacionalidade ? String(row.autor_nacionalidade) : null,
+            data_cadastro: new Date(row.autor_data_cadastro)
+        }
+    }));
+}
+
+function tipaEmprestimoCompleto(result: QueryResult): EmprestimoCompletoModel | null {
+    if (result.rows.length === 0) return null;
+
+    const primeiraLinha = result.rows[0];
+    const listaLivros = mapLivros(result) ?? [];
+
+    return {
+        id_emprestimo: Number(primeiraLinha.id_emprestimo),
+        id_cliente: Number(primeiraLinha.id_cliente),
+        data_emprestimo: new Date(primeiraLinha.data_emprestimo),
+        data_devolucao_prevista: new Date(primeiraLinha.data_devolucao_prevista),
+        data_devolucao_real: primeiraLinha.data_devolucao_real ? new Date(primeiraLinha.data_devolucao_real) : null,
+        status: primeiraLinha.status as 'ATIVO' | 'DEVOLVIDO',
+        cliente: {
+            id_cliente: Number(primeiraLinha.id_cliente),
+            nome: String(primeiraLinha.cliente_nome),
+            email: String(primeiraLinha.email),
+            telefone: primeiraLinha.telefone ? String(primeiraLinha.telefone) : null,
+            data_nascimento: primeiraLinha.data_nascimento ? new Date(primeiraLinha.data_nascimento) : null,
+            data_cadastro: new Date(primeiraLinha.cliente_data_cadastro)
+        },
+        livros: listaLivros
+    };
 }
 
 
