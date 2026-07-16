@@ -60,7 +60,8 @@ export async function fazerPergunta(
         //     // rl.question(enunciado, (resposta) => resolve(resposta));
         //     rl.question(enunciado, resolve);
         // });
-        process.stdout.write(enunciado);
+        // process.stdout.write(enunciado);
+        console.log(enunciado);
 
         if (valorOriginal !== undefined && valorOriginal !== null) {
             rl.write(String(valorOriginal));
