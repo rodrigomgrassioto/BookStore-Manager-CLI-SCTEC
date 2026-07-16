@@ -23,7 +23,7 @@ export async function criarEmprestimoServ(dados: CriarEmprestimoModel): Promise<
         throw new Error("❌ Necessário informar ao menos um livro para o empréstimo.");
     }
     
-    const emprestimoMaximo = configEmpresa.max_livros_por_cliente;
+    const emprestimoMaximo = configEmpresa.max_livros_por_emprestimo;
     if (dados.ids_livros.length > emprestimoMaximo) {
         throw new Error(`❌ Limite de livros excedido. O máximo permitido por empréstimo é de ${emprestimoMaximo} livros.`);
     }
