@@ -3,13 +3,14 @@ import {LivroCompletoModel} from "../models/LivroModel";
 import {gerarTabela} from "./gerarTabela";
 
 export function exibirAutoresTabela(autores: AutorModel[]): void {
-    console.table(
-        autores.map(autor => ({
-            ID: autor.id_autor,
-            Nome: autor.nome,
-            Nacionalidade: autor.nacionalidade ?? "-"
-        }))
-    );
+    // console.table(
+    const autoresFormatado = autores.map(autor => ({
+        ID: autor.id_autor,
+        Nome: autor.nome,
+        Nacionalidade: autor.nacionalidade ?? "-"
+    }))
+    // );
+    gerarTabela(autoresFormatado);
 }
 
 export function exibirLivrosTabela(livros: LivroCompletoModel[]): void {
