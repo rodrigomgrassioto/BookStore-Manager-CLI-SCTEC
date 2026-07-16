@@ -10,11 +10,12 @@ import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {validarISBN} from "../utils/validadores";
 import {listarAutoresServ} from "../services/AutorService";
 import { tratarErroBanco } from '../utils/tratamentosErrosBD';
+import {exibirLivrosTabela} from "../utils/formatadoresTexto";
 
 export async function livroControllerListar(): Promise<void> {
     try {
         const lista = await listarLivrosServ()
-        console.table(lista)
+        exibirLivrosTabela(lista)
     } catch (error: any){
         console.log("\n========================================");
         // Erro no PostgreSQL
@@ -182,7 +183,7 @@ export async function livroControllerDeletar(): Promise<void> {
     console.error("========================================\n");
     console.error("============== D E L E T A R============\n");
     console.error("========================================\n");
-    console.table(livroNoDb);
+    exibirLivrosTabela(livroNoDb);
     const confimacao = await fazerPergunta("Excluir livor? (S/N): ", {valorOriginal: 'N'});
     if (confimacao.toLowerCase() !== 's') return
     try {
