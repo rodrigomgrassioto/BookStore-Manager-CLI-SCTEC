@@ -42,4 +42,25 @@ export interface EmprestimoCompletoModel extends EmprestimoModel {
     };
 };
 
+export interface LivrosPorClienteModel { // 🆕 Removido o extends para evitar carregar campos que você não vai usar aqui
+    nome_cliente: string;
+    obs: string | null;
+    livros: {
+        readonly id_livro: number;
+        titulo: string;
+        isbn: string;
+        ano_publicacao: number | null;
+        quantidade_estoque: number;
+        quantidade_emprestada: number;
+        quantidade_disponivel: number;
+        autor: {
+            readonly id_autor: number;
+            nome: string;
+            nacionalidade?: string | null;
+            data_cadastro: Date;
+        };
+    }[];
+}
+
+
 
