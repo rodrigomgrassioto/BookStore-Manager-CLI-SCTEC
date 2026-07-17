@@ -20,7 +20,13 @@ export function gerarTabela<T extends object>(dados: T[]): void {
 
         for (const linha of dados) {
             // Varre as linhas para descobrir qual o maior texto impresso naquela coluna
-            const valorTexto = String(linha[coluna] ?? "-");
+            const valor = linha[coluna];
+
+            const valorTexto =
+                valor instanceof Date
+                    ? valor.toLocaleDateString("pt-BR")
+                    : String(valor ?? "-");
+
             if (valorTexto.length > tamanhoMaximo) {
                 tamanhoMaximo = valorTexto.length;
             }
