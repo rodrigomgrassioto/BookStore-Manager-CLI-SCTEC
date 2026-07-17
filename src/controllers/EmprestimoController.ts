@@ -1,27 +1,29 @@
 import * as readline from 'readline';
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
-import * as formatadoresTexto from "../utils/formatadoresTexto";
+import { exibirEmprestimosDetalhadoTabela} from "../utils/formatadoresTexto";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
-//import {  } from '../services/EmprestimoService';
+import { criarEmprestimoServ, devolucaoEmprestimoServ, buscarEmprestimoPorIdServ } from '../services/EmprestimoService';
+import configEmpresa from '../configuracoes_empresa.json'
 
 export async function criarEmprestimoController(): Promise<void> {
     console.log("\n=== REGISTRAR NOVO EMPRÉSTIMO ===");
 
     const id_cliente = await fazerPergunta("Digite o ID do cliente: ", { tipoRetorno: "i_zero" });
-    const ids_livros = await fazerPergunta("Digite os IDs dos livros separados por vírgula: ");
-    const dias_para_devolucao = await fazerPergunta("Prazo para devolução em dias (deixe vazio para usar o padrão): ", {tipoRetorno: "i_null", aceitarVazio: true});
+    const ids_livros = await fazerPergunta("Digite os IDs dos livros separados por vírgula (ex: 5, 6, 10): ");
+    const dias_para_devolucao = await fazerPergunta("Prazo para devolução em dias (deixe vazio para usar o padrão): ", 
+        {tipoRetorno: "i_zero", valorOriginal: configEmpresa.dias_padrao_emprestimo , aceitarVazio: false});
 
     try {
-        const entradaLivros = converterIdsLivros(ids_livros); // CRIAR FUNÇÃO PARA CONVERTER IDS DE LIVROS EM ARRAY DE NÚMEROS
+        const entradaLivros = converterIdsLivros(ids_livros); // FUNÇÃO PARA CONVERTER IDS DE LIVROS EM ARRAY DE NÚMEROS
 
         const emprestimo = await criarEmprestimoServ({
             id_cliente,
             ids_livros: entradaLivros,
-            dias_para_devolucao: dias_para_devolucao ?? undefined
+            dias_para_devolucao: dias_para_devolucao
         });
 
         console.log("\n🎉 Empréstimo registrado com sucesso!");
-        //console.log(formatadoresTexto.exibirEmprestimoDetalhado(emprestimo)); // CRIAR FORMATADOR PARA EXIBIR EMPRÉSTIMO DETALHADO
+        exibirEmprestimosDetalhadoTabela([emprestimo]);
 
     } catch (error: any){
         console.log("\n========================================");
@@ -42,7 +44,7 @@ export async function buscarEmprestimoPorIdController(): Promise<void> {
 
     try {
         const emprestimo = await buscarEmprestimoPorIdServ(id);
-        //console.log(formatadoresTexto.exibirEmprestimoDetalhado(emprestimo));
+        exibirEmprestimosDetalhadoTabela([emprestimo]);
     } catch (error: any){
         console.log("\n========================================");
         // Erro no PostgreSQL
@@ -63,7 +65,7 @@ export async function devolverEmprestimoController(): Promise<void> {
     try {
         const emprestimo = await buscarEmprestimoPorIdServ(id_emprestimo);
 
-        //console.log(formatadoresTexto.exibirEmprestimoDetalhado(emprestimo));
+        exibirEmprestimosDetalhadoTabela([emprestimo]);
 
         if (emprestimo.status === "DEVOLVIDO") {
             console.log("\n❌ Este empréstimo já foi devolvido.");
@@ -82,7 +84,7 @@ export async function devolverEmprestimoController(): Promise<void> {
         const emprestimoDevolvido = await devolucaoEmprestimoServ(id_emprestimo);
 
         console.log("\n🎉 Devolução registrada com sucesso!");
-        //console.log(formatadoresTexto.exibirEmprestimoDetalhado(emprestimoDevolvido));
+        exibirEmprestimosDetalhadoTabela([emprestimoDevolvido]);
     } catch (error: any){
         console.log("\n========================================");
         // Erro no PostgreSQL
@@ -102,9 +104,7 @@ function converterIdsLivros(entrada: string): number[] {
 
     const ids = partes.map(Number);
 
-    const possuiIdInvalido = ids.some(
-        id => !Number.isInteger(id) || id <= 0
-    );
+    const possuiIdInvalido = ids.some(id => !Number.isInteger(id) || id <= 0);
 
     if (possuiIdInvalido) {
         throw new Error(
