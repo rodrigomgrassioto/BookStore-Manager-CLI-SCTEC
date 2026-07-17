@@ -13,7 +13,6 @@ import { buscarLivroPorIdServ } from './LivroService';
 import { buscarClientePorIdServ } from './ClienteService';
 import configEmpresa from '../configuracoes_empresa.json';
 
-
 // registra um novo empréstimo.
 export async function criarEmprestimoServ(dados: CriarEmprestimoModel): Promise<EmprestimoCompletoModel> {
 
@@ -23,23 +22,17 @@ export async function criarEmprestimoServ(dados: CriarEmprestimoModel): Promise<
     if (!dados.ids_livros || dados.ids_livros.length === 0) {
         throw new Error("❌ Necessário informar ao menos um livro para o empréstimo.");
     }
+
+    if (configEmpresa.dias_de_emprestimo === undefined ||
+        configEmpresa.max_livros_por_cliente === undefined) {
+        throw new Error("Configurações do sistema ausentes no arquivo JSON. Contate o suporte.");
+    }
     
     // validação de limite por pedido
     const emprestimoPedidoMaximo = configEmpresa.max_livros_por_emprestimo;
-    if (dados.ids_livros.length > emprestimoPedidoMaximo) {
+    if (emprestimoPedidoMaximo !== null && dados.ids_livros.length > emprestimoPedidoMaximo) {
         throw new Error(`❌ Limite de livros excedido. O máximo permitido por empréstimo é de ${emprestimoPedidoMaximo} livros.`);
     }
-
-    // validação de limite por cliente
-    const emprestimoClienteMaximo = configEmpresa.max_livros_por_cliente;
-    const livrosCliente = await buscarLivrosComEmprestimosAtivosPorIdCliente(dados.id_cliente);
-    const livrosAtivos = livrosCliente ? livrosCliente.livros.length : 0;
-    const totalLivrosCliente = livrosAtivos + dados.ids_livros.length;
-
-    if (totalLivrosCliente > emprestimoClienteMaximo) {
-        throw new Error(`❌ Limite de livros por cliente excedido. O máximo permitido é ${emprestimoClienteMaximo}, e este cliente já possui ${livrosAtivos} livro(s) emprestado(s).`);
-    }
-
 
     const idsUnicos = new Set(dados.ids_livros);
     if (idsUnicos.size !== dados.ids_livros.length) {
@@ -52,6 +45,8 @@ export async function criarEmprestimoServ(dados: CriarEmprestimoModel): Promise<
         throw new Error(`❌ Cliente com ID ${dados.id_cliente} não encontrado.`);
     }
 
+    // validação de limite por cliente
+    await clientePodeEmprestar(dados)
 
     // cada livro precisa existir e estar disponível
     for (const id_livro of dados.ids_livros) {
@@ -69,7 +64,7 @@ export async function criarEmprestimoServ(dados: CriarEmprestimoModel): Promise<
     }
 
     // prazo de devolução
-    const dias = dados.dias_para_devolucao ?? configEmpresa.dias_padrao_emprestimo;
+    const dias = dados.dias_para_devolucao ?? configEmpresa.dias_de_emprestimo;
     if (dias <= 0) {
         throw new Error("❌ O prazo de devolução deve ser maior que zero.");
     }
@@ -79,6 +74,23 @@ export async function criarEmprestimoServ(dados: CriarEmprestimoModel): Promise<
     return resultado;
 }
 
+async function clientePodeEmprestar(dados: CriarEmprestimoModel): Promise<void> {
+    const limitePorCliente = configEmpresa.max_livros_por_cliente;
+    // se empresa optar por não ter limite por cliente
+    if (limitePorCliente === null) return;
+
+    const livrosAtivoCliente = await buscarLivrosComEmprestimosAtivosPorIdCliente(dados.id_cliente);
+
+    // se livroCliente não é null nem undefined -
+    // quantidadeDeLivrosAtivos recebe a quantidade de length,
+    // se não quantidadeDeLivrosAtivos recebe Zero
+    const quantidadeDeLivrosAtivos = livrosAtivoCliente ? livrosAtivoCliente.livros.length : 0;
+    const totalLivrosCliente = quantidadeDeLivrosAtivos + dados.ids_livros.length;
+
+    if (totalLivrosCliente > limitePorCliente) {
+        throw new Error(`❌ Limite de livros por cliente excedido. O máximo permitido é ${limitePorCliente}, e este cliente já possui ${quantidadeDeLivrosAtivos} livro(s) emprestado(s).`);
+    }
+}
 
 export async function buscarEmprestimoPorIdServ(id_emprestimo: number): Promise<EmprestimoCompletoModel> {
     if (!id_emprestimo || id_emprestimo <= 0) {
