@@ -19,14 +19,16 @@ import { cadastrarAutor, listarAutores, atualizarAutor, deletarAutor } from "./r
 import { cadastrarAutorServ, listarAutoresServ, atualizarAutorServ, deletarAutorServ, buscarAutorPorIdServ } from "./services/AutorService";
 import { autorControlerBuscarPorId, autorControllerAtualizar, autorControllerCadastrar, autorControllerDeletar, autorControllerListar,  } from "./controllers/AutorController";
 import { criarEmprestimoController, buscarEmprestimoPorIdController, devolverEmprestimoController } from './controllers/EmprestimoController.js';
+import { clientesComEmprestimosAtivosController, livrosCadastradosPorAutorController, livrosDisponiveisController, livrosEmprestadosController, quantidadeEmprestimoPorLivroController } from './controllers/RelatorioController.js';
+import { livrosDisponiveisServ } from './services/RelatorioService.js';
 
 async function main() {
     const inicioMenu = new InicioMenu();
     inicioMenu.iniciarMenu()
 }
 
-//main();
-testes();
+main();
+//testes();
 /**
  * Forma SIMPLES de testar os repositórios.
  *
@@ -41,15 +43,6 @@ async function testes() {
     // });
     //const result = await devolucaoEmprestimoRP(1);
     //console.log(result)
-
-////////////////////////////////////////////////
-// ***** Testes referente a Entidade Empréstimo *****
-
-    // *** Controllers:
-        const resultCriar = await criarEmprestimoController();
-        //const resultBuscarPorId = await buscarEmprestimoPorIdController();
-        //const resultDevolver = await devolverEmprestimoController();
-
 
 ////////////////////////////////////////////////
 // ***** Testes referente a Entidade Autor *****
@@ -141,4 +134,27 @@ async function testes() {
 //         // Fecha o pool para o Node não ficar "preso" rodando no terminal
 //         await pool.end();
 //     }
-}
+
+////////////////////////////////////////////////
+// ***** Testes referente a Entidade Empréstimo *****
+
+    // *** Controllers:
+        //const resultCriar = await criarEmprestimoController();
+        //const resultBuscarPorId = await buscarEmprestimoPorIdController();
+        //const resultDevolver = await devolverEmprestimoController();
+
+
+////////////////////////////////////////////////
+// ***** Testes referentes aos Relatórios *****
+
+    // *** Controllers:
+        //const result = await livrosDisponiveisController();
+        //const result = await livrosEmprestadosController();
+        //const result = await livrosCadastradosPorAutorController();
+        //const result = await quantidadeEmprestimoPorLivroController();
+        //const result = await clientesComEmprestimosAtivosController();
+
+    // *** Services:
+        //const result = await livrosDisponiveisServ();
+        //console.log(result);
+};
