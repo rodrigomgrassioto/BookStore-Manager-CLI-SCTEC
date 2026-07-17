@@ -1,17 +1,21 @@
 import * as readline from 'readline';
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
-import { exibirEmprestimosDetalhadoTabela} from "../utils/formatadoresTexto";
+import { exibirEmprestimosDetalhadoTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
 import { criarEmprestimoServ, devolucaoEmprestimoServ, buscarEmprestimoPorIdServ } from '../services/EmprestimoService';
 import configEmpresa from '../configuracoes_empresa.json'
+import { listarClientesServ } from '../services/ClienteService';
+import { listarLivrosServ } from '../services/LivroService';
 
 export async function criarEmprestimoController(): Promise<void> {
     console.log("\n=== REGISTRAR NOVO EMPRÉSTIMO ===");
 
+    const clientes =  await listarClientesServ();
+    console.table(clientes);       
     const id_cliente = await fazerPergunta("Digite o ID do cliente: ", { tipoRetorno: "i_zero" });
+    const livros = await listarLivrosServ();
+    exibirLivrosTabela(livros);
     const ids_livros = await fazerPergunta("Digite os IDs dos livros separados por vírgula (ex: 5, 6, 10): ");
-    const dias_para_devolucao = await fazerPergunta("Prazo para devolução em dias (deixe vazio para usar o padrão): ", 
-        {tipoRetorno: "i_zero", valorOriginal: configEmpresa.dias_padrao_emprestimo , aceitarVazio: false});
 
     try {
         const entradaLivros = converterIdsLivros(ids_livros); // FUNÇÃO PARA CONVERTER IDS DE LIVROS EM ARRAY DE NÚMEROS
@@ -19,7 +23,7 @@ export async function criarEmprestimoController(): Promise<void> {
         const emprestimo = await criarEmprestimoServ({
             id_cliente,
             ids_livros: entradaLivros,
-            dias_para_devolucao: dias_para_devolucao
+            dias_para_devolucao: configEmpresa.dias_padrao_emprestimo
         });
 
         console.log("\n🎉 Empréstimo registrado com sucesso!");
@@ -84,7 +88,7 @@ export async function devolverEmprestimoController(): Promise<void> {
         const emprestimoDevolvido = await devolucaoEmprestimoServ(id_emprestimo);
 
         console.log("\n🎉 Devolução registrada com sucesso!");
-        exibirEmprestimosDetalhadoTabela([emprestimoDevolvido]);
+        console.log(`ID Empréstimo: "${id_emprestimo}" | Status: "${emprestimoDevolvido.status}"`)
     } catch (error: any){
         console.log("\n========================================");
         // Erro no PostgreSQL
