@@ -112,7 +112,7 @@ export async function autorControllerAtualizar(): Promise<void> {
         if (error.code) tratarErroBanco(error);
 
         // Erro do service
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao atualizar o autor.");
         console.log("========================================\n");
     };
 };
@@ -166,7 +166,7 @@ export async function autorControllerDeletar(): Promise<void> {
         if (error.code) tratarErroBanco(error);
 
         // Erro do service
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o livro.");
+        else console.error(error.message || "❌ Ocorreu um erro inesperado ao deletar o autor.");
         console.log("========================================\n");
     };
 };

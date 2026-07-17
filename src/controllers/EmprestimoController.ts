@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
-import { exibirEmprestimosDetalhadoTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
+import { exibirClientesTabela, exibirEmprestimosDetalhadoTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
 import { criarEmprestimoServ, devolucaoEmprestimoServ, buscarEmprestimoPorIdServ } from '../services/EmprestimoService';
 import configEmpresa from '../configuracoes_empresa.json'
@@ -11,7 +11,7 @@ export async function criarEmprestimoController(): Promise<void> {
     console.log("\n=== REGISTRAR NOVO EMPRÉSTIMO ===");
 
     const clientes =  await listarClientesServ();
-    console.table(clientes);       
+    exibirClientesTabela(clientes);       
     const id_cliente = await fazerPergunta("Digite o ID do cliente: ", { tipoRetorno: "i_zero" });
     const livros = await listarLivrosServ();
     exibirLivrosTabela(livros);

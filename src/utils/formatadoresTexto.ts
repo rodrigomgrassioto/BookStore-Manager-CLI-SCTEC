@@ -1,4 +1,5 @@
 import { AutorModel } from "../models/AutorModel";
+import { ClienteModel } from "../models/ClienteModel";
 import { EmprestimoCompletoModel } from "../models/EmprestimoModel";
 import {LivroCompletoModel} from "../models/LivroModel";
 import { ClienteComEmprestimoAtivoModel, EmprestimosPorLivroModel, LivroDisponivelModel, LivroEmprestadoModel, LivroPorAutorModel } from "../models/RelatorioModel";
@@ -37,15 +38,26 @@ export function exibirLivrosTabela(livros: LivroCompletoModel[]): void {
     gerarTabela(livrosFormatado);
 };
 
+export function exibirClientesTabela(clientes: ClienteModel[]): void {
+    const clientesFormatados = clientes.map(clientes => ({
+        "ID Cliente": clientes.id_cliente,
+        Nome: clientes.nome,
+        "e-mail": clientes.email,
+        Telefone: clientes.telefone,
+        "Data Nascimento": clientes.data_nascimento,
+        "Data Cadastro": clientes.data_cadastro
+    }));
+    gerarTabela(clientesFormatados);
+};
+
 export function exibirEmprestimosDetalhadoTabela(emprestimos: EmprestimoCompletoModel[]): void {
     const emprestimosFormatado = emprestimos.map(emprestimo => ({
         "ID Empréstimo": emprestimo.id_emprestimo,
-        "Cliente": emprestimo.cliente.nome,
-        "Emprestimo": formatarDataPrompt(emprestimo.data_emprestimo),
-        "Devolução": formatarDataPrompt(emprestimo.data_devolucao_prevista),
-        "Status": emprestimo.status
+        Cliente: emprestimo.cliente.nome,
+        Emprestimo: formatarDataPrompt(emprestimo.data_emprestimo),
+        Devolução: formatarDataPrompt(emprestimo.data_devolucao_prevista),
+        Status: emprestimo.status
     }));
-
     gerarTabela(emprestimosFormatado);
     
     const livrosFormatados = emprestimos.flatMap(emprestimo =>
@@ -55,7 +67,6 @@ export function exibirEmprestimosDetalhadoTabela(emprestimos: EmprestimoCompleto
         Autor: livro.autor.nome,
         ISBN: livro.isbn
     })));
-
     gerarTabela(livrosFormatados);
 };
 
@@ -68,7 +79,6 @@ export function exibirLivrosDisponiveisTabela(livrosDisponiveis: LivroDisponivel
         Disponíveis: livrosDisponiveis.quantidade_disponivel,
         Autor: livrosDisponiveis.autor_nome
     }));
-
     gerarTabela(livrosFormatados);
 };
 
@@ -77,10 +87,9 @@ export function exibirLivrosEmprestados(livrosEmprestados: LivroEmprestadoModel[
         "ID Livro": livrosEmprestados.id_livro,
         Título: livrosEmprestados.titulo,
         ISBN: livrosEmprestados.isbn,
-        " Quantidade Emprestada": livrosEmprestados.quantidade_emprestada,
+        "Quantidade Emprestada": livrosEmprestados.quantidade_emprestada,
         Autor: livrosEmprestados.autor_nome
     }));
-
     gerarTabela(livrosFormatados);
 };
 
@@ -91,7 +100,6 @@ export function exibirLivrosCadastradosPorAutor(livrosPorAutor: LivroPorAutorMod
         "ID Livro": livrosPorAutor.id_livro,
         Título: livrosPorAutor.titulo
     }));
-
     gerarTabela(livrosFormatados);
 };
 
@@ -101,7 +109,6 @@ export function exibirQuantidadeEmprestimoPorLivro(emprestimoPorLivro: Emprestim
         Título: emprestimoPorLivro.titulo,
         Empréstimos: emprestimoPorLivro.total_emprestimos
     }));
-
     gerarTabela(livrosFormatados);
 };
 
@@ -114,7 +121,6 @@ export function exibirClientesComEmprestivosAtivos(clientesEmprestimosAtivos: Cl
         Título: clientesEmprestimosAtivos.titulo,
         "Devolução Prevista": clientesEmprestimosAtivos.data_devolucao_prevista
     }));
-
     gerarTabela(livrosFormatados);
 };
 

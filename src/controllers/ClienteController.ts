@@ -10,6 +10,7 @@ import { fazerPergunta } from '../utils/leitorFormatadorDeEntradas';
 import * as formatadoresTexto from "../utils/formatadoresTexto";
 import { ClienteModel } from '../models/ClienteModel';
 import { tratarErroBanco } from '../utils/tratamentosErrosBD';
+import { exibirClientesTabela } from '../utils/formatadoresTexto';
 
 // 1. Cadastrar Cliente
 export async function clienteControllerCriar(): Promise<void> {
@@ -37,7 +38,7 @@ export async function clienteControllerListar(): Promise<void> {
 
     try {
         const lista = await listarClientesServ();
-        console.table(lista);
+        exibirClientesTabela(lista);
     } catch (error: any) {
         console.log("\n========================================");
         if (error.code) tratarErroBanco(error);
@@ -49,6 +50,7 @@ export async function clienteControllerListar(): Promise<void> {
 // 3. Atualizar Cliente
 export async function clienteControllerAtualizar(): Promise<void> {
     console.log("\n=== ATUALIZAR CLIENTE ===");
+
 
     const id_cliente = await fazerPergunta("Número do ID do cliente: ", { tipoRetorno: 'i_zero' });
 
@@ -63,7 +65,7 @@ export async function clienteControllerAtualizar(): Promise<void> {
         return;
     }
 
-    console.table([clienteNoDb]);
+    exibirClientesTabela([clienteNoDb]);
 
     const nome = await fazerPergunta("Nome do Cliente: ", { valorOriginal: clienteNoDb.nome });
     const email = await fazerPergunta("E-mail do Cliente: ", { valorOriginal: clienteNoDb.email });
@@ -101,7 +103,7 @@ export async function clienteControllerDeletar(): Promise<void> {
         return;
     }
 
-    console.table([clienteNoDb]);
+    exibirClientesTabela([clienteNoDb]);
     console.log("\n⚠️  ATENÇÃO: Esta ação é irreversível e irá deletar o cliente do sistema.\n");
 
     const confirmacao = await fazerPergunta("Excluir cliente? (S/N): ");
@@ -129,7 +131,7 @@ export async function clienteControllerBuscarPorId(): Promise<void> {
 
     try {
         const cliente = await buscarClientePorIdServ(id_cliente);
-        console.table([cliente]);
+        exibirClientesTabela([cliente]);
     } catch (error: any) {
         console.log("\n========================================");
         if (error.code) tratarErroBanco(error);

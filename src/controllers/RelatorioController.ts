@@ -1,5 +1,7 @@
-import { livrosDisponiveisServ, livrosEmprestadosServ, livrosCadastradosPorAutorServ, quantidadeEmprestimosPorLivroServ, clientesComEmprestimosAtivosServ } from "../services/RelatorioService";
-import { exibirClientesComEmprestivosAtivos, exibirLivrosCadastradosPorAutor, exibirLivrosDisponiveisTabela, exibirLivrosEmprestados, exibirQuantidadeEmprestimoPorLivro } from "../utils/formatadoresTexto";
+import { livrosDisponiveisServ, livrosEmprestadosServ, livrosCadastradosPorAutorServ, quantidadeEmprestimosPorLivroServ, 
+         clientesComEmprestimosAtivosServ } from "../services/RelatorioService";
+import { exibirClientesComEmprestivosAtivos, exibirLivrosCadastradosPorAutor, exibirLivrosDisponiveisTabela, 
+         exibirLivrosEmprestados, exibirQuantidadeEmprestimoPorLivro } from "../utils/formatadoresTexto";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
 
 export async function livrosDisponiveisController(): Promise<void> {
