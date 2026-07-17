@@ -6,6 +6,7 @@ import {
     clienteControllerDeletar,
     clienteControllerBuscarPorId
 } from "../controllers/ClienteController";
+import {opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
 
 export class ClienteMenu {
     async subMenuCliente(): Promise<void> {
@@ -13,14 +14,14 @@ export class ClienteMenu {
 
         let continuar = true;
         while (continuar) {
-            console.log('\n🟦 --- BookStore Manager --- 🟦');
-            console.log('🟦 --- Cliente --- 🟦');
-            console.log('1. Adicionar cliente');
-            console.log('2. Listar clientes');
-            console.log('3. Buscar cliente por ID');
-            console.log('4. Atualizar cliente');
-            console.log('5. Excluir cliente');
-            console.log('0. Voltar para o menu anterior');
+            tituloMsg("BookStore Manager");
+            subtituloMsg('Opções em cliente');
+            opcoes('1 - Adicionar cliente');
+            opcoes('2 - Listar clientes');
+            opcoes('3 - Buscar cliente por ID');
+            opcoes('4 - Atualizar cliente');
+            opcoes('5 - Excluir cliente');
+            opcaoSair('0 - Voltar para o menu anterior');
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 

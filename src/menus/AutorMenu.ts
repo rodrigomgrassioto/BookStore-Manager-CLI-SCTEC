@@ -4,6 +4,7 @@ import { autorControllerCadastrar,
          autorControlerBuscarPorId, 
          autorControllerAtualizar,
          autorControllerDeletar } from "../controllers/AutorController";
+import {opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
 
 export class AutorMenu {
    async subMenuAutor(): Promise<void> {
@@ -11,14 +12,14 @@ export class AutorMenu {
 
         let continuar = true;
         while (continuar) {
-            console.log('\n🟦 --- BookStore Manager --- 🟦');
-            console.log('🟦 --- Autor --- 🟦');
-            console.log('1. Adicionar autor');
-            console.log('2. Listar autores');
-            console.log('3. Buscar autor por ID');
-            console.log('4. Atualizar autor');
-            console.log('5. Deletar autor');
-            console.log('0. Voltar para o menu anterior');
+            tituloMsg('BookStore Manager');
+            subtituloMsg('Opções em Autor');
+            opcoes('1 - Adicionar autor');
+            opcoes('2 - Listar autores');
+            opcoes('3 - Buscar autor por ID');
+            opcoes('4 - Atualizar autor');
+            opcoes('5 - Deletar autor');
+            opcaoSair('0 - Voltar para o menu anterior');
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 

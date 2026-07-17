@@ -6,6 +6,7 @@ import {
     livroControllerListar,
     livroControllerProcurarPorNome
 } from "../controllers/LivroController";
+import {opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
 
 export class LivroMenu {
     async subMenuLivro(): Promise<void> {
@@ -13,14 +14,14 @@ export class LivroMenu {
 
         console.clear()
         while (noSubMenu) {
-            console.log('\n🟦 --- BookStore Manager --- 🟦');
-            console.log('\n🟦 --- Livro --- 🟦');
-            console.log('1. Adicionar livro');
-            console.log('2. Listar livros');
-            console.log('3. Procurar livro por nome');
-            console.log('4. Editar livro');
-            console.log('5. Excluir livro');
-            console.log('0. Voltar menu anterior');
+            tituloMsg("BookStore Manager");
+            subtituloMsg('Opções em livro');
+            opcoes('1 - Adicionar livro');
+            opcoes('2 - Listar livros');
+            opcoes('3 - Procurar livro por nome');
+            opcoes('4 - Editar livro');
+            opcoes('5 - Excluir livro');
+            opcaoSair('0 - Voltar menu anterior');
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 

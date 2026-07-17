@@ -1,13 +1,11 @@
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import {
-    cianolNegritoMsg,
+    opcaoSair,
     opcoes,
     subtituloMsg,
     sucessoMsg,
     tituloMsg,
-    verdeMsg,
-    vermelhoMsg
-} from "../utils/consoleLogCor";
+} from "../utils/estilo";
 import { livrosDisponiveisController, livrosEmprestadosController, 
          livrosCadastradosPorAutorController, quantidadeEmprestimoPorLivroController, 
          clientesComEmprestimosAtivosController } from "../controllers/RelatorioController";
@@ -20,14 +18,12 @@ export class RelatorioMenu {
         while (noSubMenu) {
             tituloMsg("BookStore Manager");
             subtituloMsg('Relatórios');
-            opcoes('====================');
-            opcoes('1. Livros disponíveis');
-            opcoes('2. Livros emprestados');
-            opcoes('3. Livros por autor');
-            opcoes('4. Quantidade empréstimos por livro');
-            opcoes('5. Clientes com empréstimos ativos');
-            vermelhoMsg('0. Voltar menu anterior');
-            opcoes('====================');
+            opcoes('1 - Livros disponíveis');
+            opcoes('2 - Livros emprestados');
+            opcoes('3 - Livros por autor');
+            opcoes('4 - Quantidade empréstimos por livro');
+            opcoes('5 - Clientes com empréstimos ativos');
+            opcaoSair('0 - Voltar menu anterior');
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 

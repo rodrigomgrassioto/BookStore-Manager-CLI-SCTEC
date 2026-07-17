@@ -1,6 +1,6 @@
 import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
 import {criarEmprestimoServ, devolucaoEmprestimoServ} from "../services/EmprestimoService";
-import {subtituloMsg, sucessoMsg, tituloMsg, verdeMsg} from "../utils/consoleLogCor";
+import {opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../utils/estilo";
 import { buscarEmprestimoPorIdController, criarEmprestimoController } from "../controllers/EmprestimoController";
 
 export class EmprestimoMenu {
@@ -10,14 +10,11 @@ export class EmprestimoMenu {
         let noSubMenu = true;   
         while (noSubMenu) {
             tituloMsg("BookStore Manager");
-            // console.log('\n🟦 ---  --- 🟦');
-            subtituloMsg('Empréstimos');
-
-            // console.log('\n🟦 --- Empréstimos --- 🟦');
-            console.log('1. Criar Novo Empréstimo');
-            console.log('2. Buscar Empréstimo Por ID');
-            console.log('3. Devolver Empréstimo');
-            console.log('0. Voltar menu anterior');
+            subtituloMsg('Opções em empréstimo');
+            opcoes('1 - Criar Novo Empréstimo');
+            opcoes('2 - Buscar Empréstimo Por ID');
+            opcoes('3 - Devolver Empréstimo');
+            opcaoSair('0 - Voltar menu anterior');
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 

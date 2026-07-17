@@ -5,6 +5,7 @@ import {AutorMenu} from "./AutorMenu";
 import {ClienteMenu} from "./ClienteMenu";
 import {EmprestimoMenu} from "./EmprestimoMenu";
 import {RelatorioMenu} from "./RelatorioMenu";
+import {opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
 
 export class InicioMenu {
     // private rl: readline.Interface;
@@ -32,13 +33,15 @@ export class InicioMenu {
 
         console.clear();
         while (continuar) {
-            console.log('\n🟦 --- BookStore Manager --- 🟦');
-            console.log('1. Autor');
-            console.log('2. Livros');
-            console.log('3. Clientes');
-            console.log('4. Empréstimos');
-            console.log('5. Relatórios');
-            console.log('0. Sair');
+            tituloMsg('BookStore Manager');
+            subtituloMsg('Opções');
+            opcoes('1 - Autor');
+            opcoes('2 - Livros');
+            opcoes('3 - Clientes');
+            opcoes('4 - Empréstimos');
+            opcoes('5 - Relatórios');
+            opcaoSair('0 - Sair')
+
 
             // const opcao = await this.perguntar('Escolha uma opção: ');
             const opcao = await fazerPergunta('Escolha uma opção: ');
