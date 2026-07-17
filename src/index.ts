@@ -18,13 +18,14 @@ import {InicioMenu} from "./menus/InicioMenu";
 import { cadastrarAutor, listarAutores, atualizarAutor, deletarAutor } from "./repositories/AutorRepository";
 import { cadastrarAutorServ, listarAutoresServ, atualizarAutorServ, deletarAutorServ, buscarAutorPorIdServ } from "./services/AutorService";
 import { autorControlerBuscarPorId, autorControllerAtualizar, autorControllerCadastrar, autorControllerDeletar, autorControllerListar,  } from "./controllers/AutorController";
+import { criarEmprestimoController, buscarEmprestimoPorIdController, devolverEmprestimoController } from './controllers/EmprestimoController.js';
 
 async function main() {
     const inicioMenu = new InicioMenu();
     inicioMenu.iniciarMenu()
 }
 
-// main();
+//main();
 testes();
 /**
  * Forma SIMPLES de testar os repositórios.
@@ -38,14 +39,23 @@ async function testes() {
     //     ids_livros: [10, 11],
     //     dias_para_devolucao: 3
     // });
-    const result = await devolucaoEmprestimoRP(1);
-    console.log(result)
+    //const result = await devolucaoEmprestimoRP(1);
+    //console.log(result)
+
+////////////////////////////////////////////////
+// ***** Testes referente a Entidade Empréstimo *****
+
+    // *** Controllers:
+        const resultCriar = await criarEmprestimoController();
+        //const resultBuscarPorId = await buscarEmprestimoPorIdController();
+        //const resultDevolver = await devolverEmprestimoController();
+
 
 ////////////////////////////////////////////////
 // ***** Testes referente a Entidade Autor *****
 
     // *** Controllers:
-        //const resultCadastrar = await autorControllerCadastrar();
+        //const resultCriar = await autorControllerCadastrar();
         //const resultListar = await autorControllerListar();
         //const resultBuscarPorId = await autorControlerBuscarPorId();
         //const resultAtualizar = await autorControllerAtualizar();
