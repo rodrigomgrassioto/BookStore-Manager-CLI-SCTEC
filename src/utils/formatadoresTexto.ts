@@ -1,4 +1,5 @@
 import { AutorModel } from "../models/AutorModel";
+import { EmprestimoCompletoModel } from "../models/EmprestimoModel";
 import {LivroCompletoModel} from "../models/LivroModel";
 import {gerarTabela} from "./gerarTabela";
 
@@ -8,10 +9,31 @@ export function exibirAutoresTabela(autores: AutorModel[]): void {
         ID: autor.id_autor,
         Nome: autor.nome,
         Nacionalidade: autor.nacionalidade ?? "-"
-    }))
-    // );
+    }));
     gerarTabela(autoresFormatado);
-}
+};
+
+export function exibirEmprestimosDetalhadoTabela(emprestimos: EmprestimoCompletoModel[]): void {
+    const emprestimosFormatado = emprestimos.map(emprestimo => [{
+        "ID Empréstimo": emprestimo.id_emprestimo,
+        Cliente: emprestimo.cliente.nome,
+        "Emprestimo": formatarDataPrompt(emprestimo.data_emprestimo),
+        "Devolução": formatarDataPrompt(emprestimo.data_devolucao_prevista),
+        Status: emprestimo.status
+    }]);
+
+    gerarTabela(emprestimosFormatado);
+    
+    const livrosFormatados = emprestimos.flatMap(emprestimo =>
+    emprestimo.livros.map(livro => ({
+        "ID Livro": livro.id_livro,
+        Título: livro.titulo,
+        Autor: livro.autor.nome,
+        ISBN: livro.isbn
+    })));
+
+    gerarTabela(livrosFormatados);
+};
 
 export function exibirLivrosTabela(livros: LivroCompletoModel[]): void {
     const livrosFormatado = livros.map(livro => ({
