@@ -1,5 +1,4 @@
-import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
-import {criarEmprestimoServ, devolucaoEmprestimoServ} from "../services/EmprestimoService";
+import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import {
     cianolNegritoMsg,
     opcoes,
@@ -9,71 +8,69 @@ import {
     verdeMsg,
     vermelhoMsg
 } from "../utils/consoleLogCor";
+import { livrosDisponiveisController, livrosEmprestadosController, 
+         livrosCadastradosPorAutorController, quantidadeEmprestimoPorLivroController, 
+         clientesComEmprestimosAtivosController } from "../controllers/RelatorioController";
 
 export class RelatorioMenu {
     async subMenuRelatorio(): Promise<void> {
-        let noSubMenu = true;
+        console.clear();
 
-        console.clear()
+        let noSubMenu = true;
         while (noSubMenu) {
             tituloMsg("BookStore Manager");
-            subtituloMsg('Relatórios')
-            opcoes('====================')
+            subtituloMsg('Relatórios');
+            opcoes('====================');
             opcoes('1. Livros disponíveis');
             opcoes('2. Livros emprestados');
             opcoes('3. Livros por autor');
             opcoes('4. Quantidade empréstimos por livro');
             opcoes('5. Clientes com empréstimos ativos');
             vermelhoMsg('0. Voltar menu anterior');
-            opcoes('====================')
+            opcoes('====================');
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 
             switch (opcao) {
                 case '1':
-                    console.clear()
+                    console.clear();
                     console.log('\n🟦 --- Novo empréstimo --- 🟦');
-                    const id_cliente = await fazerPergunta("ID do cliente", {aceitarVazio: false, tipoRetorno: "i_zero"});
-                    const ids_livros: number[] = [];
-                    let continuar = true
-                    do{
-                        if (ids_livros.length > 0) console.log("Se terminou, digite 0 (ZERO)")
-                        const temp = await fazerPergunta("ID do livro:", {aceitarVazio: false, tipoRetorno: "i_zero"});
-                        if (temp === 0) {
-                            continuar = false;
-                            break;
-                        }
-                        ids_livros.push(temp)
-                    } while (continuar)
-
-                    try {
-                        await criarEmprestimoServ({id_cliente: id_cliente, ids_livros:ids_livros});
-                        console.log("✅ Empréstimo registrado com sucesso.")
-                    } catch (e) {
-                        console.error(e);
-                    }
+                    await livrosDisponiveisController();
                     break;
 
                 case '2':
-                    console.clear()
+                    console.clear();
                     console.log('\n🟦 --- Devolução --- 🟦');
-                    const id_emprestimo = await fazerPergunta("ID do empréstimo: ", {aceitarVazio: false, tipoRetorno: "i_zero"});
-                    try {
-                        devolucaoEmprestimoServ(id_emprestimo)
-                        sucessoMsg("Devolução registrada com sucesso.")
-                    } catch (e){
-                        console.error(e);
-                    }
+                    await livrosEmprestadosController();
+                    break;
+
+                case '3':
+                    console.clear();
+                    console.log('\n🟦 --- Devolução --- 🟦');
+                    await livrosCadastradosPorAutorController();
+                    break;
+
+                case '4':
+                    console.clear();
+                    console.log('\n🟦 --- Devolução --- 🟦');
+                    await quantidadeEmprestimoPorLivroController();
+                    break;
+
+                case '5':
+                    console.clear();
+                    console.log('\n🟦 --- Devolução --- 🟦');
+                    await clientesComEmprestimosAtivosController();
                     break;
 
                 case '0':
-                    console.clear()
+                    console.clear();
                     noSubMenu = false; // volta para o menu inicial
                     break;
+
                 default:
-                    console.clear()
+                    console.clear();
                     console.log('❌ Opção inválida.');
-            }
-        }
-    }
-}
+            };
+        };
+    };
+};
