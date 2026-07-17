@@ -1,4 +1,4 @@
-import {cores} from "./coresTerminal";
+import {cores} from "./estiloCores";
 
 export function verdeMsg(msg: string): void {
     console.log(`${cores.verde} ${msg} ${cores.reset}`);
