@@ -1,6 +1,10 @@
 {
-  "dias_padrao_emprestimo": 14,
+  "dias_de_emprestimo": 14,
+  "permitir_quantidade_livro_disponivel_negativo": false,
+
+  "obs":" Max livro por cliente e empréstimo, podem ser null para que seja ignorado a verificação.",
+  "ex1": "max_livros_por_emprestimo: null vai ignorar regra de livro máximo por empréstimo",
+  "ex2": "max_livros_por_cliente: null vai ignorar regra de livro máximo por cliente",
   "max_livros_por_emprestimo": 3,
-  "max_livros_por_cliente": 5,
-  "permitir_quantidade_livro_disponivel_negativo": false
+  "max_livros_por_cliente": 5
 }

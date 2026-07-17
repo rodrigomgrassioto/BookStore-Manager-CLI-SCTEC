@@ -23,7 +23,7 @@ export async function criarEmprestimoController(): Promise<void> {
         const emprestimo = await criarEmprestimoServ({
             id_cliente,
             ids_livros: entradaLivros,
-            dias_para_devolucao: configEmpresa.dias_padrao_emprestimo
+            dias_para_devolucao: configEmpresa.dias_de_emprestimo
         });
 
         console.log("\n🎉 Empréstimo registrado com sucesso!");

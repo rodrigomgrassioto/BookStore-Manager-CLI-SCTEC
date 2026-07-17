@@ -46,7 +46,7 @@ export async function livroJaFoiEmprestadoRP(id: number): Promise<boolean> {
  *    console.log(result)
  */
 export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< EmprestimoCompletoModel | null> {
-    const { id_cliente, ids_livros, dias_para_devolucao = configEmpresa.dias_padrao_emprestimo } = dados;
+    const { id_cliente, ids_livros, dias_para_devolucao = configEmpresa.dias_de_emprestimo } = dados;
 
     // Verifica se tem livro
     if (!ids_livros || ids_livros.length === 0)
