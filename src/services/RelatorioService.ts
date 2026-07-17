@@ -1,5 +1,7 @@
-import { livrosDisponiveisRP, livrosEmprestadosRP, livrosCadastradosPorAutorRP, quantidadeEmprestimosPorLivroRP, clientesComEmprestimosAtivosRP } from "../repositories/RelatoriosRepository";
-import { LivroDisponivelModel, LivroEmprestadoModel, LivroPorAutorModel, EmprestimosPorLivroModel, ClienteComEmprestimoAtivoModel } from "../models/RelatorioModel";
+import { livrosDisponiveisRP, livrosEmprestadosRP, livrosCadastradosPorAutorRP, 
+         quantidadeEmprestimosPorLivroRP, clientesComEmprestimosAtivosRP } from "../repositories/RelatoriosRepository";
+import { LivroDisponivelModel, LivroEmprestadoModel, LivroPorAutorModel, 
+         EmprestimosPorLivroModel, ClienteComEmprestimoAtivoModel } from "../models/RelatorioModel";
 
 export async function livrosDisponiveisServ(): Promise<LivroDisponivelModel[]> {
     const livros = await livrosDisponiveisRP();
@@ -38,7 +40,7 @@ export async function quantidadeEmprestimosPorLivroServ(): Promise<EmprestimosPo
 
     if (emprestimosPorLivro.length === 0) {
         throw new Error(
-            "❌ Nenhum livro foi encontrado para gerar o relatório."
+            "❌ Nenhum empréstimo foi encontrado para gerar o relatório."
         );
     }
 

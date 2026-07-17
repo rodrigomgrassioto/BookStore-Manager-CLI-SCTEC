@@ -34,31 +34,31 @@ export class RelatorioMenu {
             switch (opcao) {
                 case '1':
                     console.clear();
-                    console.log('\n🟦 --- Novo empréstimo --- 🟦');
+                    console.log('\n🟦 --- Livros Disponíveis --- 🟦');
                     await livrosDisponiveisController();
                     break;
 
                 case '2':
                     console.clear();
-                    console.log('\n🟦 --- Devolução --- 🟦');
+                    console.log('\n🟦 --- Livros Emprestados --- 🟦');
                     await livrosEmprestadosController();
                     break;
 
                 case '3':
                     console.clear();
-                    console.log('\n🟦 --- Devolução --- 🟦');
+                    console.log('\n🟦 --- Livros Cadastrados Por Autor --- 🟦');
                     await livrosCadastradosPorAutorController();
                     break;
 
                 case '4':
                     console.clear();
-                    console.log('\n🟦 --- Devolução --- 🟦');
+                    console.log('\n🟦 --- Quantidade de Empréstimos Por Livro --- 🟦');
                     await quantidadeEmprestimoPorLivroController();
                     break;
 
                 case '5':
                     console.clear();
-                    console.log('\n🟦 --- Devolução --- 🟦');
+                    console.log('\n🟦 --- Clientes Com Empréstimos Ativos --- 🟦');
                     await clientesComEmprestimosAtivosController();
                     break;
 
