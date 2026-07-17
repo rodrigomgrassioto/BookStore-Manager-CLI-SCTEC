@@ -1,4 +1,5 @@
 import * as readline from 'readline';
+import {pergunta} from "./consoleLogCor";
 
 export const rl = readline.createInterface({
     input: process.stdin,
@@ -61,7 +62,8 @@ export async function fazerPergunta(
         //     rl.question(enunciado, resolve);
         // });
         // process.stdout.write(enunciado);
-        console.log(enunciado);
+        // console.log(enunciado);
+        pergunta(enunciado);
 
         if (valorOriginal !== undefined && valorOriginal !== null) {
             rl.write(String(valorOriginal));

@@ -4,6 +4,7 @@ import {LivroMenu} from "./LivroMenu";
 import {AutorMenu} from "./AutorMenu";
 import {ClienteMenu} from "./ClienteMenu";
 import {EmprestimoMenu} from "./EmprestimoMenu";
+import {RelatorioMenu} from "./RelatorioMenu";
 
 export class InicioMenu {
     // private rl: readline.Interface;
@@ -26,6 +27,7 @@ export class InicioMenu {
         const autorMenu = new AutorMenu();
         const clienteMenu = new ClienteMenu();
         const emprestimoMenu = new EmprestimoMenu();
+        const relatorioMenu = new RelatorioMenu();
         let continuar = true;
 
         console.clear();
@@ -59,6 +61,11 @@ export class InicioMenu {
                 case '4':
                     console.clear();
                     await emprestimoMenu.subMenuEmprestimo()
+                    break;
+
+                case '5':
+                    console.clear();
+                    await relatorioMenu.subMenuRelatorio()
                     break;
 
                 case '0':
