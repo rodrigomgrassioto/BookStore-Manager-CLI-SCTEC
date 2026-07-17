@@ -14,13 +14,13 @@ export function exibirAutoresTabela(autores: AutorModel[]): void {
 };
 
 export function exibirEmprestimosDetalhadoTabela(emprestimos: EmprestimoCompletoModel[]): void {
-    const emprestimosFormatado = emprestimos.map(emprestimo => [{
+    const emprestimosFormatado = emprestimos.map(emprestimo => ({
         "ID Empréstimo": emprestimo.id_emprestimo,
-        Cliente: emprestimo.cliente.nome,
+        "Cliente": emprestimo.cliente.nome,
         "Emprestimo": formatarDataPrompt(emprestimo.data_emprestimo),
         "Devolução": formatarDataPrompt(emprestimo.data_devolucao_prevista),
-        Status: emprestimo.status
-    }]);
+        "Status": emprestimo.status
+    }));
 
     gerarTabela(emprestimosFormatado);
     
