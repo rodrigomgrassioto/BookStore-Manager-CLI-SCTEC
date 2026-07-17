@@ -5,7 +5,7 @@ import {AutorMenu} from "./AutorMenu";
 import {ClienteMenu} from "./ClienteMenu";
 import {EmprestimoMenu} from "./EmprestimoMenu";
 import {RelatorioMenu} from "./RelatorioMenu";
-import {opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
+import {divisor, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
 
 export class InicioMenu {
     // private rl: readline.Interface;
@@ -41,6 +41,7 @@ export class InicioMenu {
             opcoes('4 - Empréstimos');
             opcoes('5 - Relatórios');
             opcaoSair('0 - Sair')
+            divisor()
 
 
             // const opcao = await this.perguntar('Escolha uma opção: ');

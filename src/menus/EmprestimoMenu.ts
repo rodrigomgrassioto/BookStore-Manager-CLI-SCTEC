@@ -1,6 +1,6 @@
 import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
 import {criarEmprestimoServ, devolucaoEmprestimoServ} from "../services/EmprestimoService";
-import {opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../utils/estilo";
+import {divisor, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../utils/estilo";
 import { buscarEmprestimoPorIdController, criarEmprestimoController } from "../controllers/EmprestimoController";
 
 export class EmprestimoMenu {
@@ -15,6 +15,7 @@ export class EmprestimoMenu {
             opcoes('2 - Buscar Empréstimo Por ID');
             opcoes('3 - Devolver Empréstimo');
             opcaoSair('0 - Voltar menu anterior');
+            divisor()
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 

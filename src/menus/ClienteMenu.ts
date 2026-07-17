@@ -6,7 +6,7 @@ import {
     clienteControllerDeletar,
     clienteControllerBuscarPorId
 } from "../controllers/ClienteController";
-import {opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
+import {divisor, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
 
 export class ClienteMenu {
     async subMenuCliente(): Promise<void> {
@@ -22,6 +22,7 @@ export class ClienteMenu {
             opcoes('4 - Atualizar cliente');
             opcoes('5 - Excluir cliente');
             opcaoSair('0 - Voltar para o menu anterior');
+            divisor()
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 

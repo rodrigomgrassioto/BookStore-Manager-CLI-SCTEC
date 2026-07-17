@@ -1,5 +1,6 @@
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import {
+    divisor,
     opcaoSair,
     opcoes,
     subtituloMsg,
@@ -24,6 +25,7 @@ export class RelatorioMenu {
             opcoes('4 - Quantidade empréstimos por livro');
             opcoes('5 - Clientes com empréstimos ativos');
             opcaoSair('0 - Voltar menu anterior');
+            divisor()
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 

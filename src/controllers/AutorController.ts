@@ -4,8 +4,6 @@ import { atualizarAutorServ, listarAutoresServ, cadastrarAutorServ, deletarAutor
 import {exibirAutoresTabela} from "../utils/formatadoresTexto";
 
 export async function autorControllerCadastrar(): Promise<void> {
-    console.log("\n=== CADASTRAR NOVO AUTOR ===");
-
     // Imput do usuário
     const nome = await fazerPergunta("Digite o nome do autor: ");
     const nacionalidade = await fazerPergunta("Digite a nacionalidade do autor (Opcional): ", {aceitarVazio: true});

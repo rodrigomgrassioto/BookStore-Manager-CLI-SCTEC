@@ -1,17 +1,20 @@
 import { cores } from "./estiloCores";
 
 // Auxiliar para desenhar linhas divisórias elegantes no terminal
-const divisor = (caractere = "─", tamanho = 50) => `${cores.dim}${caractere.repeat(tamanho)}${cores.reset}`;
+const divisorConst = (caractere = "─", tamanho = 50) => `${cores.dim}${caractere.repeat(tamanho)}${cores.reset}`;
+export function divisor (){
+    console.log(`${divisorConst("─", 30)}`);
+}
 
 export function tituloMsg(msg: string): void {
-    console.log(`\n${divisor("═")}`);
+    console.log(`\n${divisorConst("═")}`);
     console.log(`${cores.tituloPrincipal}🔮  ${msg.toUpperCase()}${cores.reset}`);
-    console.log(`${divisor("═")}`);
+    console.log(`${divisorConst("═")}`);
 }
 
 export function subtituloMsg(msg: string): void {
     console.log(`\n${cores.subtitulo}🔹 ${msg}${cores.reset}`);
-    console.log(`${divisor("─", 30)}`);
+    console.log(`${divisorConst("─", 30)}`);
 }
 
 export function sucessoMsg(msg: string): void {
@@ -27,7 +30,7 @@ export function erroMsg(msg: string): void {
 }
 
 export function pergunta(msg: string): void {
-    console.log(`${divisor("─", 30)}`);
+    // console.log(`${divisorConst("─", 30)}`);
     // Note o \n inicial para dar espaço da resposta anterior e o espaço no final para o input
     // process.stdout.write(`\n${cores.promptPergunta}❓ ${msg}${cores.reset} `); // causa erro ao pressionar backspace
     console.log(`\n${cores.promptPergunta}❓ ${msg}${cores.reset} `);
