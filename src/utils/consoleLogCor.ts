@@ -12,8 +12,8 @@ export function amareloMsg(msg: string): void {
     console.log(`${cores.amarelo} ${msg} ${cores.reset}`);
 }
 
-export function azulNegritoMsg(msg: string): void {
-    console.log(`${cores.negrito}${cores.ciano}  {cores.reset}`);
+export function cianolNegritoMsg(msg: string): void {
+    console.log(`${cores.negrito}${cores.ciano} ${msg} ${cores.reset}`);
 }
 
 export function tituloMsg(msg: string): void {
@@ -32,4 +32,10 @@ export function alertaMsg(msg: string): void {
 }
 export function erroMsg(msg: string): void {
     console.log(`${cores.vermelho}❌ ${msg} ${cores.reset}`);
+}
+export function pergunta(msg: string): void {
+    console.log(`${cores.negrito}${cores.azulMarinhoVivo}❓ ${msg} ${cores.reset}`);
+}
+export function opcoes(msg: string): void {
+    console.log(`${cores.azul} ${msg} ${cores.reset}`);
 }
