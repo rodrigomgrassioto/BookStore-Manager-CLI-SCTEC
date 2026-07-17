@@ -19,7 +19,7 @@ export function gerarTabela<T extends object>(dados: T[]): void {
         let tamanhoMaximo = String(coluna).length;
 
         for (const linha of dados) {
-            // Varre as linhas para descobrir qual o maior texto impresso naquela coluna
+            // Formata o valor exatamente como será exibido e compara seu tamanho para definir a largura necessária da coluna.
             const valor = linha[coluna];
 
             const valorTexto =
