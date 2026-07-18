@@ -3,7 +3,7 @@ import {
     livroControllerAtualizar,
     livroControllerCriar,
     livroControllerDeletar,
-    livroControllerListar,
+    livroControllerListar, livroControllerProcurarPorId,
     livroControllerProcurarPorNome
 } from "../controllers/LivroController";
 import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../estilos/estilo";
@@ -18,9 +18,10 @@ export class LivroMenu {
             subtituloMsg('Opções em livro');
             opcoes('1 - Adicionar livro');
             opcoes('2 - Listar livros');
-            opcoes('3 - Procurar livro por nome');
-            opcoes('4 - Editar livro');
-            opcoes('5 - Excluir livro');
+            opcoes('3 - Procurar livro por ID');
+            opcoes('4 - Procurar livro por nome');
+            opcoes('5 - Editar livro');
+            opcoes('6 - Excluir livro');
             opcaoSair('0 - Voltar menu anterior');
             divisor()
 
@@ -44,18 +45,24 @@ export class LivroMenu {
                 case '3':
                     console.clear()
                     tituloMsg('BookStore Manager');
+                    subtituloMsg('Procurar livro por ID');
+                    await livroControllerProcurarPorId()
+                    break;
+                case '4':
+                    console.clear()
+                    tituloMsg('BookStore Manager');
                     subtituloMsg('Procurar livro por nome');
                     await livroControllerProcurarPorNome()
                     break;
 
-                case '4':
+                case '5':
                     console.clear()
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Editar livro');
                     await livroControllerAtualizar()
                     break;
 
-                case '5':
+                case '6':
                     console.clear()
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Excluir livro');
