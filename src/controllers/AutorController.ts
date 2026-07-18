@@ -77,7 +77,7 @@ export async function autorControllerAtualizar(): Promise<void> {
     }
        
     if (!autoresDB) {
-        erroMsg("❌ Autor não encontrado.");
+        erroMsg("Autor não encontrado.");
         return;
     }
     
