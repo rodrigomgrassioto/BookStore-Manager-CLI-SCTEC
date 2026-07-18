@@ -1,5 +1,5 @@
 import * as readline from 'readline';
-import {pergunta} from "./estilo";
+import {pergunta} from "../estilos/estilo";
 
 export const rl = readline.createInterface({
     input: process.stdin,

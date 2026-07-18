@@ -11,7 +11,7 @@ import * as formatadoresTexto from "../utils/formatadoresTexto";
 import { ClienteModel } from '../models/ClienteModel';
 import { tratarErroBanco } from '../utils/tratamentosErrosBD';
 import { exibirClientesTabela } from '../utils/formatadoresTexto';
-import {alertaMsg, erroMsg, sucessoMsg} from "../utils/estilo";
+import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
 
 // 1. Cadastrar Cliente
 export async function clienteControllerCriar(): Promise<void> {

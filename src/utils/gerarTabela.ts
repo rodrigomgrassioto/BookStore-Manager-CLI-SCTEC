@@ -1,4 +1,4 @@
-import { cores } from "./estiloCores";
+import { cores } from "../estilos/estiloCores";
 
 export function gerarTabela<T extends object>(dados: T[]): void {
     if (!dados || dados.length === 0) {

@@ -6,7 +6,7 @@ import { criarEmprestimoServ, devolucaoEmprestimoServ, buscarEmprestimoPorIdServ
 import configEmpresa from '../configuracoes_empresa.json'
 import { listarClientesServ } from '../services/ClienteService';
 import { listarLivrosServ } from '../services/LivroService';
-import {alertaMsg, erroMsg, sucessoMsg} from "../utils/estilo";
+import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
 
 export async function criarEmprestimoController(): Promise<void> {
     const clientes =  await listarClientesServ();

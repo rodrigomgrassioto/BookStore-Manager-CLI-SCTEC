@@ -3,7 +3,7 @@ import { livrosDisponiveisServ, livrosEmprestadosServ, livrosCadastradosPorAutor
 import { exibirClientesComEmprestivosAtivos, exibirLivrosCadastradosPorAutor, exibirLivrosDisponiveisTabela, 
          exibirLivrosEmprestados, exibirQuantidadeEmprestimoPorLivro } from "../utils/formatadoresTexto";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
-import {erroMsg} from "../utils/estilo";
+import {erroMsg} from "../estilos/estilo";
 
 export async function livrosDisponiveisController(): Promise<void> {
 

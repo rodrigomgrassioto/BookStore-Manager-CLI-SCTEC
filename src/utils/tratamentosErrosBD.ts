@@ -1,5 +1,5 @@
 // Tratamentos de erro proveniente do DB para as entidades do sistema Autor, Livro e Cliente
-import {erroMsg} from "./estilo";
+import {erroMsg} from "../estilos/estilo";
 
 export function tratarErroBanco(error: any): void {
     switch (error.code) {

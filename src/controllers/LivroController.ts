@@ -11,7 +11,7 @@ import {validarISBN} from "../utils/validadores";
 import {listarAutoresServ} from "../services/AutorService";
 import { tratarErroBanco } from '../utils/tratamentosErrosBD';
 import {exibirAutoresTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
-import {erroMsg, sucessoMsg} from "../utils/estilo";
+import {erroMsg, sucessoMsg} from "../estilos/estilo";
 
 export async function livroControllerListar(): Promise<void> {
     try {

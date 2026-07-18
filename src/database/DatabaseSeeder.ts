@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { pool } from './connection';
-import {alertaMsg, erroMsg, sucessoMsg} from "../utils/estilo"; // Conexão oficial do seu projeto
+import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo"; // Conexão oficial do seu projeto
 
 // 1. Defina aqui a lista dos arquivos de seed na ordem exata que devem rodar
 // (Simulando o $this->call() do Laravel)

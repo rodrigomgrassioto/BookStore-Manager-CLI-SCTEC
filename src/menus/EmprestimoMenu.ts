@@ -1,6 +1,6 @@
 import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
 import {criarEmprestimoServ, devolucaoEmprestimoServ} from "../services/EmprestimoService";
-import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../utils/estilo";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../estilos/estilo";
 import {
     buscarEmprestimoPorIdController,
     criarEmprestimoController,

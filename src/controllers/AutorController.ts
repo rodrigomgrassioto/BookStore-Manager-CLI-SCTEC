@@ -2,7 +2,7 @@ import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
 import { atualizarAutorServ, listarAutoresServ, cadastrarAutorServ, deletarAutorServ, buscarAutorPorIdServ } from '../services/AutorService';
 import {exibirAutoresTabela} from "../utils/formatadoresTexto";
-import {alertaMsg, erroMsg, sucessoMsg} from "../utils/estilo";
+import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
 
 export async function autorControllerCadastrar(): Promise<void> {
     // Imput do usuário

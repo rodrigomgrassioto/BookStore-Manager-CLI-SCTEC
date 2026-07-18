@@ -6,7 +6,7 @@ import {
     subtituloMsg,
     sucessoMsg,
     tituloMsg,
-} from "../utils/estilo";
+} from "../estilos/estilo";
 import { livrosDisponiveisController, livrosEmprestadosController, 
          livrosCadastradosPorAutorController, quantidadeEmprestimoPorLivroController, 
          clientesComEmprestimosAtivosController } from "../controllers/RelatorioController";

@@ -6,7 +6,7 @@ import {
     livroControllerListar,
     livroControllerProcurarPorNome
 } from "../controllers/LivroController";
-import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../estilos/estilo";
 
 export class LivroMenu {
     async subMenuLivro(): Promise<void> {

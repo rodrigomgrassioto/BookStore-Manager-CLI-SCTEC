@@ -2,7 +2,7 @@ import { Client } from 'pg';
 import * as fs from 'fs';
 import * as path from 'path';
 import { pool } from './connection';
-import {alertaMsg, erroMsg, sucessoMsg} from "../utils/estilo"; // Herda a conexão que já usa o process.env padrão
+import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo"; // Herda a conexão que já usa o process.env padrão
 
 // Configuração temporária usando o process.env padrão do projeto, apenas para criar o banco se ele não existir
 const bootstrapConfig = {

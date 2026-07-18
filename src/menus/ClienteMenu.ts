@@ -6,7 +6,7 @@ import {
     clienteControllerDeletar,
     clienteControllerBuscarPorId
 } from "../controllers/ClienteController";
-import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../estilos/estilo";
 
 export class ClienteMenu {
     async subMenuCliente(): Promise<void> {

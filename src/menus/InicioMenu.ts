@@ -5,7 +5,7 @@ import {AutorMenu} from "./AutorMenu";
 import {ClienteMenu} from "./ClienteMenu";
 import {EmprestimoMenu} from "./EmprestimoMenu";
 import {RelatorioMenu} from "./RelatorioMenu";
-import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../utils/estilo";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../estilos/estilo";
 
 export class InicioMenu {
     // private rl: readline.Interface;
