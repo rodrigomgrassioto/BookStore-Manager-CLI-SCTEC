@@ -47,15 +47,14 @@ export async function livroControllerProcurarPorNome(): Promise<void> {
 
 
 export async function livroControllerCriar(): Promise<void> {
-    console.log("\n=== CADASTRO DE NOVO LIVRO ===");
-
     // 1 Dados do usuário
     const titulo = await fazerPergunta("Título do livro: ");
     let isbn: string;
     do {
         // usei Number pois ele já limpa de 978-1-349-075-37-9 para 9781349075379
-        const isbnNumber = await fazerPergunta("Código ISBN: ", {tipoRetorno:"i_zero", aceitarVazio: false});
+        const isbnNumber = await fazerPergunta("Código ISBN - 0 (Zero) para cancelar: ", {tipoRetorno:"i_zero", aceitarVazio: false});
         isbn = String(isbnNumber ?? ""); // Convert para string, se for null fica como ""
+        if (isbn === '0') return
         if (!validarISBN(isbn)) console.error("❌ Código ISBN inválido")
     } while (!validarISBN(isbn))
     const quantidade_estoque = await fazerPergunta("Quantidade em estoque: ", {
