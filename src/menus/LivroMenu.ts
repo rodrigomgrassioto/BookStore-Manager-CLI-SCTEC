@@ -6,7 +6,7 @@ import {
     livroControllerListar,
     livroControllerProcurarPorNome
 } from "../controllers/LivroController";
-import {divisor, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
 
 export class LivroMenu {
     async subMenuLivro(): Promise<void> {
@@ -29,31 +29,36 @@ export class LivroMenu {
             switch (opcao) {
                 case '1':
                     console.clear()
-                    console.log('\n🟦 --- Adicionar livro --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Adicionar livro');
                     await livroControllerCriar();
                     break;
 
                 case '2':
                     console.clear()
-                    console.log('\n🟦 --- Listar livros --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Listar livros');
                     await livroControllerListar();
                     break;
 
                 case '3':
                     console.clear()
-                    console.log('\n🟦 --- Procurar livro por nome --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Procurar livro por nome');
                     await livroControllerProcurarPorNome()
                     break;
 
                 case '4':
                     console.clear()
-                    console.log('\n🟦 --- Editar livro --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Editar livro');
                     await livroControllerAtualizar()
                     break;
 
                 case '5':
                     console.clear()
-                    console.log('\n🟦 --- Excluir livro --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Excluir livro');
                     await livroControllerDeletar()
                     break;
 
@@ -63,7 +68,7 @@ export class LivroMenu {
                     break;
                 default:
                     console.clear()
-                    console.log('❌ Opção inválida.');
+                    erroMsg('Opção inválida.');
             }
         }
     }

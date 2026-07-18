@@ -17,8 +17,8 @@ export function subtituloMsg(msg: string): void {
     console.log(`${divisorConst("─", 30)}`);
 }
 
-export function sucessoMsg(msg: string): void {
-    console.clear()
+export function sucessoMsg(msg: string, limpar=true): void {
+    if (limpar) console.clear()
     divisor("─", 50)
     console.log(`${cores.verde}✅  ${msg}${cores.reset}`);
     divisor("─", 50)
@@ -30,8 +30,8 @@ export function alertaMsg(msg: string): void {
     divisor("─", 50)
 }
 
-export function erroMsg(msg: string): void {
-    console.clear()
+export function erroMsg(msg: string, limpar=true): void {
+    if (limpar) console.clear()
     divisor("─", 50)
     console.log(`${cores.vermelho}❌  ${msg}${cores.reset}`);
     divisor("─", 50)

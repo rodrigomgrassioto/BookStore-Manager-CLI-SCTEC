@@ -1,4 +1,3 @@
-import { TerminalController } from './controllers/TerminalController.js';
 import {
     atualizarLivroRP, buscarLivroPorIdRP,
     buscarLivroPorTituloRP,

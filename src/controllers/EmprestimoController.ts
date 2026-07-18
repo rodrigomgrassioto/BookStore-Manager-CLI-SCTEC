@@ -25,7 +25,7 @@ export async function criarEmprestimoController(): Promise<void> {
             dias_para_devolucao: configEmpresa.dias_de_emprestimo
         });
 
-        console.log("\n🎉 Empréstimo registrado com sucesso!");
+        sucessoMsg("Empréstimo registrado com sucesso!");
         exibirEmprestimosDetalhadoTabela([emprestimo]);
 
     } catch (error: any){
@@ -79,8 +79,7 @@ export async function devolverEmprestimoController(): Promise<void> {
 
         const emprestimoDevolvido = await devolucaoEmprestimoServ(id_emprestimo);
 
-        sucessoMsg(`Devolução registrada com sucesso! \n
-        ID Empréstimo: "${id_emprestimo}" | Status: "${emprestimoDevolvido.status}"`)
+        sucessoMsg(`Devolução registrada com sucesso!\n\nID Empréstimo: "${id_emprestimo}" | Status: "${emprestimoDevolvido.status}"`)
     } catch (error: any){
         // Erro no PostgreSQL
         if (error.code) tratarErroBanco(error);

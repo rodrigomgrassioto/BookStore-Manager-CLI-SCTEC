@@ -5,7 +5,7 @@ import {AutorMenu} from "./AutorMenu";
 import {ClienteMenu} from "./ClienteMenu";
 import {EmprestimoMenu} from "./EmprestimoMenu";
 import {RelatorioMenu} from "./RelatorioMenu";
-import {divisor, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../utils/estilo";
 
 export class InicioMenu {
     // private rl: readline.Interface;
@@ -74,14 +74,14 @@ export class InicioMenu {
 
                 case '0':
                     console.clear();
-                    console.log('👋 👋 👋  Até mais!');
+                    sucessoMsg('Até mais!');
                     continuar = false;
                     rl.close(); // Fecha a interface do terminal
                     break;
 
                 default:
                     console.clear();
-                    console.log('❌ Opção inválida! Tente novamente.');
+                    erroMsg('Opção inválida! Tente novamente.');
                     break;
             };
         };

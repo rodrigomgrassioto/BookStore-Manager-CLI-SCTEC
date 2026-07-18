@@ -1,6 +1,6 @@
 import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
 import {criarEmprestimoServ, devolucaoEmprestimoServ} from "../services/EmprestimoService";
-import {divisor, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../utils/estilo";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../utils/estilo";
 import {
     buscarEmprestimoPorIdController,
     criarEmprestimoController,
@@ -52,7 +52,7 @@ export class EmprestimoMenu {
 
                 default:
                     console.clear();
-                    console.log('❌ Opção inválida.');
+                    erroMsg('Opção inválida.');
             };
         };
     };

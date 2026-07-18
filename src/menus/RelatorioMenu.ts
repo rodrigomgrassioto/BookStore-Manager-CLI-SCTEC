@@ -1,6 +1,6 @@
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import {
-    divisor,
+    divisor, erroMsg,
     opcaoSair,
     opcoes,
     subtituloMsg,
@@ -32,31 +32,36 @@ export class RelatorioMenu {
             switch (opcao) {
                 case '1':
                     console.clear();
-                    console.log('\n🟦 --- Livros Disponíveis --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Livros disponíveis');
                     await livrosDisponiveisController();
                     break;
 
                 case '2':
                     console.clear();
-                    console.log('\n🟦 --- Livros Emprestados --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Livros emprestados');
                     await livrosEmprestadosController();
                     break;
 
                 case '3':
                     console.clear();
-                    console.log('\n🟦 --- Livros Cadastrados Por Autor --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Livros por autor');
                     await livrosCadastradosPorAutorController();
                     break;
 
                 case '4':
                     console.clear();
-                    console.log('\n🟦 --- Quantidade de Empréstimos Por Livro --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Total de empréstimos por livro');
                     await quantidadeEmprestimoPorLivroController();
                     break;
 
                 case '5':
                     console.clear();
-                    console.log('\n🟦 --- Clientes Com Empréstimos Ativos --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Empréstimos Ativos');
                     await clientesComEmprestimosAtivosController();
                     break;
 
@@ -67,7 +72,7 @@ export class RelatorioMenu {
 
                 default:
                     console.clear();
-                    console.log('❌ Opção inválida.');
+                    erroMsg('Opção inválida.');
             };
         };
     };
