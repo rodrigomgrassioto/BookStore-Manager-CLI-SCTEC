@@ -3,6 +3,7 @@ import { tratarErroBanco } from "../utils/tratamentosErrosBD";
 import { atualizarAutorServ, listarAutoresServ, cadastrarAutorServ, deletarAutorServ, buscarAutorPorIdServ } from '../services/AutorService';
 import {exibirAutoresTabela} from "../utils/formatadoresTexto";
 import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
+import {AutorModel} from "../models/AutorModel";
 
 export async function autorControllerCadastrar(): Promise<void> {
     // Imput do usuário
@@ -60,13 +61,29 @@ export async function autorControlerBuscarPorId(): Promise<void> {
 
 
 export async function autorControllerAtualizar(): Promise<void> {
-    exibirAutoresTabela(await listarAutoresServ());
+    let autores: AutorModel[]
+    try {
+        autores = await listarAutoresServ()
+    } catch (error: any) {
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+        return;
+    }
+
+    if (!autores || autores.length === 0){
+        alertaMsg("Sem autores cadastrados")
+        return
+    }
+    exibirAutoresTabela(autores);
     // Imput do usuário
     const id_autor = await fazerPergunta("Digite o número do ID do autor: ", {tipoRetorno: 'i_zero'});
 
-    let autoresDB;
+    let autorDB;
     try {
-        autoresDB = await buscarAutorPorIdServ(id_autor);
+        autorDB = await buscarAutorPorIdServ(id_autor);
     } catch (error: any) {
         // Erro no PostgreSQL
         if (error.code) tratarErroBanco(error);
@@ -76,15 +93,15 @@ export async function autorControllerAtualizar(): Promise<void> {
         return;
     }
        
-    if (!autoresDB) {
+    if (!autorDB) {
         erroMsg("Autor não encontrado.");
         return;
     }
     
-    exibirAutoresTabela([autoresDB]);
+    exibirAutoresTabela([autorDB]);
 
-    const nome = await fazerPergunta("Digite o nome do autor: ", {valorOriginal: autoresDB.nome});
-    const nacionalidade = await fazerPergunta("Digite a nova nacionalidade do autor: ", {valorOriginal: autoresDB.nacionalidade, aceitarVazio: true});
+    const nome = await fazerPergunta("Digite o nome do autor: ", {valorOriginal: autorDB.nome});
+    const nacionalidade = await fazerPergunta("Digite a nova nacionalidade do autor: ", {valorOriginal: autorDB.nacionalidade, aceitarVazio: true});
 
     try {
         const autorAtualizado = await atualizarAutorServ(id_autor, nome, nacionalidade);
@@ -96,12 +113,29 @@ export async function autorControllerAtualizar(): Promise<void> {
 
         // Erro do service
         else erroMsg(error.message || "Ocorreu um erro inesperado ao atualizar o autor.");
-    };
-};
+    }
+}
 
 
 export async function autorControllerDeletar(): Promise<void> {
-    exibirAutoresTabela(await listarAutoresServ());
+    let autores: AutorModel[]
+    try {
+        autores = await listarAutoresServ()
+    } catch (error: any) {
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+        return;
+    }
+
+    if (!autores || autores.length === 0){
+        alertaMsg("Sem autores cadastrados")
+        return
+    }
+
+    exibirAutoresTabela(autores);
 
     // Imput do usuário
     const id_autor = await fazerPergunta("Digite o número do ID do autor que deseja deletar: ", {tipoRetorno: 'i_zero'});

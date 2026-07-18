@@ -2,14 +2,36 @@ import * as readline from 'readline';
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import { exibirClientesTabela, exibirEmprestimosDetalhadoTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
-import { criarEmprestimoServ, devolucaoEmprestimoServ, buscarEmprestimoPorIdServ } from '../services/EmprestimoService';
+import {
+    criarEmprestimoServ,
+    devolucaoEmprestimoServ,
+    buscarEmprestimoPorIdServ,
+    listarEmprestimosAtivosServ
+} from '../services/EmprestimoService';
 import configEmpresa from '../configuracoes_empresa.json'
 import { listarClientesServ } from '../services/ClienteService';
 import { listarLivrosServ } from '../services/LivroService';
 import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
+import {ClienteModel} from "../models/ClienteModel";
+import {EmprestimoCompletoModel} from "../models/EmprestimoModel";
 
 export async function criarEmprestimoController(): Promise<void> {
-    const clientes =  await listarClientesServ();
+    let clientes:ClienteModel[]
+    try {
+        clientes =  await listarClientesServ();
+    } catch (error: any){
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao criar o empréstimo.");
+        return
+    }
+
+    if (!clientes || clientes.length === 0) {
+        alertaMsg("Sem clientes cadastrados.")
+        return
+    }
     exibirClientesTabela(clientes);       
     const id_cliente = await fazerPergunta("Digite o ID do cliente: ", { tipoRetorno: "i_zero" });
     const livros = await listarLivrosServ();
@@ -55,6 +77,26 @@ export async function buscarEmprestimoPorIdController(): Promise<void> {
 };
 
 export async function devolverEmprestimoController(): Promise<void> {
+    let emprestimosLista:EmprestimoCompletoModel[]
+    try {
+        emprestimosLista = await listarEmprestimosAtivosServ()
+    } catch (error: any) {
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+        return;
+    }
+
+    if (!emprestimosLista || emprestimosLista.length === 0){
+        alertaMsg("Sem empréstimos cadastrados")
+        return
+    }
+
+    alertaMsg('EMPRÉSTIMOS ATIVOS:')
+    exibirEmprestimosDetalhadoTabela(emprestimosLista, true);
+
     // Imput do usuário
     const id_emprestimo = await fazerPergunta("Digite o ID do empréstimo: ", { tipoRetorno: "i_zero" });
 

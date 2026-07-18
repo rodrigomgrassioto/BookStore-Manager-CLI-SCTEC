@@ -13,6 +13,7 @@ import { tratarErroBanco } from '../utils/tratamentosErrosBD';
 import {exibirAutoresTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
 import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
 import {AutorModel} from "../models/AutorModel";
+import {LivroCompletoModel} from "../models/LivroModel";
 
 export async function livroControllerListar(): Promise<void> {
     try {
@@ -103,12 +104,22 @@ export async function livroControllerCriar(): Promise<void> {
 }
 
 export async function livroControllerAtualizar(): Promise<void> {
-    const livros = await listarLivrosServ()
-    if(livros.length === 0){
+    let livrosLista:LivroCompletoModel[]
+    try {
+        livrosLista = await listarLivrosServ()
+    }catch (error: any){
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao salvar o livro.");
+        return
+    }
+    if(livrosLista.length === 0){
         alertaMsg("Sem livros para editar")
         return
     }
-    exibirLivrosTabela(livros)
+    exibirLivrosTabela(livrosLista)
     const id = await fazerPergunta("Numero do id do livro: ", {tipoRetorno: 'i_zero'});
     let livroNoDb
     try {
@@ -170,12 +181,24 @@ export async function livroControllerAtualizar(): Promise<void> {
 }
 
 export async function livroControllerDeletar(): Promise<void> {
-    const livros = await listarLivrosServ()
-    if(livros.length === 0){
+    let livrosLista:LivroCompletoModel[]
+    try {
+        livrosLista = await listarLivrosServ()
+    }catch (error: any){
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao salvar o livro.");
+        return
+    }
+    if(livrosLista.length === 0){
         alertaMsg("Sem livros para excluir")
         return
     }
-    exibirLivrosTabela(livros)
+    exibirLivrosTabela(livrosLista)
+
+
     const id = await fazerPergunta("Numero do id do livro: ", {tipoRetorno: 'i_zero'});
     let livroNoDb ;
     try {
