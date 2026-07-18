@@ -6,11 +6,10 @@ export function gerarTabela<T extends object>(dados: T[]): void {
         return;
     }
 
-    // Garante que o TypeScript entenda as chaves
     const colunas = Object.keys(dados[0]) as Array<keyof T>;
     const larguras: Record<keyof T, number> = {} as any;
 
-    // 1. Calcula as larguras ideais das colunas
+    // 1. Calcula as larguras (Sua lógica perfeita mantida)
     for (const coluna of colunas) {
         let tamanhoMaximo = String(coluna).length;
         for (const linha of dados) {
@@ -21,29 +20,34 @@ export function gerarTabela<T extends object>(dados: T[]): void {
         larguras[coluna] = tamanhoMaximo;
     }
 
+    // 2. Criação das Linhas Divisórias com Caracteres de Caixa Especial
     const corBorda = cores.bordaTabela;
 
-    // 2. Monta as Linhas Divisórias Contínuas em CIANO
+    // Linha do Topo: ┌──────┬──────┐
     const linhaTopo = corBorda + "┌─" + colunas.map(c => "─".repeat(larguras[c])).join("─┬─") + "─┐" + cores.reset;
+
+    // Linha do Meio: ├──────┼──────┤
     const linhaMeio = corBorda + "├─" + colunas.map(c => "─".repeat(larguras[c])).join("─┼─") + "─┤" + cores.reset;
+
+    // Linha do Fundo: └──────┴──────┘
     const linhaFundo = corBorda + "└─" + colunas.map(c => "─".repeat(larguras[c])).join("─┴─") + "─┘" + cores.reset;
 
-    // 3. Imprime o Cabeçalho (Bordas Ciano + Fundo Roxo)
+    // 3. Imprime o Topo e o Cabeçalho (Com fundo destacado)
     console.log(linhaTopo);
 
     const cabecalhoTexto = colunas
         .map(c => String(c).toUpperCase().padEnd(larguras[c]))
-        .join(`${cores.reset}${corBorda} │ ${cores.textoCabecalho}${cores.fundoCabecalho}`);
+        .join(`${corBorda} │ ${cores.textoCabecalho}${cores.fundoCabecalho}`);
 
-    // Aplica o fundo roxo e as bordas ciano perfeitamente alinhadas
-    console.log(`${corBorda}│ ${cores.textoCabecalho}${cores.fundoCabecalho}${cabecalhoTexto} ${cores.reset}${corBorda}│${cores.reset}`);
+    // Aplica o fundo em toda a linha do cabeçalho
+    console.log(`${corBorda}│ ${cores.textoCabecalho}${cores.fundoCabecalho}${cabecalhoTexto} ${corBorda}│${cores.reset}`);
 
     console.log(linhaMeio);
 
-    // 4. Imprime as Linhas de Dados com o Zebrado sutil de fundo
+    // 4. Imprime as Linhas de Dados (Com efeito zebrado sutil usando o index)
     dados.forEach((linha, index) => {
-        // Altera o fundo da linha de forma sutil para o efeito zebra não brigar com as cores vivas
-        const fundoLinha = index % 2 === 0 ? cores.fundoZebra : "";
+        // Se a linha for par, adiciona um fundo levemente destacado, se for ímpar deixa padrão
+        const fundoLinha = index % 2 === 0 ? "\x1b[48;5;234m" : "";
 
         const linhaTexto = colunas
             .map(c => {
@@ -56,6 +60,6 @@ export function gerarTabela<T extends object>(dados: T[]): void {
         console.log(`${corBorda}│ ${fundoLinha}${linhaTexto} ${cores.reset}${corBorda}│${cores.reset}`);
     });
 
-    // 5. Imprime a base da tabela
+    // 5. Imprime o encerramento da tabela
     console.log(linhaFundo + "\n");
 }

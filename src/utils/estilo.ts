@@ -2,8 +2,8 @@ import { cores } from "./estiloCores";
 
 // Auxiliar para desenhar linhas divisórias elegantes no terminal
 const divisorConst = (caractere = "─", tamanho = 50) => `${cores.dim}${caractere.repeat(tamanho)}${cores.reset}`;
-export function divisor (){
-    console.log(`${divisorConst("─", 30)}`);
+export function divisor (caracter="─", tamanho = 30){
+    console.log(`${divisorConst(caracter, tamanho)}`);
 }
 
 export function tituloMsg(msg: string): void {
@@ -18,15 +18,23 @@ export function subtituloMsg(msg: string): void {
 }
 
 export function sucessoMsg(msg: string): void {
-    console.log(`${cores.verde}🟢 ${msg}${cores.reset}`);
+    console.clear()
+    divisor("─", 50)
+    console.log(`${cores.verde}✅  ${msg}${cores.reset}`);
+    divisor("─", 50)
 }
 
 export function alertaMsg(msg: string): void {
-    console.log(`${cores.amarelo}🟡 ${msg}${cores.reset}`);
+    divisor("─", 50)
+    console.log(`${cores.amarelo}🟡  ${msg}${cores.reset}`);
+    divisor("─", 50)
 }
 
 export function erroMsg(msg: string): void {
-    console.log(`${cores.vermelho}🔴 ${msg}${cores.reset}`);
+    console.clear()
+    divisor("─", 50)
+    console.log(`${cores.vermelho}❌  ${msg}${cores.reset}`);
+    divisor("─", 50)
 }
 
 export function pergunta(msg: string): void {

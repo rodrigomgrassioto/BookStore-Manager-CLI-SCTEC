@@ -22,19 +22,22 @@ export class EmprestimoMenu {
             switch (opcao) {
                 case '1':
                     console.clear();
-                    console.log('\n🟦 --- Criar Novo Empréstimo --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Novo Empréstimo');
                     await criarEmprestimoController();
                     break;
 
                 case '2':
                     console.clear();
-                    console.log('\n🟦 --- Buscar Empréstimo Por ID --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Buscar Empréstimo por ID');
                     await buscarEmprestimoPorIdController();
                     break;
 
                 case '3':
                     console.clear();
-                    console.log('\n🟦 --- Devolver Empréstimo --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Devolver Empréstimo');
                     await buscarEmprestimoPorIdController();
                     break;
 

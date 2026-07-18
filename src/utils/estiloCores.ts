@@ -28,4 +28,15 @@ export const cores = {
     tituloPrincipal: "\x1b[1m\x1b[35m", // Roxo Negrito (Moderno e elegante)
     subtitulo: "\x1b[1m\x1b[36m",        // Ciano Negrito
     promptPergunta: "\x1b[1m\x1b[34m",   // Azul Negrito
+
+    // tabela cinza
+    // bordaTabela: "\x1b[38;5;244m",     // Cinza elegante para as linhas divisórias
+    // textoCabecalho: "\x1b[1m\x1b[37m", // Branco negrito
+    // fundoCabecalho: "\x1b[48;5;238m", // Fundo cinza escuro para destacar o topo da tabela
+    // tabela cinza fim
+
+    bordaTabela: "\x1b[1m\x1b[36m",
+    textoCabecalho: "\x1b[34m",
+    fundoCabecalho: "\x1b[32m",
+    fundoZebra: "\x1b[48;5;235m",
 };

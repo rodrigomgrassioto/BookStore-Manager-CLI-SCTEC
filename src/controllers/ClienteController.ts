@@ -11,11 +11,10 @@ import * as formatadoresTexto from "../utils/formatadoresTexto";
 import { ClienteModel } from '../models/ClienteModel';
 import { tratarErroBanco } from '../utils/tratamentosErrosBD';
 import { exibirClientesTabela } from '../utils/formatadoresTexto';
+import {alertaMsg, erroMsg, sucessoMsg} from "../utils/estilo";
 
 // 1. Cadastrar Cliente
 export async function clienteControllerCriar(): Promise<void> {
-    console.log("\n=== CADASTRO DE NOVO CLIENTE ===");
-
     const nome = await fazerPergunta("Nome do Cliente: ");
     const email = await fazerPergunta("E-mail do Cliente: ");
     const telefone = await fazerPergunta("Telefone do Cliente: ");
@@ -23,34 +22,26 @@ export async function clienteControllerCriar(): Promise<void> {
 
     try {
         await criarClienteServ(nome, email, telefone, data_nascimento);
-        console.log(`\n🎉 Cliente "${nome}" cadastrado com sucesso!`);
+        sucessoMsg(`Cliente "${nome}" cadastrado com sucesso!`);
     } catch (error: any) {
-        console.log("\n========================================");
         if (error.code) tratarErroBanco(error);
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao salvar o cliente.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao salvar o cliente.");
     }
 }
 
 // 2. Listar Clientes
 export async function clienteControllerListar(): Promise<void> {
-    console.log("\n=== LISTAR CLIENTES ===");
-
     try {
         const lista = await listarClientesServ();
         exibirClientesTabela(lista);
     } catch (error: any) {
-        console.log("\n========================================");
         if (error.code) tratarErroBanco(error);
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao listar os clientes.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao listar os clientes.");
     }
 }
 
 // 3. Atualizar Cliente
 export async function clienteControllerAtualizar(): Promise<void> {
-    console.log("\n=== ATUALIZAR CLIENTE ===");
-
 
     const id_cliente = await fazerPergunta("Número do ID do cliente: ", { tipoRetorno: 'i_zero' });
 
@@ -58,10 +49,8 @@ export async function clienteControllerAtualizar(): Promise<void> {
     try {
         clienteNoDb = await buscarClientePorIdServ(id_cliente);
     } catch (error: any) {
-        console.log("\n========================================");
         if (error.code) tratarErroBanco(error);
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao buscar o cliente.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o cliente.");
         return;
     }
 
@@ -77,65 +66,53 @@ export async function clienteControllerAtualizar(): Promise<void> {
 
     try {
         const dadosAtualizacao = await atualizarClienteServ(id_cliente, nome, email, telefone, data_nascimento);
-        console.log(`\n🎉 Cliente "${dadosAtualizacao.nome}" atualizado com sucesso!`);
+        sucessoMsg(`Cliente "${dadosAtualizacao.nome}" atualizado com sucesso!`);
     } catch (error: any) {
-        console.log("\n========================================");
         if (error.code) tratarErroBanco(error);
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao atualizar o cliente.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao atualizar o cliente.");
     }
 }
 
 // 4. Deletar Cliente
 export async function clienteControllerDeletar(): Promise<void> {
-    console.log("\n=== DELETAR CLIENTE ===");
-
     const id_cliente = await fazerPergunta("Número do ID do cliente: ", { tipoRetorno: 'i_zero' });
 
     let clienteNoDb: ClienteModel;
     try {
         clienteNoDb = await buscarClientePorIdServ(id_cliente);
     } catch (error: any) {
-        console.log("\n========================================");
         if (error.code) tratarErroBanco(error);
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao buscar o cliente.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o cliente.");
         return;
     }
 
     exibirClientesTabela([clienteNoDb]);
-    console.log("\n⚠️  ATENÇÃO: Esta ação é irreversível e irá deletar o cliente do sistema.\n");
+    alertaMsg(" ATENÇÃO: Esta ação é irreversível e irá deletar o cliente do sistema.");
 
-    const confirmacao = await fazerPergunta("Excluir cliente? (S/N): ");
+    const confirmacao = await fazerPergunta("Excluir cliente? (S/N):");
     if (confirmacao.toLowerCase() !== 's') {
-        console.log("Operação de exclusão cancelada.");
+        alertaMsg("Operação de exclusão cancelada.");
         return;
     }
 
     try {
         const result = await deletarClienteServ(id_cliente);
-        if (!result) throw new Error("❌ Erro desconhecido ao deletar.");
-        console.log(`\n🎉 Cliente "${clienteNoDb.nome}" excluído com sucesso!`);
+        if (!result) throw new Error("Erro desconhecido ao deletar.");
+        sucessoMsg(`Cliente "${clienteNoDb.nome}" excluído com sucesso!`);
     } catch (error: any) {
-        console.log("\n========================================");
         if (error.code) tratarErroBanco(error);
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao excluir o cliente.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao excluir o cliente.");
     }
 }
 
 export async function clienteControllerBuscarPorId(): Promise<void> {
-    console.log("\n=== BUSCAR CLIENTE POR ID ===");
-
     const id_cliente = await fazerPergunta("Digite o número do ID do cliente: ", { tipoRetorno: 'i_zero' });
 
     try {
         const cliente = await buscarClientePorIdServ(id_cliente);
         exibirClientesTabela([cliente]);
     } catch (error: any) {
-        console.log("\n========================================");
         if (error.code) tratarErroBanco(error);
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao buscar o cliente.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o cliente.");
     }
 }

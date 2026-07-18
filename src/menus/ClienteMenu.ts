@@ -6,7 +6,7 @@ import {
     clienteControllerDeletar,
     clienteControllerBuscarPorId
 } from "../controllers/ClienteController";
-import {divisor, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
 
 export class ClienteMenu {
     async subMenuCliente(): Promise<void> {
@@ -30,31 +30,35 @@ export class ClienteMenu {
 
                 case '1':
                     console.clear();
-                    console.log('\n🟦 --- Adicionar cliente --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Adicionar cliente');
                     await clienteControllerCriar();
                     break;
 
                 case '2':
                     console.clear();
-                    console.log('\n🟦 --- Listar clientes --- 🟦');
+                    subtituloMsg('Lista de clientes');
                     await clienteControllerListar();
                     break;
 
                 case '3':
                     console.clear();
-                    console.log('\n🟦 --- Buscar cliente por ID --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Buscar cliente por ID');
                     await clienteControllerBuscarPorId();
                     break;
 
                 case '4':
                     console.clear();
-                    console.log('\n🟦 --- Atualizar cliente --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Atualizar cliente');
                     await clienteControllerAtualizar();
                     break;
 
                 case '5':
                     console.clear();
-                    console.log('\n🟦 --- Excluir cliente --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Excluir cliente');
                     await clienteControllerDeletar();
                     break;
 
@@ -65,7 +69,7 @@ export class ClienteMenu {
 
                 default:
                     console.clear();
-                    console.log('❌ Opção inválida.');
+                    erroMsg('Opção inválida.');
             };
         };
     };

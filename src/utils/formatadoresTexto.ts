@@ -40,30 +40,30 @@ export function exibirLivrosTabela(livros: LivroCompletoModel[]): void {
 
 export function exibirClientesTabela(clientes: ClienteModel[]): void {
     const clientesFormatados = clientes.map(clientes => ({
-        "ID Cliente": clientes.id_cliente,
+        ID: clientes.id_cliente,
         Nome: clientes.nome,
-        "e-mail": clientes.email,
+        "E-mail": clientes.email,
         Telefone: clientes.telefone,
-        "Data Nascimento": clientes.data_nascimento,
-        "Data Cadastro": clientes.data_cadastro
+        Nascimento: clientes.data_nascimento,
+        Cadastro: clientes.data_cadastro
     }));
     gerarTabela(clientesFormatados);
 };
 
 export function exibirEmprestimosDetalhadoTabela(emprestimos: EmprestimoCompletoModel[]): void {
     const emprestimosFormatado = emprestimos.map(emprestimo => ({
-        "ID Empréstimo": emprestimo.id_emprestimo,
+        ID: emprestimo.id_emprestimo,
         Cliente: emprestimo.cliente.nome,
         Emprestimo: formatarDataPrompt(emprestimo.data_emprestimo),
-        Devolução: formatarDataPrompt(emprestimo.data_devolucao_prevista),
+        Devolucao: formatarDataPrompt(emprestimo.data_devolucao_prevista),
         Status: emprestimo.status
     }));
     gerarTabela(emprestimosFormatado);
     
     const livrosFormatados = emprestimos.flatMap(emprestimo =>
     emprestimo.livros.map(livro => ({
-        "ID Livro": livro.id_livro,
-        Título: livro.titulo,
+        ID: livro.id_livro,
+        Titulo: livro.titulo,
         Autor: livro.autor.nome,
         ISBN: livro.isbn
     })));

@@ -4,7 +4,7 @@ import { autorControllerCadastrar,
          autorControlerBuscarPorId, 
          autorControllerAtualizar,
          autorControllerDeletar } from "../controllers/AutorController";
-import {divisor, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../utils/estilo";
 
 export class AutorMenu {
    async subMenuAutor(): Promise<void> {
@@ -30,31 +30,33 @@ export class AutorMenu {
                     console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Adicionar autor');
-                    // console.log('\n🟦 --- Adicionar autor --- 🟦');
                     await autorControllerCadastrar();
                     break;
 
                 case '2':
                     console.clear();
-                    console.log('\n🟦 --- Listar autores --- 🟦');
+                    subtituloMsg('Lista de autores');
                     await autorControllerListar();
                     break;
 
                 case '3':
                     console.clear();
-                    console.log('\n🟦 --- Buscar autor por ID --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Buscar autor por ID');
                     await autorControlerBuscarPorId();
                     break;
 
                  case '4':
                     console.clear();
-                    console.log('\n🟦 --- Atualizar autor --- 🟦');
+                     tituloMsg('BookStore Manager');
+                     subtituloMsg('Atualizar autor');
                     await autorControllerAtualizar();
                     break;
 
                 case '5':
                     console.clear();
-                    console.log('\n🟦 --- Deletar autor --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Deletar autor');
                     await autorControllerDeletar();
                     break;
 
@@ -65,7 +67,7 @@ export class AutorMenu {
 
                 default:
                     console.clear();
-                    console.log('❌ Opção inválida.');
+                    erroMsg('Opção inválida.');
             };
         };
     };
