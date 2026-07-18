@@ -17,6 +17,8 @@ garantir no service que sejam usadas as configurações max_livros_por_emprestim
 no service antes de criar um emprestimo, deve consultar se o cliente já tem algum emprestimo ativo,
 por exemplo se já tiver 1 ativo... só pode emprestar mais 2
 
+* para melhor visualização.. executar sistema com o terminal maximizado.
+
 
 *******************************
 
