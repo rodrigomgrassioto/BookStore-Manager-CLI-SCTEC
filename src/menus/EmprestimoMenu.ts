@@ -1,7 +1,11 @@
 import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
 import {criarEmprestimoServ, devolucaoEmprestimoServ} from "../services/EmprestimoService";
 import {divisor, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../utils/estilo";
-import { buscarEmprestimoPorIdController, criarEmprestimoController } from "../controllers/EmprestimoController";
+import {
+    buscarEmprestimoPorIdController,
+    criarEmprestimoController,
+    devolverEmprestimoController
+} from "../controllers/EmprestimoController";
 
 export class EmprestimoMenu {
     async subMenuEmprestimo(): Promise<void> {
@@ -38,7 +42,7 @@ export class EmprestimoMenu {
                     console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Devolver Empréstimo');
-                    await buscarEmprestimoPorIdController();
+                    await devolverEmprestimoController();
                     break;
 
                 case '0':

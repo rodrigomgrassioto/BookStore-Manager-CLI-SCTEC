@@ -55,14 +55,13 @@ export async function buscarEmprestimoPorIdController(): Promise<void> {
 };
 
 export async function devolverEmprestimoController(): Promise<void> {
-
     // Imput do usuário
-    const id_emprestimo = await fazerPergunta("Digite o ID do empréstimoooo: ", { tipoRetorno: "i_zero" });
+    const id_emprestimo = await fazerPergunta("Digite o ID do empréstimo: ", { tipoRetorno: "i_zero" });
 
     try {
         const emprestimo = await buscarEmprestimoPorIdServ(id_emprestimo);
 
-        // exibirEmprestimosDetalhadoTabela([emprestimo]);
+        exibirEmprestimosDetalhadoTabela([emprestimo]);
 
         if (emprestimo.status === "DEVOLVIDO") {
             erroMsg("Este empréstimo já foi devolvido.");
