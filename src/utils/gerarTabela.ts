@@ -1,8 +1,9 @@
 import { cores } from "../estilos/estiloCores";
+import {alertaMsg} from "../estilos/estilo";
 
 export function gerarTabela<T extends object>(dados: T[]): void {
     if (!dados || dados.length === 0) {
-        console.log(`\n  ${cores.dim}ℹ️  Nenhum registro para exibir.${cores.reset}\n`);
+        alertaMsg("Nenhum registro para exibir.");
         return;
     }
 
