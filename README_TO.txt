@@ -17,10 +17,12 @@ garantir no service que sejam usadas as configurações max_livros_por_emprestim
 no service antes de criar um emprestimo, deve consultar se o cliente já tem algum emprestimo ativo,
 por exemplo se já tiver 1 ativo... só pode emprestar mais 2
 
+* para melhor visualização.. executar sistema com o terminal maximizado.
+
 
 *******************************
 
-no PowerShel Windows ao tentar rodar, npm run dev e ter o erro:
+Se ao tentar rodar npm run dev no PowerShel Windows der o erro:
 npm : O arquivo C:\***\node-v24.18.0-win-x64\npm.ps1 não pode ser carregado porque a execução de
 scripts foi desabilitada neste sistema. Para obter mais informações, consulte about_Execution_Policies em
 https://go.microsoft.com/fwlink/?LinkID=135170.
@@ -30,9 +32,18 @@ No linha:1 caractere:1
     + CategoryInfo          : ErrodeSegurança: (:) [], PSSecurityException
     + FullyQualifiedErrorId : UnauthorizedAccess
 
-EXECUTE O COMANDO:
+Você tem DUAS opções para liberar a execução de script.
+
+1 - Liberar temporariamente. (Ao fechar o PowerShell a restrição retorna como originalmente)
+Execute o comando:
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
-Para liberar temporariamente a execução de scripts no Windows PowerShell
+*** OU ****
+
+2 - Liberar definitivamente
+Execute o comando:
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+
+
 *******************************
 
