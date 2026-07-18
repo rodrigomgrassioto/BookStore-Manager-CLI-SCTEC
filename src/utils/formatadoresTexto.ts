@@ -50,7 +50,7 @@ export function exibirClientesTabela(clientes: ClienteModel[]): void {
     gerarTabela(clientesFormatados);
 };
 
-export function exibirEmprestimosDetalhadoTabela(emprestimos: EmprestimoCompletoModel[]): void {
+export function exibirEmprestimosDetalhadoTabela(emprestimos: EmprestimoCompletoModel[], porSoACabecinha=false): void {
     const emprestimosFormatado = emprestimos.map(emprestimo => ({
         ID: emprestimo.id_emprestimo,
         Cliente: emprestimo.cliente.nome,
@@ -59,6 +59,7 @@ export function exibirEmprestimosDetalhadoTabela(emprestimos: EmprestimoCompleto
         Status: emprestimo.status
     }));
     gerarTabela(emprestimosFormatado);
+    if (porSoACabecinha) return
     
     const livrosFormatados = emprestimos.flatMap(emprestimo =>
     emprestimo.livros.map(livro => ({

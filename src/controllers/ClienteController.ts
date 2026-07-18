@@ -42,6 +42,23 @@ export async function clienteControllerListar(): Promise<void> {
 
 // 3. Atualizar Cliente
 export async function clienteControllerAtualizar(): Promise<void> {
+    let clientes: ClienteModel[]
+    try {
+        clientes = await listarClientesServ()
+    } catch (error: any) {
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+        return;
+    }
+
+    if (!clientes || clientes.length === 0){
+        alertaMsg("Sem clientes cadastrados")
+        return
+    }
+    exibirClientesTabela(clientes)
 
     const id_cliente = await fazerPergunta("Número do ID do cliente: ", { tipoRetorno: 'i_zero' });
 
@@ -75,6 +92,24 @@ export async function clienteControllerAtualizar(): Promise<void> {
 
 // 4. Deletar Cliente
 export async function clienteControllerDeletar(): Promise<void> {
+    let clientes: ClienteModel[]
+    try {
+        clientes = await listarClientesServ()
+    } catch (error: any) {
+        // Erro no PostgreSQL
+        if (error.code) tratarErroBanco(error);
+
+        // Erro do service
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+        return;
+    }
+
+    if (!clientes || clientes.length === 0){
+        alertaMsg("Sem clientes cadastrados")
+        return
+    }
+    exibirClientesTabela(clientes)
+
     const id_cliente = await fazerPergunta("Número do ID do cliente: ", { tipoRetorno: 'i_zero' });
 
     let clienteNoDb: ClienteModel;

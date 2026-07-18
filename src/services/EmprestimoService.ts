@@ -7,7 +7,7 @@ import {
     buscarEmprestimoPorIdRP,
     livroJaFoiEmprestadoRP,
     devolucaoEmprestimoRP,
-    buscarLivrosComEmprestimosAtivosPorIdCliente
+    buscarLivrosComEmprestimosAtivosPorIdCliente, listarEmprestimosAtivosRP
 } from '../repositories/EmprestimoRepository';
 import { buscarLivroPorIdServ } from './LivroService';
 import { buscarClientePorIdServ } from './ClienteService';
@@ -110,6 +110,15 @@ export async function livroJaFoiEmprestadoServ(id_livro: number): Promise<boolea
         throw new Error("❌ Necessário informar um ID válido de livro.");
     }
     return await livroJaFoiEmprestadoRP(id_livro);
+}
+
+export async function listarEmprestimosAtivosServ(): Promise<EmprestimoCompletoModel[]> {
+    const emprestimos = await listarEmprestimosAtivosRP();
+    if (emprestimos === null || !emprestimos || emprestimos.length === 0) {
+        throw new Error("Nenhum empréstimo encontrado.");
+    }
+
+    return emprestimos;
 }
 
 export async function devolucaoEmprestimoServ(id_emprestimo: number): Promise<EmprestimoCompletoModel> {

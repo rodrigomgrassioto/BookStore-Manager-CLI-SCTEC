@@ -24,6 +24,25 @@ export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCom
     return tipaEmprestimoCompleto(result);
 }
 
+export async function listarEmprestimosAtivosRP(): Promise<EmprestimoCompletoModel[] | null> {
+    const sql = `
+        SELECT
+            e.id_emprestimo, e.id_cliente, e.data_emprestimo, e.data_devolucao_prevista, e.data_devolucao_real, e.status,
+            l.id_livro, l.titulo, l.isbn, l.ano_publicacao, l.quantidade_estoque, l.quantidade_emprestada, l.quantidade_disponivel, l.id_autor,
+            a.nome AS autor_nome, a.nacionalidade AS autor_nacionalidade, a.data_cadastro AS autor_data_cadastro,
+            c.nome AS cliente_nome, c.email, c.telefone, c.data_nascimento, c.data_cadastro AS cliente_data_cadastro
+        FROM emprestimos e
+                 INNER JOIN emprestimo_livros el ON e.id_emprestimo = el.id_emprestimo
+                 INNER JOIN livros l ON el.id_livro = l.id_livro
+                 INNER JOIN autores a ON l.id_autor = a.id_autor
+                 INNER JOIN clientes c ON e.id_cliente = c.id_cliente
+        WHERE e.status = 'ATIVO'
+    `;
+
+    const result = await pool.query(sql);
+    return tipaListaEmprestimosCompletosArray(result);
+}
+
 // Uso no teste antes de excluir livro
 export async function livroJaFoiEmprestadoRP(id: number): Promise<boolean> {
     const sql = `
@@ -223,6 +242,69 @@ function tipaEmprestimoCompleto(result: QueryResult): EmprestimoCompletoModel | 
         livros: listaLivros
     };
 }
+
+function tipaListaEmprestimosCompletosArray(result: QueryResult): EmprestimoCompletoModel[] | null {
+    if (result.rows.length === 0) return null;
+
+    // Criamos um mapa para agrupar livros pelo ID do empréstimo
+    const emprestimosMap = new Map<number, EmprestimoCompletoModel>();
+
+    for (const linha of result.rows) {
+        const idEmprestimo = Number(linha.id_emprestimo);
+
+        // Se o empréstimo ainda não foi adicionado ao mapa, criamos a estrutura dele
+        if (!emprestimosMap.has(idEmprestimo)) {
+            emprestimosMap.set(idEmprestimo, {
+                id_emprestimo: idEmprestimo,
+                id_cliente: Number(linha.id_cliente),
+                data_emprestimo: new Date(linha.data_emprestimo),
+                data_devolucao_prevista: new Date(linha.data_devolucao_prevista),
+                data_devolucao_real: linha.data_devolucao_real ? new Date(linha.data_devolucao_real) : null,
+                status: linha.status as 'ATIVO' | 'DEVOLVIDO',
+                cliente: {
+                    id_cliente: Number(linha.id_cliente),
+                    nome: String(linha.cliente_nome),
+                    email: String(linha.email),
+                    telefone: linha.telefone ? String(linha.telefone) : null,
+                    data_nascimento: linha.data_nascimento ? new Date(linha.data_nascimento) : null,
+                    data_cadastro: new Date(linha.cliente_data_cadastro)
+                },
+                livros: [] // Começa com uma lista vazia de livros
+            });
+        }
+
+        // Se a linha trouxer um livro válido, adicionamos ao array de livros desse empréstimo
+        if (linha.id_livro) {
+            const emprestimoExistente = emprestimosMap.get(idEmprestimo)!;
+
+            // Evita duplicar o mesmo livro caso a query traga linhas repetidas por outro motivo
+            const jaPossuiLivro = emprestimoExistente.livros.some(l => l.id_livro === Number(linha.id_livro));
+
+            if (!jaPossuiLivro) {
+                emprestimoExistente.livros.push({
+                    id_livro: Number(linha.id_livro),
+                    titulo: String(linha.titulo),
+                    isbn: String(linha.isbn),
+                    ano_publicacao: Number(linha.ano_publicacao),
+                    quantidade_estoque: Number(linha.quantidade_estoque),
+                    quantidade_emprestada: Number(linha.quantidade_emprestada),
+                    quantidade_disponivel: Number(linha.quantidade_disponivel),
+                    // id_autor: Number(linha.id_autor),
+                    autor: {
+                        id_autor: Number(linha.id_autor),
+                        nome: String(linha.autor_nome),
+                        nacionalidade: linha.autor_nacionalidade ? String(linha.autor_nacionalidade) : null,
+                        data_cadastro: new Date(linha.autor_data_cadastro)
+                    }
+                });
+            }
+        }
+    }
+
+    // Retorna os valores do mapa convertidos em um Array do tipo EmprestimoCompletoModel[]
+    return Array.from(emprestimosMap.values());
+}
+
 
 
 
