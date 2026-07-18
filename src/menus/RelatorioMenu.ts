@@ -1,13 +1,12 @@
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import {
-    cianolNegritoMsg,
+    divisor, erroMsg,
+    opcaoSair,
     opcoes,
     subtituloMsg,
     sucessoMsg,
     tituloMsg,
-    verdeMsg,
-    vermelhoMsg
-} from "../utils/consoleLogCor";
+} from "../estilos/estilo";
 import { livrosDisponiveisController, livrosEmprestadosController, 
          livrosCadastradosPorAutorController, quantidadeEmprestimoPorLivroController, 
          clientesComEmprestimosAtivosController } from "../controllers/RelatorioController";
@@ -20,45 +19,49 @@ export class RelatorioMenu {
         while (noSubMenu) {
             tituloMsg("BookStore Manager");
             subtituloMsg('Relatórios');
-            opcoes('====================');
-            opcoes('1. Livros disponíveis');
-            opcoes('2. Livros emprestados');
-            opcoes('3. Livros por autor');
-            opcoes('4. Quantidade empréstimos por livro');
-            opcoes('5. Clientes com empréstimos ativos');
-            vermelhoMsg('0. Voltar menu anterior');
-            opcoes('====================');
+            opcoes('1 - Livros disponíveis');
+            opcoes('2 - Livros emprestados');
+            opcoes('3 - Livros por autor');
+            opcoes('4 - Quantidade empréstimos por livro');
+            opcoes('5 - Clientes com empréstimos ativos');
+            opcaoSair('0 - Voltar menu anterior');
+            divisor()
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 
             switch (opcao) {
                 case '1':
                     console.clear();
-                    console.log('\n🟦 --- Livros Disponíveis --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Livros disponíveis');
                     await livrosDisponiveisController();
                     break;
 
                 case '2':
                     console.clear();
-                    console.log('\n🟦 --- Livros Emprestados --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Livros emprestados');
                     await livrosEmprestadosController();
                     break;
 
                 case '3':
                     console.clear();
-                    console.log('\n🟦 --- Livros Cadastrados Por Autor --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Livros por autor');
                     await livrosCadastradosPorAutorController();
                     break;
 
                 case '4':
                     console.clear();
-                    console.log('\n🟦 --- Quantidade de Empréstimos Por Livro --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Total de empréstimos por livro');
                     await quantidadeEmprestimoPorLivroController();
                     break;
 
                 case '5':
                     console.clear();
-                    console.log('\n🟦 --- Clientes Com Empréstimos Ativos --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Empréstimos Ativos');
                     await clientesComEmprestimosAtivosController();
                     break;
 
@@ -69,7 +72,7 @@ export class RelatorioMenu {
 
                 default:
                     console.clear();
-                    console.log('❌ Opção inválida.');
+                    erroMsg('Opção inválida.');
             };
         };
     };

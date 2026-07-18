@@ -1,7 +1,8 @@
 import { Client } from 'pg';
 import * as fs from 'fs';
 import * as path from 'path';
-import { pool } from './connection'; // Herda a conexão que já usa o process.env padrão
+import { pool } from './connection';
+import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo"; // Herda a conexão que já usa o process.env padrão
 
 // Configuração temporária usando o process.env padrão do projeto, apenas para criar o banco se ele não existir
 const bootstrapConfig = {
@@ -25,15 +26,16 @@ async function ensureDatabaseExists() {
         );
 
         if (res.rowCount === 0) {
-            console.log(`🌐 Banco de dados "${dbName}" não existe. Criando...`);
+            alertaMsg(`🌐 Banco de dados "${dbName}" não existe. Criando...`);
             // SQL de criação de banco não aceita parâmetros ($1), concatenar com aspas duplas por segurança
             await client.query(`CREATE DATABASE "${dbName}"`);
-            console.log(`✅ Banco de dados "${dbName}" criado com sucesso!`);
+            sucessoMsg(`✅ Banco de dados "${dbName}" criado com sucesso!`, false);
         } else {
-            console.log(`ℹ️ Banco de dados "${dbName}" já existe.`);
+            alertaMsg(`ℹ️ Banco de dados "${dbName}" já existe.`);
         }
     } catch (error) {
-        console.error('❌ Erro crítico ao verificar/criar o banco de dados:', error);
+        // console.error('Erro crítico ao verificar/criar o banco de dados:', error);
+        erroMsg('Erro crítico ao verificar/criar o banco de dados:', false);
         process.exit(1);
     } finally {
         await client.end();
@@ -63,7 +65,7 @@ async function runSchemas() {
             .filter(file => file.endsWith('.sql'))
             .sort((a, b) => a.localeCompare(b));
 
-        console.log(`🚀 Iniciando a verificação de ${sqlFiles.length} arquivos de schema...`);
+        alertaMsg(`🚀 Iniciando a verificação de ${sqlFiles.length} arquivos de schema...`);
 
         // 3. Executa cada arquivo dentro de uma transação isolada
         for (const file of sqlFiles) {
@@ -73,11 +75,11 @@ async function runSchemas() {
             );
 
             if ((alreadyRun.rowCount ?? 0) > 0) {
-                console.log(`⏩ Schema pulado: ${file} (Já aplicado anteriormente)`);
+                alertaMsg(`⏩ Schema pulado: ${file} (Já aplicado anteriormente)`);
                 continue;
             }
 
-            console.log(`⚙️ Aplicando schema: ${file}...`);
+            alertaMsg(`⚙️ Aplicando schema: ${file}...`);
             const filePath = path.join(schemasDir, file);
             const sqlQuery = fs.readFileSync(filePath, 'utf-8');
 
@@ -90,25 +92,25 @@ async function runSchemas() {
                     [file]
                 );
                 await client.query('COMMIT');
-                console.log(`✅ Schema aplicado com sucesso: ${file}`);
+                sucessoMsg(`✅ Schema aplicado com sucesso: ${file}`, false);
             } catch (err: any) {
                 await client.query('ROLLBACK');
-                console.error(`\n❌ Falha catastrófica no arquivo ${file}. Alterações revertidas.`);
+                erroMsg(`Falha catastrófica no arquivo ${file}. Alterações revertidas.`, false);
 
                 switch (err.code) {
-                    case '42P07': console.error("   -> Erro: Essa tabela ou relação já existe no banco."); break;
-                    case '42704': console.error("   -> Erro: Tipo de dado ou objeto referenciado não existe."); break;
-                    case '42601': console.error("   -> Erro: Erro de sintaxe no código SQL do arquivo."); break;
-                    default: console.error(`   -> Erro Postgres [Código ${err.code}]: ${err.message}`);
+                    case '42P07': erroMsg("   -> Erro: Essa tabela ou relação já existe no banco.", false); break;
+                    case '42704': erroMsg("   -> Erro: Tipo de dado ou objeto referenciado não existe.", false); break;
+                    case '42601': erroMsg("   -> Erro: Erro de sintaxe no código SQL do arquivo.", false); break;
+                    default: erroMsg(`   -> Erro Postgres [Código ${err.code}]: ${err.message}`, false);
                 }
                 throw err;
             }
         }
 
-        console.log('\n🎉 Todos os schemas foram sincronizados perfeitamente!');
+        sucessoMsg('Todos os schemas foram sincronizados perfeitamente!', false);
 
     } catch (error) {
-        console.error('💥 Processo de migração abortado devido a erros no SQL.');
+        erroMsg('Processo de migração abortado devido a erros no SQL.', false);
     } finally {
         // Libera a conexão de volta para o Pool
         client.release();

@@ -6,10 +6,9 @@ import { criarEmprestimoServ, devolucaoEmprestimoServ, buscarEmprestimoPorIdServ
 import configEmpresa from '../configuracoes_empresa.json'
 import { listarClientesServ } from '../services/ClienteService';
 import { listarLivrosServ } from '../services/LivroService';
+import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
 
 export async function criarEmprestimoController(): Promise<void> {
-    console.log("\n=== REGISTRAR NOVO EMPRÉSTIMO ===");
-
     const clientes =  await listarClientesServ();
     exibirClientesTabela(clientes);       
     const id_cliente = await fazerPergunta("Digite o ID do cliente: ", { tipoRetorno: "i_zero" });
@@ -26,22 +25,19 @@ export async function criarEmprestimoController(): Promise<void> {
             dias_para_devolucao: configEmpresa.dias_de_emprestimo
         });
 
-        console.log("\n🎉 Empréstimo registrado com sucesso!");
+        sucessoMsg("Empréstimo registrado com sucesso!");
         exibirEmprestimosDetalhadoTabela([emprestimo]);
 
     } catch (error: any){
-        console.log("\n========================================");
         // Erro no PostgreSQL
         if (error.code) tratarErroBanco(error);
 
         // Erro do service
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao criar o empréstimo.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao criar o empréstimo.");
     }; 
 };
 
 export async function buscarEmprestimoPorIdController(): Promise<void> {
-   console.log("\n=== BUSCAR EMPRESTIMO POR ID ===");
 
     // Imput do usuário
     const id = await fazerPergunta("Digite o ID do empréstimo: ", { tipoRetorno: "i_zero" });
@@ -50,19 +46,15 @@ export async function buscarEmprestimoPorIdController(): Promise<void> {
         const emprestimo = await buscarEmprestimoPorIdServ(id);
         exibirEmprestimosDetalhadoTabela([emprestimo]);
     } catch (error: any){
-        console.log("\n========================================");
         // Erro no PostgreSQL
         if (error.code) tratarErroBanco(error);
 
         // Erro do service
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao buscar o empréstimo.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o empréstimo.");
     }; 
 };
 
 export async function devolverEmprestimoController(): Promise<void> {
-    console.log("\n=== DEVOLVER EMPRÉSTIMO ===");
-
     // Imput do usuário
     const id_emprestimo = await fazerPergunta("Digite o ID do empréstimo: ", { tipoRetorno: "i_zero" });
 
@@ -72,31 +64,28 @@ export async function devolverEmprestimoController(): Promise<void> {
         exibirEmprestimosDetalhadoTabela([emprestimo]);
 
         if (emprestimo.status === "DEVOLVIDO") {
-            console.log("\n❌ Este empréstimo já foi devolvido.");
+            erroMsg("Este empréstimo já foi devolvido.");
             return;
         }
 
-        console.log("\n⚠️ A devolução será registrada para todos os livros deste empréstimo.");
+        alertaMsg("Devolução será registrada para todos os livros deste empréstimo.");
 
         const confirmacao = await fazerPergunta("Confirmar devolução? (S/N): ");
 
         if (confirmacao.toLowerCase() !== "s") {
-            console.log("\nOperação cancelada.");
+            alertaMsg("Operação cancelada.");
             return;
         }
 
         const emprestimoDevolvido = await devolucaoEmprestimoServ(id_emprestimo);
 
-        console.log("\n🎉 Devolução registrada com sucesso!");
-        console.log(`ID Empréstimo: "${id_emprestimo}" | Status: "${emprestimoDevolvido.status}"`)
+        sucessoMsg(`Devolução registrada com sucesso!\n\nID Empréstimo: "${id_emprestimo}" | Status: "${emprestimoDevolvido.status}"`)
     } catch (error: any){
-        console.log("\n========================================");
         // Erro no PostgreSQL
         if (error.code) tratarErroBanco(error);
 
         // Erro do service
-        else console.error(error.message || "❌ Ocorreu um erro inesperado ao devolver o empréstimo.");
-        console.log("========================================\n");
+        else erroMsg(error.message || "Ocorreu um erro inesperado ao devolver o empréstimo.");
     };
 };
 

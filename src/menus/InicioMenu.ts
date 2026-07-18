@@ -5,6 +5,7 @@ import {AutorMenu} from "./AutorMenu";
 import {ClienteMenu} from "./ClienteMenu";
 import {EmprestimoMenu} from "./EmprestimoMenu";
 import {RelatorioMenu} from "./RelatorioMenu";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../estilos/estilo";
 
 export class InicioMenu {
     // private rl: readline.Interface;
@@ -32,13 +33,16 @@ export class InicioMenu {
 
         console.clear();
         while (continuar) {
-            console.log('\n🟦 --- BookStore Manager --- 🟦');
-            console.log('1. Autor');
-            console.log('2. Livros');
-            console.log('3. Clientes');
-            console.log('4. Empréstimos');
-            console.log('5. Relatórios');
-            console.log('0. Sair');
+            tituloMsg('BookStore Manager');
+            subtituloMsg('Opções');
+            opcoes('1 - Autor');
+            opcoes('2 - Livros');
+            opcoes('3 - Clientes');
+            opcoes('4 - Empréstimos');
+            opcoes('5 - Relatórios');
+            opcaoSair('0 - Sair')
+            divisor()
+
 
             // const opcao = await this.perguntar('Escolha uma opção: ');
             const opcao = await fazerPergunta('Escolha uma opção: ');
@@ -70,14 +74,14 @@ export class InicioMenu {
 
                 case '0':
                     console.clear();
-                    console.log('👋 👋 👋  Até mais!');
+                    sucessoMsg('Até mais!');
                     continuar = false;
                     rl.close(); // Fecha a interface do terminal
                     break;
 
                 default:
                     console.clear();
-                    console.log('❌ Opção inválida! Tente novamente.');
+                    erroMsg('Opção inválida! Tente novamente.');
                     break;
             };
         };

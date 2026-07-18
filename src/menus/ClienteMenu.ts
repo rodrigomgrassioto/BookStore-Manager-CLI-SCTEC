@@ -6,6 +6,7 @@ import {
     clienteControllerDeletar,
     clienteControllerBuscarPorId
 } from "../controllers/ClienteController";
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../estilos/estilo";
 
 export class ClienteMenu {
     async subMenuCliente(): Promise<void> {
@@ -13,14 +14,15 @@ export class ClienteMenu {
 
         let continuar = true;
         while (continuar) {
-            console.log('\n🟦 --- BookStore Manager --- 🟦');
-            console.log('🟦 --- Cliente --- 🟦');
-            console.log('1. Adicionar cliente');
-            console.log('2. Listar clientes');
-            console.log('3. Buscar cliente por ID');
-            console.log('4. Atualizar cliente');
-            console.log('5. Excluir cliente');
-            console.log('0. Voltar para o menu anterior');
+            tituloMsg("BookStore Manager");
+            subtituloMsg('Opções em cliente');
+            opcoes('1 - Adicionar cliente');
+            opcoes('2 - Listar clientes');
+            opcoes('3 - Buscar cliente por ID');
+            opcoes('4 - Atualizar cliente');
+            opcoes('5 - Excluir cliente');
+            opcaoSair('0 - Voltar para o menu anterior');
+            divisor()
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 
@@ -28,31 +30,35 @@ export class ClienteMenu {
 
                 case '1':
                     console.clear();
-                    console.log('\n🟦 --- Adicionar cliente --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Adicionar cliente');
                     await clienteControllerCriar();
                     break;
 
                 case '2':
                     console.clear();
-                    console.log('\n🟦 --- Listar clientes --- 🟦');
+                    subtituloMsg('Lista de clientes');
                     await clienteControllerListar();
                     break;
 
                 case '3':
                     console.clear();
-                    console.log('\n🟦 --- Buscar cliente por ID --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Buscar cliente por ID');
                     await clienteControllerBuscarPorId();
                     break;
 
                 case '4':
                     console.clear();
-                    console.log('\n🟦 --- Atualizar cliente --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Atualizar cliente');
                     await clienteControllerAtualizar();
                     break;
 
                 case '5':
                     console.clear();
-                    console.log('\n🟦 --- Excluir cliente --- 🟦');
+                    tituloMsg('BookStore Manager');
+                    subtituloMsg('Excluir cliente');
                     await clienteControllerDeletar();
                     break;
 
@@ -63,7 +69,7 @@ export class ClienteMenu {
 
                 default:
                     console.clear();
-                    console.log('❌ Opção inválida.');
+                    erroMsg('Opção inválida.');
             };
         };
     };

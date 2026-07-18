@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { pool } from './connection'; // Conexão oficial do seu projeto
+import { pool } from './connection';
+import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo"; // Conexão oficial do seu projeto
 
 // 1. Defina aqui a lista dos arquivos de seed na ordem exata que devem rodar
 // (Simulando o $this->call() do Laravel)
@@ -16,7 +17,7 @@ async function runSeeds() {
     // Pega uma conexão limpa do pool oficial
     const client = await pool.connect();
 
-    console.log(`🌱 Iniciando o semeamento do banco de dados...`);
+    sucessoMsg(`🌱 Iniciando o semeamento do banco de dados...`, false);
 
     try {
         const seedsDir = path.join(__dirname, 'seeds');
@@ -26,11 +27,11 @@ async function runSeeds() {
 
             // Verifica se o arquivo listado realmente existe na pasta
             if (!fs.existsSync(filePath)) {
-                console.error(`⚠️ Arquivo de seed não encontrado: ${file}. Pulando...`);
+                erroMsg(`Arquivo de seed não encontrado: ${file}. Pulando...`, false);
                 continue;
             }
 
-            console.log(`⚙️ Executando seed: ${file}...`);
+            alertaMsg(`⚙️ Executando seed: ${file}...`);
             const sqlQuery = fs.readFileSync(filePath, 'utf-8');
 
             // Executa em uma transação para garantir consistência
@@ -38,25 +39,25 @@ async function runSeeds() {
             try {
                 await client.query(sqlQuery);
                 await client.query('COMMIT');
-                console.log(`✅ Seed aplicado com sucesso: ${file}`);
+                sucessoMsg(`Seed aplicado com sucesso: ${file}`, false);
             } catch (err: any) {
                 await client.query('ROLLBACK');
-                console.error(`\n❌ Falha ao rodar os dados do arquivo ${file}. Alterações deste arquivo desfeitas.`);
+                erroMsg(`Falha ao rodar os dados do arquivo ${file}. Alterações deste arquivo desfeitas.`, false);
 
                 // Tratamento de erros comuns em inserções de seeds
                 switch (err.code) {
-                    case '23505': console.error("   -> Erro: Registro duplicado detectado (Unique Violation)."); break;
-                    case '23503': console.error("   -> Erro: Chave estrangeira inválida (Foreign Key Violation)."); break;
-                    default: console.error(`   -> Erro Postgres [Código ${err.code}]: ${err.message}`);
+                    case '23505': erroMsg("   -> Erro: Registro duplicado detectado (Unique Violation).", false); break;
+                    case '23503': erroMsg("   -> Erro: Chave estrangeira inválida (Foreign Key Violation).", false); break;
+                    default: erroMsg(`   -> Erro Postgres [Código ${err.code}]: ${err.message}`, false);
                 }
                 throw err; // Interrompe o processo para avaliar o erro no script
             }
         }
 
-        console.log('\n🎉 Banco de dados semeado com sucesso!');
+        sucessoMsg('Banco de dados semeado com sucesso!', false);
 
     } catch (error) {
-        console.error('💥 Processo de seed abortado devido a erros nos dados.');
+        erroMsg('Processo de seed abortado devido a erros nos dados.', false);
     } finally {
         // Libera a conexão de volta para o Pool
         client.release();
