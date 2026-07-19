@@ -237,6 +237,8 @@ PSSecurityException
 FullyQualifiedErrorId: UnauthorizedAccess
 ```
 
+![Erro PowerShell](src/img/erro-powershell.jpeg)
+
 Nesse caso, escolha **uma** das opções abaixo.
 
 #### Opção 1 — Liberação temporária (recomendada)
