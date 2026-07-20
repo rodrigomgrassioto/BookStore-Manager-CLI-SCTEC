@@ -19,7 +19,7 @@ export class AutorService implements IAutorService {
     }
 
     public async cadastrarAutorServ(nome: string, nacionalidade?: string): Promise<AutorModel> {
-        // validarNomeAutor(nome);
+        validarNomeAutor(nome);
         validarNacionalidadeAutor(nacionalidade);
         // return await cadastrarAutor(nome, nacionalidade);
         return await this.repositorio.cadastrarAutor(nome, nacionalidade);
