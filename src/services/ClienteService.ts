@@ -1,119 +1,130 @@
 import { ClienteModel, ClienteCadastro } from '../models/ClienteModel';
 import {
-    criarClienteRP,
-    buscarClientePorIdRP,
-    atualizarClienteRP,
-    deletarClienteRP,
-    listarClientesRP
-} from "../repositories/ClienteRepository";
-import {
     camposObrigatoriosPreenchidos,
     nomeValido,
     emailValido,
     telefoneValido,
     dataNascimentoValida,
     dataNascimentoMaior18Anos,
-    clienteValidoParaBusca,
     clienteValidoParaExclusao
 } from '../utils/validadores';
+import {ClienteRepository, IClienteRepository} from "../repositories/ClienteRepository";
 
-export async function listarClientesServ(): Promise<ClienteModel[]> {
-    const clientes = await listarClientesRP();
-    if (clientes.length === 0) {
-        throw new Error("Nenhum cliente encontrado.");
-    }
-    return clientes;
-};
+export interface IClienteService{
+    listarClientesServ(): Promise<ClienteModel[]>
+    buscarClientePorIdServ(id_cliente: number): Promise<ClienteModel>
+    criarClienteServ(nome: string,email: string,telefone: string,data_nascimento: Date): Promise<ClienteCadastro>
+    atualizarClienteServ(id_cliente: number, nome: string,email: string,
+                         telefone: string,data_nascimento: Date): Promise<ClienteCadastro>
+    deletarClienteServ(id_cliente: number): Promise<boolean>
+}
 
-export async function buscarClientePorIdServ(id_cliente: number): Promise<ClienteModel> {
-    if (!clienteValidoParaExclusao(id_cliente)) {
-        throw new Error("Necessário informar um ID válido de cliente.");
-    }
+export class ClienteService implements IClienteService {
+    private readonly repositorio: IClienteRepository;
 
-    const cliente = await buscarClientePorIdRP(id_cliente);
-    if (!cliente) {
-        throw new Error("Cliente não encontrado.");
-    }
-    return cliente;
-};
-
-export async function criarClienteServ(
-    nome: string, 
-    email: string, 
-    telefone: string, 
-    data_nascimento: Date
-): Promise<ClienteCadastro> {
-    
-    if (!camposObrigatoriosPreenchidos(nome, email, telefone, data_nascimento)) {
-        throw new Error("Os campos (nome, email, telefone, e data de nascimento) são obrigatórios.");
-    }
-    if (!nomeValido(nome)) {
-        throw new Error("Nome inválido. O nome deve conter apenas letras.");
-    }
-    if (!dataNascimentoValida(data_nascimento)) {
-        throw new Error("Data de nascimento inválida.");
-    }
-    if (!dataNascimentoMaior18Anos(data_nascimento)) {
-        throw new Error("Cliente inválido. O cliente deve ser maior de 18 anos.");
-    }
-    if (!emailValido(email)) {
-        throw new Error("Email inválido.");
-    }
-    if (!telefoneValido(telefone)) {
-        throw new Error("Telefone inválido. Deve conter apenas números e ter 10 ou 11 dígitos.");
+    constructor(repositorio: IClienteRepository = new ClienteRepository()) {
+        this.repositorio = repositorio;
     }
 
-    return await criarClienteRP(nome, email, telefone, data_nascimento);
-};
 
-export async function atualizarClienteServ(
-    id_cliente: number, 
-    nome: string, 
-    email: string, 
-    telefone: string, 
-    data_nascimento: Date
-): Promise<ClienteCadastro> {
+    public async listarClientesServ(): Promise<ClienteModel[]> {
+        const clientes = await this.repositorio.listarClientesRP();
+        if (clientes.length === 0) {
+            throw new Error("Nenhum cliente encontrado.");
+        }
+        return clientes
+    }
 
-    if (!id_cliente || !camposObrigatoriosPreenchidos(nome, email, telefone, data_nascimento)) {
-        throw new Error("Os campos (Id do cliente, nome, email, telefone, e data de nascimento) são obrigatórios.");
-    };
-    if (!nomeValido(nome)) {
-        throw new Error("Nome inválido. O nome deve conter apenas letras.");
-    };
-    if (!dataNascimentoValida(data_nascimento)) {
-        throw new Error("Data de nascimento inválida.");
-    };
-    if (!dataNascimentoMaior18Anos(data_nascimento)) {
-        throw new Error("Alteração inválida. O cliente deve ser maior de 18 anos.");
-    };
-    if (!emailValido(email)) {
-        throw new Error("Email inválido.");
-    };
-    if (!telefoneValido(telefone)) {
-        throw new Error("Telefone inválido. Deve conter apenas números e ter 10 ou 11 dígitos.");
-    };
+    public async buscarClientePorIdServ(id_cliente: number): Promise<ClienteModel> {
+        if (!clienteValidoParaExclusao(id_cliente)) {
+            throw new Error("Necessário informar um ID válido de cliente.");
+        }
 
-    const r = await atualizarClienteRP(id_cliente, {
-        nome,
-        email,
-        telefone,
-        data_nascimento
-    });
+        const cliente = await this.repositorio.buscarClientePorIdRP(id_cliente);
+        if (!cliente) {
+            throw new Error("Cliente não encontrado.");
+        }
+        return cliente;
+    }
 
-    if (!r) {
-        throw new Error("Erro ao atualizar cliente. Verifique se o ID informado existe.");
-    };
-    return r;
-};
+    public async criarClienteServ(
+        nome: string,
+        email: string,
+        telefone: string,
+        data_nascimento: Date
+    ): Promise<ClienteCadastro> {
 
-export async function deletarClienteServ(id_cliente: number): Promise<boolean> {
-    if (!clienteValidoParaExclusao(id_cliente)) {
-        throw new Error("Necessário informar um ID válido de cliente para exclusão.");
-    };
+        if (!camposObrigatoriosPreenchidos(nome, email, telefone, data_nascimento)) {
+            throw new Error("Os campos (nome, email, telefone, e data de nascimento) são obrigatórios.");
+        }
+        if (!nomeValido(nome)) {
+            throw new Error("Nome inválido. O nome deve conter apenas letras.");
+        }
+        if (!dataNascimentoValida(data_nascimento)) {
+            throw new Error("Data de nascimento inválida.");
+        }
+        if (!dataNascimentoMaior18Anos(data_nascimento)) {
+            throw new Error("Cliente inválido. O cliente deve ser maior de 18 anos.");
+        }
+        if (!emailValido(email)) {
+            throw new Error("Email inválido.");
+        }
+        if (!telefoneValido(telefone)) {
+            throw new Error("Telefone inválido. Deve conter apenas números e ter 10 ou 11 dígitos.");
+        }
 
-    const deletado = await deletarClienteRP(id_cliente);
-    if (!deletado) {
-        throw new Error("Cliente não encontrado para exclusão.");
-    };
-    return deletado;
-};
+        return await this.repositorio.criarClienteRP(nome, email, telefone, data_nascimento);
+    }
+
+    public async atualizarClienteServ(
+        id_cliente: number,
+        nome: string,
+        email: string,
+        telefone: string,
+        data_nascimento: Date
+    ): Promise<ClienteCadastro> {
+
+        if (!id_cliente || !camposObrigatoriosPreenchidos(nome, email, telefone, data_nascimento)) {
+            throw new Error("Os campos (Id do cliente, nome, email, telefone, e data de nascimento) são obrigatórios.");
+        }
+        if (!nomeValido(nome)) {
+            throw new Error("Nome inválido. O nome deve conter apenas letras.");
+        }
+        if (!dataNascimentoValida(data_nascimento)) {
+            throw new Error("Data de nascimento inválida.");
+        }
+        if (!dataNascimentoMaior18Anos(data_nascimento)) {
+            throw new Error("Alteração inválida. O cliente deve ser maior de 18 anos.");
+        }
+        if (!emailValido(email)) {
+            throw new Error("Email inválido.");
+        }
+        if (!telefoneValido(telefone)) {
+            throw new Error("Telefone inválido. Deve conter apenas números e ter 10 ou 11 dígitos.");
+        }
+
+        const result = await this.repositorio.atualizarClienteRP(id_cliente, {
+            nome,
+            email,
+            telefone,
+            data_nascimento
+        })
+
+        if (!result) {
+            throw new Error("Erro ao atualizar cliente. Verifique se o ID informado existe.");
+        }
+        return result;
+    }
+
+    public async deletarClienteServ(id_cliente: number): Promise<boolean> {
+        if (!clienteValidoParaExclusao(id_cliente)) {
+            throw new Error("Necessário informar um ID válido de cliente para exclusão.");
+        }
+
+        const deletado = await this.repositorio.deletarClienteRP(id_cliente);
+        if (!deletado) {
+            throw new Error("Cliente não encontrado para exclusão.");
+        }
+        return deletado;
+    }
+}
