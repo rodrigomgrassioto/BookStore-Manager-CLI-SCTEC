@@ -1,6 +1,11 @@
-// Tratamentos de erro proveniente do DB para as entidades do sistema Autor, Livro e Cliente
 import {erroMsg} from "../estilos/estilo";
 
+export function tratarErro(error: any, mensagemPadrao: string): void {
+    if (error.code) tratarErroBanco(error); // Erro no PostgreSQL
+    else erroMsg(error.message || mensagemPadrao); // Erro do service
+}
+
+// Tratamentos de erro do DB para todas entidades do sistema
 export function tratarErroBanco(error: any): void {
     
     switch (error.code) {

@@ -336,11 +336,11 @@ A árvore estrutural do projeto segue uma arquitetura em camadas (**Layered Arch
     │   │   ├── formatadoresTexto.ts              # Formata os dados para exibição
     │   │   ├── gerarTabela.ts                    # Gera tabelas estilizadas no terminal
     │   │   ├── leitorFormatadorDeEntradas.ts     # Captura e converte entradas do terminal
-    │   │   ├── tratamentosErrosBD.ts             # Padroniza erros do PostgreSQL
+    │   │   ├── tratarErros.ts             # Padroniza erros do PostgreSQL
     │   │   └── validadores.ts                    # Valida dados das entidades
     │   │
     │   ├── configuracoes_empresa.json             # Regras configuráveis da biblioteca
-    │   └── index.ts                               # Ponto de entrada da aplicação
+    │   └── main.ts                               # Ponto de entrada da aplicação
     │
     ├── .env.example                               # Modelo das variáveis de ambiente
     ├── .gitignore                                 # Arquivos e diretórios ignorados pelo Git

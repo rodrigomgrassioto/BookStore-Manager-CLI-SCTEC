@@ -8,7 +8,7 @@ import {
 import { fazerPergunta } from '../utils/leitorFormatadorDeEntradas';
 import * as formatadoresTexto from "../utils/formatadoresTexto";
 import { ClienteModel } from '../models/ClienteModel';
-import { tratarErroBanco } from '../utils/tratamentosErrosBD';
+import { tratarErroBanco } from '../utils/tratarErros';
 import { exibirClientesTabela } from '../utils/formatadoresTexto';
 import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
 
