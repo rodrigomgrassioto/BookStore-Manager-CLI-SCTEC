@@ -1,8 +1,8 @@
 import {InicioMenu} from "./menus/InicioMenu";
 
-async function main() {
+async function main(): Promise<void> {
     const inicioMenu = new InicioMenu();
-    inicioMenu.iniciarMenu();
+    await inicioMenu.iniciarMenu();
 };
 
 main();
