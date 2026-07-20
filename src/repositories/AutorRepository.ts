@@ -1,4 +1,4 @@
-import { AutorModel } from '../models/AutorModel';
+import {Autor, AutorModel} from '../models/AutorModel';
 import { pool } from '../database/connection';
 
 export interface IAutorRepository {
@@ -22,7 +22,6 @@ export class AutorRepository implements IAutorRepository {
          VALUES ($1, $2)
          RETURNING *`;
 
-        // const result = await pool.query<AutorModel>(sql, [nome, nacionalidade ?? null]);
         const result = await this.conexao.query<AutorModel>(sql, [nome, nacionalidade ?? null]);
         return result.rows[0];
     }
@@ -41,7 +40,8 @@ export class AutorRepository implements IAutorRepository {
      WHERE id_autor = $1`;
 
         const result = await this.conexao.query<AutorModel>(sql, [id_autor]);
-        return result.rows[0] || null;
+        if (!result) return null;
+        return new Autor(result.rows[0].id_autor, result.rows[0].nome, result.rows[0].nacionalidade, result.rows[0].data_cadastro);
     }
 
     public async atualizarAutor(id_autor: number, nome: string, nacionalidade?: string): Promise<AutorModel> {
@@ -61,7 +61,7 @@ export class AutorRepository implements IAutorRepository {
             `DELETE FROM autores 
      WHERE id_autor = $1`;
 
-        const result = await pool.query(sql, [id_autor]);
+        const result = await this.conexao.query(sql, [id_autor]);
         return (result.rowCount ?? 0) > 0;
     }
 }
