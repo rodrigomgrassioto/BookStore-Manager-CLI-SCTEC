@@ -1,4 +1,3 @@
-import {LivroCompletoModel, LivroModel} from "../models/LivroModel";
 import {pool} from "../database/connection";
 import {CriarEmprestimoModel, EmprestimoCompletoModel, LivrosPorClienteModel} from "../models/EmprestimoModel";
 import configEmpresa from '../configuracoes_empresa.json';
@@ -22,7 +21,7 @@ export async function buscarEmprestimoPorIdRP(id: number): Promise<EmprestimoCom
 
     const result = await pool.query(sql, [id]);
     return tipaEmprestimoCompleto(result);
-}
+};
 
 export async function listarEmprestimosAtivosRP(): Promise<EmprestimoCompletoModel[] | null> {
     const sql = `
@@ -41,9 +40,9 @@ export async function listarEmprestimosAtivosRP(): Promise<EmprestimoCompletoMod
 
     const result = await pool.query(sql);
     return tipaListaEmprestimosCompletosArray(result);
-}
+};
 
-// Uso no teste antes de excluir livro
+// Usado no teste antes de excluir livro
 export async function livroJaFoiEmprestadoRP(id: number): Promise<boolean> {
     const sql = `
         SELECT id_livro
@@ -53,17 +52,8 @@ export async function livroJaFoiEmprestadoRP(id: number): Promise<boolean> {
 
     const result = await pool.query(sql, [id]);
     return result.rows.length > 0;
-}
+};
 
-/**
- * COMO UTILIZAR
- * const result = await criarEmprestimoRP({
- *        id_cliente: 1,
- *        ids_livros: [1, 2],
- *        dias_para_devolucao: 3
- *    });
- *    console.log(result)
- */
 export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< EmprestimoCompletoModel | null> {
     const { id_cliente, ids_livros, dias_para_devolucao = configEmpresa.dias_de_emprestimo } = dados;
 
@@ -95,7 +85,7 @@ export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< E
     `;
 
         for (const id_livro of ids_livros) {
-            const livroArray= await buscarLivroPorIdServ(id_livro)
+            const livroArray= await buscarLivroPorIdServ(id_livro);
 
             if (!livroArray || livroArray.length === 0)
                 throw new Error(`❌ O livro com ID ${id_livro} não foi encontrado no sistema.`);
@@ -114,20 +104,20 @@ export async function criarEmprestimoRP(dados: CriarEmprestimoModel): Promise< E
                 quantidade_disponivel = quantidade_disponivel - 1 
             WHERE id_livro = $1
         `, [id_livro]);
-        }
+        };
         // dando certo confirma alterações
         await client.query('COMMIT');
-        // console.log(resultadoEmprestimo.rows[0]);
         return  buscarEmprestimoPorIdRP(id_emprestimo) ?? null;
     } catch (error: any) {
         // Em caso de erro, desfaz TUDO
         await client.query('ROLLBACK');
-        return null
+        return null;
     } finally {
         // Libera a conexão do banco de dados
         client.release();
-    }
-}
+    };
+};
+
 export async function devolucaoEmprestimoRP(id_emprestimo: number): Promise< EmprestimoCompletoModel | null> {
     const emprestimoAtual = await buscarEmprestimoPorIdRP(id_emprestimo);
 
@@ -157,7 +147,7 @@ export async function devolucaoEmprestimoRP(id_emprestimo: number): Promise< Emp
 
         for (const livro of emprestimoAtual.livros) {
             await client.query(sqlAtualizarEstoque, [livro.id_livro]);
-        }
+        };
 
         await client.query('COMMIT');
 
@@ -169,8 +159,8 @@ export async function devolucaoEmprestimoRP(id_emprestimo: number): Promise< Emp
         throw error;
     } finally {
         client.release();
-    }
-}
+    };
+};
 
 export async function buscarLivrosComEmprestimosAtivosPorIdCliente(id_cliente: number): Promise<LivrosPorClienteModel | null> {
     const sql = `
@@ -188,16 +178,15 @@ export async function buscarLivrosComEmprestimosAtivosPorIdCliente(id_cliente: n
     `;
 
     const result = await pool.query(sql, [id_cliente]);
-    // const emprestimoCompleto = await tipaEmprestimoCompleto(result);
-    // if (!emprestimoCompleto) return null;
     const livros = await mapLivros(result);
+    
     if (!livros) return null
     return {
         nome_cliente: result.rows[0].cliente_nome,
         obs: "Retornando livros com empréstimo ativo por cliente",
         livros:livros,
-    }
-}
+    };
+};
 
 function mapLivros(result: QueryResult): any[] | null {
     if (result.rows.length === 0) return null;
@@ -216,7 +205,7 @@ function mapLivros(result: QueryResult): any[] | null {
             data_cadastro: new Date(row.autor_data_cadastro)
         }
     }));
-}
+};
 
 function tipaEmprestimoCompleto(result: QueryResult): EmprestimoCompletoModel | null {
     if (result.rows.length === 0) return null;
@@ -241,7 +230,7 @@ function tipaEmprestimoCompleto(result: QueryResult): EmprestimoCompletoModel | 
         },
         livros: listaLivros
     };
-}
+};
 
 function tipaListaEmprestimosCompletosArray(result: QueryResult): EmprestimoCompletoModel[] | null {
     if (result.rows.length === 0) return null;
@@ -271,7 +260,7 @@ function tipaListaEmprestimosCompletosArray(result: QueryResult): EmprestimoComp
                 },
                 livros: [] // Começa com uma lista vazia de livros
             });
-        }
+        };
 
         // Se a linha trouxer um livro válido, adicionamos ao array de livros desse empréstimo
         if (linha.id_livro) {
@@ -289,7 +278,6 @@ function tipaListaEmprestimosCompletosArray(result: QueryResult): EmprestimoComp
                     quantidade_estoque: Number(linha.quantidade_estoque),
                     quantidade_emprestada: Number(linha.quantidade_emprestada),
                     quantidade_disponivel: Number(linha.quantidade_disponivel),
-                    // id_autor: Number(linha.id_autor),
                     autor: {
                         id_autor: Number(linha.id_autor),
                         nome: String(linha.autor_nome),
@@ -297,13 +285,13 @@ function tipaListaEmprestimosCompletosArray(result: QueryResult): EmprestimoComp
                         data_cadastro: new Date(linha.autor_data_cadastro)
                     }
                 });
-            }
-        }
-    }
+            };
+        };
+    };
 
     // Retorna os valores do mapa convertidos em um Array do tipo EmprestimoCompletoModel[]
     return Array.from(emprestimosMap.values());
-}
+};
 
 
 

@@ -6,7 +6,7 @@ export interface LivroModel {
     quantidade_emprestada: number;
     quantidade_disponivel: number;
     id_autor: number;
-}
+};
 
 export interface LivroCompletoModel extends LivroModel{
     readonly id_livro: number;
@@ -16,4 +16,4 @@ export interface LivroCompletoModel extends LivroModel{
         nacionalidade?: string;
         data_cadastro: Date;
     };
-}
+};

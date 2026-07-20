@@ -5,7 +5,7 @@ import {LivroCompletoModel} from "../models/LivroModel";
 import { ClienteComEmprestimoAtivoModel, EmprestimosPorLivroModel, LivroDisponivelModel, LivroEmprestadoModel, LivroPorAutorModel } from "../models/RelatorioModel";
 import {gerarTabela} from "./gerarTabela";
 
-//para exibir a data no formato dd/mm/yyyy na data de nascimento de clientes
+//para exibir a data no formato dd/mm/yyyy 
 export function formatarDataPrompt(data?: Date | null): string {
     if (!data) return "";
     const d = new Date(data);
@@ -15,7 +15,6 @@ export function formatarDataPrompt(data?: Date | null): string {
 };
 
 export function exibirAutoresTabela(autores: AutorModel[]): void {
-    // console.table(
     const autoresFormatado = autores.map(autor => ({
         ID: autor.id_autor,
         Nome: autor.nome,
@@ -59,7 +58,7 @@ export function exibirEmprestimosDetalhadoTabela(emprestimos: EmprestimoCompleto
         Status: emprestimo.status
     }));
     gerarTabela(emprestimosFormatado);
-    if (porSoACabecinha) return
+    if (porSoACabecinha) return;    // TROCAR NOME PARÂMETRO
     
     const livrosFormatados = emprestimos.flatMap(emprestimo =>
     emprestimo.livros.map(livro => ({

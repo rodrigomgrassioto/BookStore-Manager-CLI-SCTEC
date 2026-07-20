@@ -5,7 +5,7 @@ export function gerarTabela<T extends object>(dados: T[]): void {
     if (!dados || dados.length === 0) {
         alertaMsg("Nenhum registro para exibir.");
         return;
-    }
+    };
 
     // Garante que o TypeScript entenda as chaves
     const colunas = Object.keys(dados[0]) as Array<keyof T>;
@@ -18,9 +18,9 @@ export function gerarTabela<T extends object>(dados: T[]): void {
             const valor = linha[coluna];
             const valorTexto = valor instanceof Date ? valor.toLocaleDateString("pt-BR") : String(valor ?? "-");
             if (valorTexto.length > tamanhoMaximo) tamanhoMaximo = valorTexto.length;
-        }
+        };
         larguras[coluna] = tamanhoMaximo;
-    }
+    };
 
     const corBorda = cores.bordaTabela;
 
@@ -59,4 +59,4 @@ export function gerarTabela<T extends object>(dados: T[]): void {
 
     // 5. Imprime a base da tabela
     console.log(linhaFundo + "\n");
-}
+};

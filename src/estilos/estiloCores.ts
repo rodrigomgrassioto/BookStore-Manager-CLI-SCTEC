@@ -29,11 +29,12 @@ export const cores = {
     subtitulo: "\x1b[1m\x1b[36m",        // Ciano Negrito
     promptPergunta: "\x1b[1m\x1b[34m",   // Azul Negrito
 
-    // tabela cinza
-    // bordaTabela: "\x1b[38;5;244m",     // Cinza elegante para as linhas divisórias
-    // textoCabecalho: "\x1b[1m\x1b[37m", // Branco negrito
-    // fundoCabecalho: "\x1b[48;5;238m", // Fundo cinza escuro para destacar o topo da tabela
-    // tabela cinza fim
+    /* 
+        Tabela cinza (não usada na aplicação atual)
+    bordaTabela: "\x1b[38;5;244m",     // Cinza elegante para as linhas divisórias
+    textoCabecalho: "\x1b[1m\x1b[37m", // Branco negrito
+    fundoCabecalho: "\x1b[48;5;238m", // Fundo cinza escuro para destacar o topo da tabela
+    */
 
     bordaTabela: "\x1b[1m\x1b[36m",
     textoCabecalho: "\x1b[34m",

@@ -22,7 +22,7 @@ export class ClienteMenu {
             opcoes('4 - Atualizar cliente');
             opcoes('5 - Excluir cliente');
             opcaoSair('0 - Voltar para o menu anterior');
-            divisor()
+            divisor();
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 

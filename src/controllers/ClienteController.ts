@@ -5,7 +5,6 @@ import {
     atualizarClienteServ,
     deletarClienteServ
 } from '../services/ClienteService';
-
 import { fazerPergunta } from '../utils/leitorFormatadorDeEntradas';
 import * as formatadoresTexto from "../utils/formatadoresTexto";
 import { ClienteModel } from '../models/ClienteModel';
@@ -13,7 +12,6 @@ import { tratarErroBanco } from '../utils/tratamentosErrosBD';
 import { exibirClientesTabela } from '../utils/formatadoresTexto';
 import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
 
-// 1. Cadastrar Cliente
 export async function clienteControllerCriar(): Promise<void> {
     const nome = await fazerPergunta("Nome do Cliente: ");
     const email = await fazerPergunta("E-mail do Cliente: ");
@@ -26,10 +24,9 @@ export async function clienteControllerCriar(): Promise<void> {
     } catch (error: any) {
         if (error.code) tratarErroBanco(error);
         else erroMsg(error.message || "Ocorreu um erro inesperado ao salvar o cliente.");
-    }
-}
+    };
+};
 
-// 2. Listar Clientes
 export async function clienteControllerListar(): Promise<void> {
     try {
         const lista = await listarClientesServ();
@@ -37,14 +34,13 @@ export async function clienteControllerListar(): Promise<void> {
     } catch (error: any) {
         if (error.code) tratarErroBanco(error);
         else erroMsg(error.message || "Ocorreu um erro inesperado ao listar os clientes.");
-    }
-}
+    };
+};
 
-// 3. Atualizar Cliente
 export async function clienteControllerAtualizar(): Promise<void> {
-    let clientes: ClienteModel[]
+    let clientes: ClienteModel[];
     try {
-        clientes = await listarClientesServ()
+        clientes = await listarClientesServ();
     } catch (error: any) {
         // Erro no PostgreSQL
         if (error.code) tratarErroBanco(error);
@@ -52,13 +48,13 @@ export async function clienteControllerAtualizar(): Promise<void> {
         // Erro do service
         else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
         return;
-    }
+    };
 
     if (!clientes || clientes.length === 0){
-        alertaMsg("Sem clientes cadastrados")
-        return
-    }
-    exibirClientesTabela(clientes)
+        alertaMsg("Sem clientes cadastrados");
+        return;
+    };
+    exibirClientesTabela(clientes);
 
     const id_cliente = await fazerPergunta("Número do ID do cliente: ", { tipoRetorno: 'i_zero' });
 
@@ -69,7 +65,7 @@ export async function clienteControllerAtualizar(): Promise<void> {
         if (error.code) tratarErroBanco(error);
         else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o cliente.");
         return;
-    }
+    };
 
     exibirClientesTabela([clienteNoDb]);
 
@@ -87,14 +83,13 @@ export async function clienteControllerAtualizar(): Promise<void> {
     } catch (error: any) {
         if (error.code) tratarErroBanco(error);
         else erroMsg(error.message || "Ocorreu um erro inesperado ao atualizar o cliente.");
-    }
-}
+    };
+};
 
-// 4. Deletar Cliente
 export async function clienteControllerDeletar(): Promise<void> {
-    let clientes: ClienteModel[]
+    let clientes: ClienteModel[];
     try {
-        clientes = await listarClientesServ()
+        clientes = await listarClientesServ();
     } catch (error: any) {
         // Erro no PostgreSQL
         if (error.code) tratarErroBanco(error);
@@ -102,13 +97,13 @@ export async function clienteControllerDeletar(): Promise<void> {
         // Erro do service
         else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
         return;
-    }
+    };
 
     if (!clientes || clientes.length === 0){
-        alertaMsg("Sem clientes cadastrados")
-        return
-    }
-    exibirClientesTabela(clientes)
+        alertaMsg("Sem clientes cadastrados");
+        return;
+    };
+    exibirClientesTabela(clientes);
 
     const id_cliente = await fazerPergunta("Número do ID do cliente: ", { tipoRetorno: 'i_zero' });
 
@@ -119,7 +114,7 @@ export async function clienteControllerDeletar(): Promise<void> {
         if (error.code) tratarErroBanco(error);
         else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o cliente.");
         return;
-    }
+    };
 
     exibirClientesTabela([clienteNoDb]);
     alertaMsg(" ATENÇÃO: Esta ação é irreversível e irá deletar o cliente do sistema.");
@@ -128,7 +123,7 @@ export async function clienteControllerDeletar(): Promise<void> {
     if (confirmacao.toLowerCase() !== 's') {
         alertaMsg("Operação de exclusão cancelada.");
         return;
-    }
+    };
 
     try {
         const result = await deletarClienteServ(id_cliente);
@@ -137,8 +132,8 @@ export async function clienteControllerDeletar(): Promise<void> {
     } catch (error: any) {
         if (error.code) tratarErroBanco(error);
         else erroMsg(error.message || "Ocorreu um erro inesperado ao excluir o cliente.");
-    }
-}
+    };
+};
 
 export async function clienteControllerBuscarPorId(): Promise<void> {
     const id_cliente = await fazerPergunta("Digite o número do ID do cliente: ", { tipoRetorno: 'i_zero' });
@@ -149,5 +144,5 @@ export async function clienteControllerBuscarPorId(): Promise<void> {
     } catch (error: any) {
         if (error.code) tratarErroBanco(error);
         else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o cliente.");
-    }
-}
+    };
+};

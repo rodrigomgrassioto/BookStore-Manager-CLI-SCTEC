@@ -7,7 +7,6 @@ import {
     ClienteComEmprestimoAtivoModel
 } from "../models/RelatorioModel";
 
-// livros disponíveis
 export async function livrosDisponiveisRP(): Promise<LivroDisponivelModel[]> {
     const sql = `
         SELECT l.id_livro, l.titulo, l.isbn, l.quantidade_estoque, l.quantidade_disponivel,
@@ -26,9 +25,8 @@ export async function livrosDisponiveisRP(): Promise<LivroDisponivelModel[]> {
         quantidade_disponivel: Number(row.quantidade_disponivel),
         autor_nome: String(row.autor_nome)
     }));
-}
+};
 
-// livros emprestados
 export async function livrosEmprestadosRP(): Promise<LivroEmprestadoModel[]> {
     const sql = `
         SELECT l.id_livro, l.titulo, l.isbn, l.quantidade_emprestada,
@@ -46,9 +44,8 @@ export async function livrosEmprestadosRP(): Promise<LivroEmprestadoModel[]> {
         quantidade_emprestada: Number(row.quantidade_emprestada),
         autor_nome: String(row.autor_nome)
     }));
-}
+};
 
-// livros cadastrados por autor
 export async function livrosCadastradosPorAutorRP(): Promise<LivroPorAutorModel[]> {
     const sql = `
         SELECT a.id_autor, a.nome AS autor_nome, l.id_livro, l.titulo
@@ -63,9 +60,8 @@ export async function livrosCadastradosPorAutorRP(): Promise<LivroPorAutorModel[
         id_livro: row.id_livro !== null ? Number(row.id_livro) : null,
         titulo: row.titulo !== null ? String(row.titulo) : null
     }));
-}
+};
 
-// quantidade de empréstimos por livro
 export async function quantidadeEmprestimosPorLivroRP(): Promise<EmprestimosPorLivroModel[]> {
     const sql = `
         SELECT l.id_livro, l.titulo, COUNT(el.id_emprestimo) AS total_emprestimos
@@ -80,9 +76,8 @@ export async function quantidadeEmprestimosPorLivroRP(): Promise<EmprestimosPorL
         titulo: String(row.titulo),
         total_emprestimos: Number(row.total_emprestimos)
     }));
-}
+};
 
-// Clientes com empréstimos ativos
 export async function clientesComEmprestimosAtivosRP(): Promise<ClienteComEmprestimoAtivoModel[]> {
     const sql = `
         SELECT c.id_cliente, c.nome AS cliente_nome, c.email,
@@ -102,4 +97,4 @@ export async function clientesComEmprestimosAtivosRP(): Promise<ClienteComEmpres
         titulo: String(row.titulo),
         data_devolucao_prevista: new Date(row.data_devolucao_prevista)
     }));
-}
+};

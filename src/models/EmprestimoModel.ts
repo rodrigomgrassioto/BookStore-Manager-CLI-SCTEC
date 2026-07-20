@@ -42,7 +42,7 @@ export interface EmprestimoCompletoModel extends EmprestimoModel {
     };
 };
 
-export interface LivrosPorClienteModel { // 🆕 Removido o extends para evitar carregar campos que você não vai usar aqui
+export interface LivrosPorClienteModel { 
     nome_cliente: string;
     obs: string | null;
     livros: {
@@ -60,7 +60,7 @@ export interface LivrosPorClienteModel { // 🆕 Removido o extends para evitar 
             data_cadastro: Date;
         };
     }[];
-}
+};
 
 
 
