@@ -8,7 +8,7 @@ export async function livrosDisponiveisServ(): Promise<LivroDisponivelModel[]> {
 
     if (livros.length === 0) {
         throw new Error("❌ Nenhum livro disponível encontrado.");
-    }
+    };
 
     return livros;
 };
@@ -18,7 +18,7 @@ export async function livrosEmprestadosServ(): Promise<LivroEmprestadoModel[]> {
 
     if (livros.length === 0) {
         throw new Error("❌ Nenhum livro emprestado encontrado.");
-    }
+    };
 
     return livros;
 };
@@ -30,7 +30,7 @@ export async function livrosCadastradosPorAutorServ(): Promise<LivroPorAutorMode
         throw new Error(
             "❌ Nenhum autor ou livro cadastrado foi encontrado."
         );
-    }
+    };
 
     return livrosPorAutor;
 };
@@ -42,7 +42,7 @@ export async function quantidadeEmprestimosPorLivroServ(): Promise<EmprestimosPo
         throw new Error(
             "❌ Nenhum empréstimo foi encontrado para gerar o relatório."
         );
-    }
+    };
 
     return emprestimosPorLivro;
 };
@@ -54,7 +54,7 @@ export async function clientesComEmprestimosAtivosServ(): Promise<ClienteComEmpr
         throw new Error(
             "❌ Nenhum cliente com empréstimo ativo foi encontrado."
         );
-    }
+    };
 
     return clientes;
 };

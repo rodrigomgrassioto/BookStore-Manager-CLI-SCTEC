@@ -20,7 +20,7 @@ export class AutorMenu {
             opcoes('4 - Atualizar autor');
             opcoes('5 - Deletar autor');
             opcaoSair('0 - Voltar para o menu anterior');
-            divisor()
+            divisor();
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 
@@ -62,7 +62,7 @@ export class AutorMenu {
 
                 case '0':
                     console.clear();
-                    continuar = false; // volta para o menu inicial
+                    continuar = false;
                     break;
 
                 default:

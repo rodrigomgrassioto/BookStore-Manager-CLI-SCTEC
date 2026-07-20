@@ -1,4 +1,3 @@
-import * as readline from 'readline';
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import { exibirClientesTabela, exibirEmprestimosDetalhadoTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
 import { tratarErroBanco } from "../utils/tratamentosErrosBD";
@@ -16,7 +15,7 @@ import {ClienteModel} from "../models/ClienteModel";
 import {EmprestimoCompletoModel} from "../models/EmprestimoModel";
 
 export async function criarEmprestimoController(): Promise<void> {
-    let clientes:ClienteModel[]
+    let clientes:ClienteModel[];
     try {
         clientes =  await listarClientesServ();
     } catch (error: any){
@@ -25,17 +24,20 @@ export async function criarEmprestimoController(): Promise<void> {
 
         // Erro do service
         else erroMsg(error.message || "Ocorreu um erro inesperado ao criar o empréstimo.");
-        return
-    }
+        return;
+    };
 
     if (!clientes || clientes.length === 0) {
-        alertaMsg("Sem clientes cadastrados.")
-        return
-    }
+        alertaMsg("Sem clientes cadastrados.");
+        return;
+    };
+
     exibirClientesTabela(clientes);       
     const id_cliente = await fazerPergunta("Digite o ID do cliente: ", { tipoRetorno: "i_zero" });
+
     const livros = await listarLivrosServ();
     exibirLivrosTabela(livros);
+
     const ids_livros = await fazerPergunta("Digite os IDs dos livros separados por vírgula (ex: 5, 6, 10): ");
 
     try {
@@ -61,7 +63,6 @@ export async function criarEmprestimoController(): Promise<void> {
 
 export async function buscarEmprestimoPorIdController(): Promise<void> {
 
-    // Imput do usuário
     const id = await fazerPergunta("Digite o ID do empréstimo: ", { tipoRetorno: "i_zero" });
 
     try {
@@ -77,9 +78,9 @@ export async function buscarEmprestimoPorIdController(): Promise<void> {
 };
 
 export async function devolverEmprestimoController(): Promise<void> {
-    let emprestimosLista:EmprestimoCompletoModel[]
+    let emprestimosLista:EmprestimoCompletoModel[];
     try {
-        emprestimosLista = await listarEmprestimosAtivosServ()
+        emprestimosLista = await listarEmprestimosAtivosServ();
     } catch (error: any) {
         // Erro no PostgreSQL
         if (error.code) tratarErroBanco(error);
@@ -87,17 +88,16 @@ export async function devolverEmprestimoController(): Promise<void> {
         // Erro do service
         else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
         return;
-    }
+    };
 
     if (!emprestimosLista || emprestimosLista.length === 0){
-        alertaMsg("Sem empréstimos cadastrados")
-        return
-    }
+        alertaMsg("Sem empréstimos cadastrados");
+        return;
+    };
 
-    alertaMsg('EMPRÉSTIMOS ATIVOS:')
+    alertaMsg('EMPRÉSTIMOS ATIVOS:');
     exibirEmprestimosDetalhadoTabela(emprestimosLista, true);
 
-    // Imput do usuário
     const id_emprestimo = await fazerPergunta("Digite o ID do empréstimo: ", { tipoRetorno: "i_zero" });
 
     try {
@@ -108,7 +108,7 @@ export async function devolverEmprestimoController(): Promise<void> {
         if (emprestimo.status === "DEVOLVIDO") {
             erroMsg("Este empréstimo já foi devolvido.");
             return;
-        }
+        };
 
         alertaMsg("Devolução será registrada para todos os livros deste empréstimo.");
 
@@ -117,11 +117,10 @@ export async function devolverEmprestimoController(): Promise<void> {
         if (confirmacao.toLowerCase() !== "s") {
             alertaMsg("Operação cancelada.");
             return;
-        }
+        };
 
         const emprestimoDevolvido = await devolucaoEmprestimoServ(id_emprestimo);
-
-        sucessoMsg(`Devolução registrada com sucesso!\n\nID Empréstimo: "${id_emprestimo}" | Status: "${emprestimoDevolvido.status}"`)
+        sucessoMsg(`Devolução registrada com sucesso!\n\nID Empréstimo: "${id_emprestimo}" | Status: "${emprestimoDevolvido.status}"`);
     } catch (error: any){
         // Erro no PostgreSQL
         if (error.code) tratarErroBanco(error);
@@ -131,7 +130,7 @@ export async function devolverEmprestimoController(): Promise<void> {
     };
 };
 
-// Avaliar onde colcoar essa função, mas por enquanto deixo aqui no controller mesmo
+// FUNÇÃO PARA CONVERTER IDS DE LIVROS EM ARRAY DE NÚMEROS
 function converterIdsLivros(entrada: string): number[] {
     const partes = entrada
         .split(",")

@@ -10,13 +10,12 @@ interface OpcoesPergunta {
     aceitarVazio?: boolean;
     tipoRetorno?: 's' | 'i_zero' | 'i_null' | 'd' | 'd_null';
     valorOriginal?: string | number | Date | null;
-}
+};
 
 // 1. Assinatura para quando pedir STRING ("s")
 export async function fazerPergunta(
     enunciado: string,
     opcoes?: { aceitarVazio?: boolean; tipoRetorno?: 's'; valorOriginal?: string | number | Date | null; }
-
 ): Promise<string>;
 
 // 2. Assinatura para quando pedir NÚMERO INTEIRO com Zero quando receber "" ("i_zero")
@@ -43,11 +42,7 @@ export async function fazerPergunta(
     opcoes: { aceitarVazio?: boolean; tipoRetorno: 'd_null'; valorOriginal?: string | number | Date | null; }
 ): Promise<Date | null>;
 
-/**
- * Faz uma pergunta no terminal. Por padrão, o campo é obrigatório.
- * Para tornar o campo opcional, passe { aceitarVazio: true } como segundo argumento.
- * Para tornar como numero inteiro, passe { tipoRetorno: "i" } como segundo argumento.
- */
+
 export async function fazerPergunta(
     enunciado: string,
     opcoes: OpcoesPergunta = {}
@@ -55,19 +50,13 @@ export async function fazerPergunta(
     const aceitarVazio = opcoes.aceitarVazio ?? false;
     const tipoRetorno = opcoes.tipoRetorno ?? "s";
     const valorOriginal = opcoes.valorOriginal;
+    
     while (true) {
-        // Cria a Promise para ler a linha do terminal
-        // const resposta = await new Promise<string>((resolve) => {
-        //     // rl.question(enunciado, (resposta) => resolve(resposta));
-        //     rl.question(enunciado, resolve);
-        // });
-        // process.stdout.write(enunciado);
-        // console.log(enunciado);
         pergunta(enunciado);
 
         if (valorOriginal !== undefined && valorOriginal !== null) {
             rl.write(String(valorOriginal));
-        }
+        };
 
         // Captura a linha digitada (ou modificada) pelo usuário
         const resposta = await new Promise<string>((resolve) => {
@@ -82,12 +71,12 @@ export async function fazerPergunta(
                 if (tipoRetorno === "i_zero") return 0;
                 if (tipoRetorno === "d_null") return null;
                 if (tipoRetorno === "s") return "";
-            }
+            };
             console.error("❌ Campo é obrigatório.");
             continue;
-        }
+        };
 
-        if (tipoRetorno === "s") return respostaLimpa
+        if (tipoRetorno === "s") return respostaLimpa;
 
         // Se entrar "R$ 1.234,56" vai sair 123456
         if (tipoRetorno == "i_zero" || tipoRetorno == "i_null") {
@@ -95,9 +84,9 @@ export async function fazerPergunta(
             if (apenasNumeros === "") {
                 console.error("❌ Digite um número válido.");
                 continue;
-            }
+            };
             return parseInt(apenasNumeros, 10);
-        }
+        };
 
         // Tratamento para Datas (espera o formato DD/MM/AAAA ou DD-MM-AAAA)
         if (tipoRetorno === "d" || tipoRetorno === "d_null") {
@@ -108,7 +97,7 @@ export async function fazerPergunta(
             if (!match) {
                 console.error("❌ Digite uma data válida no formato DD/MM/AAAA.");
                 continue;
-            }
+            };
 
             const dia = parseInt(match[1], 10);
             const mes = parseInt(match[2], 10) - 1; // Meses no JS começam em 0
@@ -124,11 +113,11 @@ export async function fazerPergunta(
             ) {
                 console.error("❌ Data inválida. Certifique-se de que o dia e mês existem.");
                 continue;
-            }
+            };
 
             return dataGerada;
-        }
+        };
         // se não entrar em nenhum if
         console.error("❌ Tipo inválido.");
-    }
-}
+    };
+};

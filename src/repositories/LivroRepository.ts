@@ -1,7 +1,6 @@
 import {LivroCompletoModel, LivroModel} from "../models/LivroModel";
 import {pool} from "../database/connection";
 
-// query tipada
 export async function listarLivrosRP(): Promise<LivroCompletoModel[]> {
     const sql = `
         SELECT
@@ -29,7 +28,7 @@ export async function listarLivrosRP(): Promise<LivroCompletoModel[]> {
             data_cadastro: row.autor_data_cadastro,
         },
     }));
-}
+};
 
 export async function buscarLivroPorIdRP(id:number): Promise<LivroCompletoModel[]> {
     const sql = `
@@ -59,7 +58,7 @@ export async function buscarLivroPorIdRP(id:number): Promise<LivroCompletoModel[
             data_cadastro: row.autor_data_cadastro,
         },
     }));
-}
+};
 
 export async function buscarLivroPorIsbnRP(isbn:string): Promise<LivroCompletoModel[]> {
     const sql = `
@@ -89,7 +88,7 @@ export async function buscarLivroPorIsbnRP(isbn:string): Promise<LivroCompletoMo
             data_cadastro: row.autor_data_cadastro,
         },
     }));
-}
+};
 
 export async function buscarLivroPorTituloRP(titulo:string): Promise<LivroCompletoModel[]> {
     const sql = `
@@ -119,7 +118,7 @@ export async function buscarLivroPorTituloRP(titulo:string): Promise<LivroComple
             data_cadastro: row.autor_data_cadastro,
         },
     }));
-}
+};
 
 export async function criaLivroRP(
     titulo: string,isbn: string, quantidade_estoque: number, id_autor: number, ano_publicacao?: number | null)
@@ -131,7 +130,7 @@ export async function criaLivroRP(
 
     const result = await pool.query<LivroModel>(sql, [titulo,isbn, ano_publicacao ?? null, quantidade_estoque, quantidade_estoque, id_autor]);
     return result.rows[0] ?? null;
-}
+};
 
 export async function atualizarLivroRP(
     id_livro: number, titulo: string, isbn: string, quantidade_estoque:number, id_autor: number, ano_publicacao?: number | null):Promise<LivroModel | null> {
@@ -148,7 +147,7 @@ export async function atualizarLivroRP(
 
     const result = await pool.query<LivroModel>(sql, [id_livro, titulo, isbn, ano_publicacao ?? null, quantidade_estoque, id_autor]);
     return result.rows[0] ?? null;
-}
+};
 
 export async function deletarLivroRP(
     id: number):Promise<boolean> {
@@ -158,4 +157,4 @@ export async function deletarLivroRP(
 
     const result = await pool.query<LivroModel>(sql, [id]);
     return (result.rowCount ?? 0) > 0;
-}
+};

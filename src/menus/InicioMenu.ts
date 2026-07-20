@@ -1,4 +1,3 @@
-import * as readline from "readline";
 import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {LivroMenu} from "./LivroMenu";
 import {AutorMenu} from "./AutorMenu";
@@ -8,30 +7,16 @@ import {RelatorioMenu} from "./RelatorioMenu";
 import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../estilos/estilo";
 
 export class InicioMenu {
-    // private rl: readline.Interface;
-    //
-    // constructor() {
-    //     this.rl = readline.createInterface({
-    //         input: process.stdin,
-    //         output: process.stdout
-    //     });
-    // }
-    //
-    // // váriável do MENU
-    // private perguntar = (texto: string): Promise<string> => {
-    //     return new Promise((resolve) => this.rl.question(texto, resolve));
-    // };
-
-    // Menu
     async iniciarMenu(): Promise<void> {
         const livroMenu = new LivroMenu();
         const autorMenu = new AutorMenu();
         const clienteMenu = new ClienteMenu();
         const emprestimoMenu = new EmprestimoMenu();
         const relatorioMenu = new RelatorioMenu();
-        let continuar = true;
 
         console.clear();
+        
+        let continuar = true;
         while (continuar) {
             tituloMsg('BookStore Manager');
             subtituloMsg('Opções');
@@ -41,11 +26,10 @@ export class InicioMenu {
             opcoes('4 - Empréstimos');
             opcoes('5 - Relatórios');
             opcaoSair('0 - Sair')
-            divisor()
+            divisor();
 
-
-            // const opcao = await this.perguntar('Escolha uma opção: ');
             const opcao = await fazerPergunta('Escolha uma opção: ');
+
             switch (opcao) {
                 case '1':
                     console.clear();
@@ -54,7 +38,7 @@ export class InicioMenu {
 
                 case '2':
                     console.clear();
-                    await livroMenu.subMenuLivro()
+                    await livroMenu.subMenuLivro();
                     break;
 
                 case '3':
@@ -64,19 +48,19 @@ export class InicioMenu {
 
                 case '4':
                     console.clear();
-                    await emprestimoMenu.subMenuEmprestimo()
+                    await emprestimoMenu.subMenuEmprestimo();
                     break;
 
                 case '5':
                     console.clear();
-                    await relatorioMenu.subMenuRelatorio()
+                    await relatorioMenu.subMenuRelatorio();
                     break;
 
                 case '0':
                     console.clear();
                     sucessoMsg('Até mais!');
                     continuar = false;
-                    rl.close(); // Fecha a interface do terminal
+                    rl.close();
                     break;
 
                 default:

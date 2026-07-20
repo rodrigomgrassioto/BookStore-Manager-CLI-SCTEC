@@ -1,4 +1,4 @@
-import { AutorModel, AutorCadastro } from '../models/AutorModel';
+import { AutorModel } from '../models/AutorModel';
 import { pool } from '../database/connection';
 
 export async function cadastrarAutor(

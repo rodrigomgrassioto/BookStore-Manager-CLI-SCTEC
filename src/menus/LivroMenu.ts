@@ -10,9 +10,9 @@ import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../e
 
 export class LivroMenu {
     async subMenuLivro(): Promise<void> {
+        console.clear();
+        
         let noSubMenu = true;
-
-        console.clear()
         while (noSubMenu) {
             tituloMsg("BookStore Manager");
             subtituloMsg('Opções em livro');
@@ -23,60 +23,62 @@ export class LivroMenu {
             opcoes('5 - Editar livro');
             opcoes('6 - Excluir livro');
             opcaoSair('0 - Voltar menu anterior');
-            divisor()
+            divisor();
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 
             switch (opcao) {
                 case '1':
-                    console.clear()
+                    console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Adicionar livro');
                     await livroControllerCriar();
                     break;
 
                 case '2':
-                    console.clear()
+                    console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Listar livros');
                     await livroControllerListar();
                     break;
 
                 case '3':
-                    console.clear()
+                    console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Procurar livro por ID');
-                    await livroControllerProcurarPorId()
+                    await livroControllerProcurarPorId();
                     break;
+
                 case '4':
-                    console.clear()
+                    console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Procurar livro por nome');
-                    await livroControllerProcurarPorNome()
+                    await livroControllerProcurarPorNome();
                     break;
 
                 case '5':
-                    console.clear()
+                    console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Editar livro');
-                    await livroControllerAtualizar()
+                    await livroControllerAtualizar();
                     break;
 
                 case '6':
-                    console.clear()
+                    console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Excluir livro');
-                    await livroControllerDeletar()
+                    await livroControllerDeletar();
                     break;
 
                 case '0':
-                    console.clear()
-                    noSubMenu = false; // volta para o menu inicial
+                    console.clear();
+                    noSubMenu = false;
                     break;
+
                 default:
-                    console.clear()
+                    console.clear();
                     erroMsg('Opção inválida.');
-            }
-        }
-    }
-}
+            };
+        };
+    };
+};

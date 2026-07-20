@@ -1,5 +1,4 @@
 import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
-import {criarEmprestimoServ, devolucaoEmprestimoServ} from "../services/EmprestimoService";
 import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../estilos/estilo";
 import {
     buscarEmprestimoPorIdController,
@@ -19,7 +18,7 @@ export class EmprestimoMenu {
             opcoes('2 - Buscar Empréstimo Por ID');
             opcoes('3 - Devolver Empréstimo');
             opcaoSair('0 - Voltar menu anterior');
-            divisor()
+            divisor();
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
 
@@ -47,7 +46,7 @@ export class EmprestimoMenu {
 
                 case '0':
                     console.clear();
-                    noSubMenu = false; // volta para o menu inicial
+                    noSubMenu = false;
                     break;
 
                 default:

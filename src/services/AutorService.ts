@@ -1,4 +1,4 @@
-import { AutorModel, AutorCadastro } from "../models/AutorModel";
+import { AutorModel } from "../models/AutorModel";
 import { cadastrarAutor, listarAutores, buscarAutorPorId, atualizarAutor, deletarAutor } from "../repositories/AutorRepository";
 import { validarNomeAutor, validarNacionalidadeAutor, validarIdAutor } from "../utils/validadores";
 
