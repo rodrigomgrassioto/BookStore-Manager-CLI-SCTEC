@@ -1,19 +1,12 @@
 # 📚 BookStore Manager CLI
 
-> **📌 Projeto em fase de conclusão**
->
-> Este projeto foi desenvolvido como parte do Projeto Final Avaliativo do Módulo 01 do curso de Desenvolvimento Back-end com Node.js do SENAI, pelo Programa SCTec.
->
-> As funcionalidades obrigatórias foram implementadas e a equipe está realizando a revisão final do código, da documentação e da apresentação do sistema.
->
-> O sistema foi desenvolvido em squad de 3 integrantes, seguindo arquitetura em camadas, boas práticas de programação e persistência de dados utilizando PostgreSQL.
->
+![BookStore Manager CLI](src/img/banner-bookstore-manager-cli.png)
 
 ---
 
 # 📝 Sobre o Projeto
 
-O **BookStore Manager CLI** é uma aplicação back-end desenvolvida em **Node.js** e **TypeScript**, executada via terminal (CLI), que tem como objetivo gerenciar uma pequena livraria.
+O **BookStore Manager CLI** é uma aplicação back-end desenvolvida em **Node.js** e **TypeScript**, executada via terminal (CLI), que tem como objetivo gerenciar uma pequena biblioteca.
 
 O sistema permite realizar o gerenciamento completo de:
 
@@ -21,16 +14,17 @@ O sistema permite realizar o gerenciamento completo de:
 - Livros
 - Clientes
 - Empréstimos
+- Emissão de Relatórios
 
 Todos os dados são persistidos em um banco de dados **PostgreSQL**, utilizando SQL nativo através da biblioteca **pg**.
 
-Este projeto está sendo desenvolvido como parte avaliativa do curso de **Desenvolvimento Back-end com Node.js** (Módulo 01) do **SENAI (Programa SCTec)**.
+Este projeto foi desenvolvido como parte avaliativa do curso de **Desenvolvimento Back-end com Node.js** (Módulo 01) do **SENAI (Programa SCTec)**.
 
 ---
 
 # 🎯 Objetivo
 
-Aplicar, na prática, os principais conceitos estudados durante o módulo, tais como:
+Aplicar, na prática, os principais conceitos estudados durante o módulo 01, tais como:
 
 - Node.js
 - TypeScript
@@ -53,7 +47,7 @@ Aplicar, na prática, os principais conceitos estudados durante o módulo, tais 
 
 # 🚧 Status do Projeto
 
-As funcionalidades obrigatórias do sistema foram implementadas. Atualmente, a equipe está realizando a revisão final do código, concluindo a documentação e preparando o vídeo de apresentação.
+O projeto está concluído. Todas as funcionalidades obrigatórias foram implementadas, revisadas e documentadas pela equipe, incluindo a integração com o PostgreSQL e a demonstração do sistema em vídeo.
 
 ### Progresso do Desenvolvimento
 
@@ -77,7 +71,7 @@ As funcionalidades obrigatórias do sistema foram implementadas. Atualmente, a e
 #### Entrega
 
 - [x] Documentação completa
-- [ ] Vídeo de apresentação
+- [x] Vídeo de apresentação
 
 ---
 
@@ -513,6 +507,12 @@ O banco de dados é composto pelas seguintes entidades principais:
 - Livros
 - Clientes
 - Empréstimos
+
+A tabela livros possui uma chave estrangeira que referencia autores. Dessa forma, cada livro deve estar vinculado a um autor previamente cadastrado, enquanto um autor pode possuir vários livros.
+
+A tabela emprestimos possui uma chave estrangeira para clientes. Assim, cada empréstimo pertence a um cliente, e um mesmo cliente pode realizar diferentes empréstimos.
+
+Como um empréstimo pode conter mais de um livro, utilizamos a tabela associativa emprestimo_livros. Ela relaciona os empréstimos aos livros por meio de suas chaves estrangeiras.
 
 As relações entre essas entidades são garantidas por **Primary Keys**, **Foreign Keys**, **Constraints** e demais mecanismos de integridade referencial disponibilizados pelo PostgreSQL.
 
