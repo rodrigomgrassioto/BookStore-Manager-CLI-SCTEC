@@ -166,12 +166,13 @@ export class AutorController {
             sucessoMsg(`Autor "(ID: ${autorDb.id_autor} - Nome: ${autorDb.nome}" deletado com sucesso!`);
 
         } catch (error: any){
-            // Erro no PostgreSQL
-            if (error.code) tratarErroBanco(error);
-
-            // Erro do service
-            else erroMsg(error.message || "Ocorreu um erro inesperado ao deletar o autor.")
+            this.tratarErro(error, "Ocorreu um erro inesperado ao deletar o autor.")
         }
+    }
+
+    private tratarErro(error: any, mensagemPadrao: string): void {
+        if (error.code) tratarErroBanco(error); // Erro no PostgreSQL
+        else erroMsg(error.message || mensagemPadrao); // Erro do service
     }
 }
 
