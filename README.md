@@ -340,7 +340,7 @@ A árvore estrutural do projeto segue uma arquitetura em camadas (**Layered Arch
     │   │   └── validadores.ts                    # Valida dados das entidades
     │   │
     │   ├── configuracoes_empresa.json             # Regras configuráveis da biblioteca
-    │   └── index.ts                               # Ponto de entrada da aplicação
+    │   └── main.ts                               # Ponto de entrada da aplicação
     │
     ├── .env.example                               # Modelo das variáveis de ambiente
     ├── .gitignore                                 # Arquivos e diretórios ignorados pelo Git
