@@ -7,8 +7,17 @@ import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../estilos/estilo";
 import {AutorController} from "../controllers/AutorController";
 
-export class AutorMenu {
-   async subMenuAutor(): Promise<void> {
+export interface IMenu {
+    subMenuAutor(): Promise<void>;
+}
+export class AutorMenu implements IMenu {
+    private readonly controller: AutorController;
+
+    constructor(controller: AutorController = new AutorController()) {
+        this.controller = controller;
+    }
+
+   public async subMenuAutor(): Promise<void> {
         console.clear();
 
         let continuar = true;
@@ -24,7 +33,6 @@ export class AutorMenu {
             divisor();
 
             const opcao = await fazerPergunta('Escolha uma opção: ');
-            const autorController = new AutorController()
 
             switch (opcao) {
 
@@ -32,34 +40,34 @@ export class AutorMenu {
                     console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Adicionar autor');
-                    await autorController.autorControllerCadastrar();
+                    await this.controller.autorControllerCadastrar();
                     break;
 
                 case '2':
                     console.clear();
                     subtituloMsg('Lista de autores');
-                    await autorController.autorControllerListar();
+                    await this.controller.autorControllerListar();
                     break;
 
                 case '3':
                     console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Buscar autor por ID');
-                    await autorController.autorControlerBuscarPorId();
+                    await this.controller.autorControlerBuscarPorId();
                     break;
 
                  case '4':
                     console.clear();
                      tituloMsg('BookStore Manager');
                      subtituloMsg('Atualizar autor');
-                    await autorController.autorControllerAtualizar();
+                    await this.controller.autorControllerAtualizar();
                     break;
 
                 case '5':
                     console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Deletar autor');
-                    await autorController.autorControllerDeletar();
+                    await this.controller.autorControllerDeletar();
                     break;
 
                 case '0':
@@ -70,7 +78,7 @@ export class AutorMenu {
                 default:
                     console.clear();
                     erroMsg('Opção inválida.');
-            };
-        };
-    };
-};
+            }
+        }
+    }
+}
