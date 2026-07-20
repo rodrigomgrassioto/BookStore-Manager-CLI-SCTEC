@@ -9,7 +9,7 @@ import {
 import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas";
 import {validarISBN} from "../utils/validadores";
 import {listarAutoresServ} from "../services/AutorService";
-import { tratarErroBanco } from '../utils/tratamentosErrosBD';
+import { tratarErroBanco } from '../utils/tratarErros';
 import {exibirAutoresTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
 import {alertaMsg, erroMsg, sucessoMsg} from "../estilos/estilo";
 import {AutorModel} from "../models/AutorModel";

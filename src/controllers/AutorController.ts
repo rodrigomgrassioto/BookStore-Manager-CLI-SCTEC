@@ -1,5 +1,5 @@
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
-import { tratarErroBanco } from "../utils/tratamentosErrosBD";
+import {tratarErro, tratarErroBanco} from "../utils/tratarErros";
 // import { atualizarAutorServ, listarAutoresServ, cadastrarAutorServ, deletarAutorServ, buscarAutorPorIdServ } from '../services/AutorService';
 import { AutorService, IAutorService } from "../services/AutorService";
 import {exibirAutoresTabela} from "../utils/formatadoresTexto";
@@ -22,8 +22,10 @@ export class AutorController {
             sucessoMsg(`Autor "${nome}" cadastrado com sucesso!`);
 
         } catch (error: any){
-            if (error.code) tratarErroBanco(error); // Erro no PostgreSQL
-            else erroMsg(error.message || "Ocorreu um erro inesperado ao salvar o autor."); // Erro do service
+            // if (error.code) tratarErroBanco(error); // Erro no PostgreSQL
+            // else erroMsg(error.message || "Ocorreu um erro inesperado ao salvar o autor."); // Erro do service
+            tratarErro(error, "Ocorreu um erro inesperado ao salvar o autor.")
+
         }
     }
 
@@ -32,8 +34,10 @@ export class AutorController {
             const autores = await this.service.listarAutoresServ();
             exibirAutoresTabela(autores);
         } catch (error: any){
-            if (error.code) tratarErroBanco(error); // Erro no PostgreSQL
-            else erroMsg(error.message || "Ocorreu um erro inesperado ao listar os autores."); // Erro do service
+            // if (error.code) tratarErroBanco(error); // Erro no PostgreSQL
+            // else erroMsg(error.message || "Ocorreu um erro inesperado ao listar os autores."); // Erro do service
+            tratarErro(error, "Ocorreu um erro inesperado ao listar os autores.")
+
         }
     }
 
@@ -49,10 +53,12 @@ export class AutorController {
             exibirAutoresTabela([autor]);
         } catch (error: any){
             // Erro no PostgreSQL
-            if (error.code) tratarErroBanco(error);
+            // if (error.code) tratarErroBanco(error);
 
             // Erro do service
-            else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            // else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            tratarErro(error, "Ocorreu um erro inesperado ao buscar o autor.")
+
         }
     }
 
@@ -62,10 +68,12 @@ export class AutorController {
             autores = await this.service.listarAutoresServ();
         } catch (error: any) {
             // Erro no PostgreSQL
-            if (error.code) tratarErroBanco(error);
+            // if (error.code) tratarErroBanco(error);
 
             // Erro do service
-            else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            // else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            tratarErro(error, "Ocorreu um erro inesperado ao buscar o autor.")
+
             return;
         }
 
@@ -82,10 +90,12 @@ export class AutorController {
             autorDB = await this.service.buscarAutorPorIdServ(id_autor);
         } catch (error: any) {
             // Erro no PostgreSQL
-            if (error.code) tratarErroBanco(error);
+            // if (error.code) tratarErroBanco(error);
 
             // Erro do service
-            else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            // else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            tratarErro(error, "Ocorreu um erro inesperado ao buscar o autor.")
+
             return;
         }
 
@@ -105,10 +115,12 @@ export class AutorController {
 
         } catch (error: any){
             // Erro no PostgreSQL
-            if (error.code) tratarErroBanco(error)
+            // if (error.code) tratarErroBanco(error)
 
             // Erro do service
-            else erroMsg(error.message || "Ocorreu um erro inesperado ao atualizar o autor.");
+            // else erroMsg(error.message || "Ocorreu um erro inesperado ao atualizar o autor.");
+            tratarErro(error, "Ocorreu um erro inesperado ao atualizar o autor.")
+
         }
     }
 
@@ -118,10 +130,12 @@ export class AutorController {
             autores = await this.service.listarAutoresServ();
         } catch (error: any) {
             // Erro no PostgreSQL
-            if (error.code) tratarErroBanco(error);
+            // if (error.code) tratarErroBanco(error);
 
             // Erro do service
-            else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            // else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            tratarErro(error, "Ocorreu um erro inesperado ao buscar o autor.")
+
             return;
         }
 
@@ -139,10 +153,12 @@ export class AutorController {
             autorDb = await this.service.buscarAutorPorIdServ(id_autor);
         } catch (error: any) {
             // Erro no PostgreSQL
-            if (error.code) tratarErroBanco(error);
+            // if (error.code) tratarErroBanco(error);
 
             // Erro do service
-            else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            // else erroMsg(error.message || "Ocorreu um erro inesperado ao buscar o autor.");
+            tratarErro(error, "Ocorreu um erro inesperado ao buscar o autor.")
+
             return;
         }
 
@@ -166,13 +182,8 @@ export class AutorController {
             sucessoMsg(`Autor "(ID: ${autorDb.id_autor} - Nome: ${autorDb.nome}" deletado com sucesso!`);
 
         } catch (error: any){
-            this.tratarErro(error, "Ocorreu um erro inesperado ao deletar o autor.")
+            tratarErro(error, "Ocorreu um erro inesperado ao deletar o autor.")
         }
-    }
-
-    private tratarErro(error: any, mensagemPadrao: string): void {
-        if (error.code) tratarErroBanco(error); // Erro no PostgreSQL
-        else erroMsg(error.message || mensagemPadrao); // Erro do service
     }
 }
 

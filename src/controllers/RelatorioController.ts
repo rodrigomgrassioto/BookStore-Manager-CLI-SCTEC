@@ -2,7 +2,7 @@ import { livrosDisponiveisServ, livrosEmprestadosServ, livrosCadastradosPorAutor
          clientesComEmprestimosAtivosServ } from "../services/RelatorioService";
 import { exibirClientesComEmprestivosAtivos, exibirLivrosCadastradosPorAutor, exibirLivrosDisponiveisTabela, 
          exibirLivrosEmprestados, exibirQuantidadeEmprestimoPorLivro } from "../utils/formatadoresTexto";
-import { tratarErroBanco } from "../utils/tratamentosErrosBD";
+import { tratarErroBanco } from "../utils/tratarErros";
 import {erroMsg} from "../estilos/estilo";
 
 export async function livrosDisponiveisController(): Promise<void> {

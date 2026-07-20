@@ -1,6 +1,6 @@
 import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
 import { exibirClientesTabela, exibirEmprestimosDetalhadoTabela, exibirLivrosTabela} from "../utils/formatadoresTexto";
-import { tratarErroBanco } from "../utils/tratamentosErrosBD";
+import { tratarErroBanco } from "../utils/tratarErros";
 import {
     criarEmprestimoServ,
     devolucaoEmprestimoServ,
