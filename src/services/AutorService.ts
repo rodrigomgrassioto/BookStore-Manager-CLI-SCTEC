@@ -7,8 +7,8 @@ export interface IAutorService {
     cadastrarAutorServ(nome: string, nacionalidade?: string): Promise<AutorModel>;
     listarAutoresServ(): Promise<AutorModel[]>;
     buscarAutorPorIdServ(id_autor: number): Promise<AutorModel | null>;
-    atualizar(id_autor: number, nome: string, nacionalidade?: string): Promise<AutorModel>;
-    deletar(id_autor: number): Promise<boolean>;
+    atualizarAutorServ(id_autor: number, nome: string, nacionalidade?: string): Promise<AutorModel>;
+    deletarAutorServ(id_autor: number): Promise<boolean>;
 }
 
 export class AutorService implements IAutorService {
