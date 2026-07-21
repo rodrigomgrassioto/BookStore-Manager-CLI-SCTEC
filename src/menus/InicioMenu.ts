@@ -1,0 +1,73 @@
+import {fazerPergunta, rl} from "../utils/leitorFormatadorDeEntradas"
+import {LivroMenu} from "./LivroMenu"
+import {AutorMenu} from "./AutorMenu"
+import {ClienteMenu} from "./ClienteMenu"
+import {EmprestimoMenu} from "./EmprestimoMenu"
+import {RelatorioMenu} from "./RelatorioMenu"
+import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../estilos/estilo"
+
+export class InicioMenu {
+    async iniciarMenu(): Promise<void> {
+        const livroMenu = new LivroMenu()
+        const autorMenu = new AutorMenu()
+        const clienteMenu = new ClienteMenu()
+        const emprestimoMenu = new EmprestimoMenu()
+        const relatorioMenu = new RelatorioMenu()
+
+        console.clear()
+        
+        let continuar = true
+        while (continuar) {
+            tituloMsg('BookStore Manager')
+            subtituloMsg('Opções')
+            opcoes('1 - Autor')
+            opcoes('2 - Livros')
+            opcoes('3 - Clientes')
+            opcoes('4 - Empréstimos')
+            opcoes('5 - Relatórios')
+            opcaoSair('0 - Sair')
+            divisor()
+
+            const opcao = await fazerPergunta('Escolha uma opção: ')
+
+            switch (opcao) {
+                case '1':
+                    console.clear()
+                    await autorMenu.subMenuAutor()
+                    break
+
+                case '2':
+                    console.clear()
+                    await livroMenu.subMenuLivro()
+                    break
+
+                case '3':
+                    console.clear()
+                    await clienteMenu.subMenuCliente()
+                    break
+
+                case '4':
+                    console.clear()
+                    await emprestimoMenu.subMenuEmprestimo()
+                    break
+
+                case '5':
+                    console.clear()
+                    await relatorioMenu.subMenuRelatorio()
+                    break
+
+                case '0':
+                    console.clear()
+                    sucessoMsg('Até mais!')
+                    continuar = false
+                    rl.close()
+                    break
+
+                default:
+                    console.clear()
+                    erroMsg('Opção inválida! Tente novamente.')
+                    break
+            }
+        }
+    }
+}

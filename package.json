@@ -2,17 +2,19 @@
   "name": "BookStore Manager CLI",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsx --env-file=.env src/index.ts",
-    "start": "node --env-file=.env dist/index.js"
+    "dev": "tsx --env-file=.env src/main.ts",
+    "start": "node --env-file=.env dist/main.js",
+    "db:schemas": "tsx --env-file=.env src/database/RunSchemas.ts",
+    "db:seed": "tsx --env-file=.env src/database/DatabaseSeeder.ts"
   },
   "dependencies": {
     "pg": "^8.22.0"
   },
   "devDependencies": {
-    "@types/node": "^26.1.0",
+    "@types/node": "^24.0.0",
     "@types/pg": "^8.20.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.0",
