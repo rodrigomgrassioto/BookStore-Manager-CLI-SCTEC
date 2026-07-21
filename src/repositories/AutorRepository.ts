@@ -40,8 +40,11 @@ export class AutorRepository implements IAutorRepository {
      WHERE id_autor = $1`;
 
         const result = await this.conexao.query<AutorModel>(sql, [id_autor]);
-        if (!result) return null;
-        return new Autor(result.rows[0].id_autor, result.rows[0].nome, result.rows[0].nacionalidade, result.rows[0].data_cadastro);
+
+        if (!result.rows || result.rows.length === 0) return null;
+        const { id_autor: idDb, nome: nomeDb, nacionalidade, data_cadastro } = result.rows[0];
+
+        return new Autor(idDb, nomeDb, nacionalidade, data_cadastro);
     }
 
     public async atualizarAutor(id_autor: number, nome: string, nacionalidade?: string): Promise<AutorModel> {
