@@ -1,4 +1,4 @@
-import {LivroCompletoModel, LivroModel} from "../models/LivroModel";
+import {Livro, LivroCompletoModel, LivroModel} from "../models/LivroModel";
 import {pool} from "../database/connection";
 
 export interface ILivroRepository {
@@ -62,22 +62,36 @@ export class LivroRepository implements ILivroRepository {
 
         const result = await this.conexao.query(sql, [id]);
 
-        return result.rows.map((row) => ({
-            id_livro: row.id_livro,
-            titulo: row.titulo,
-            isbn: row.isbn,
-            ano_publicacao: row.ano_publicacao,
-            quantidade_estoque: row.quantidade_estoque,
-            quantidade_emprestada: row.quantidade_emprestada,
-            quantidade_disponivel: row.quantidade_disponivel,
-            id_autor: row.id_autor,
-            data_cadastro: row.data_cadastro,
-            autor: {
-                nome: row.autor_nome,
-                nacionalidade: row.autor_nacionalidade,
-                data_cadastro: row.autor_data_cadastro,
-            },
-        }))
+        return result.rows.map((row) => {
+            const {
+                id_livro,
+                titulo,
+                isbn,
+                ano_publicacao,
+                quantidade_estoque,
+                quantidade_emprestada,
+                quantidade_disponivel,
+                id_autor,
+                autor_nome,
+                autor_nacionalidade
+            } = row;
+
+            return new Livro(
+                id_livro,
+                titulo,
+                isbn,
+                ano_publicacao,
+                quantidade_estoque,
+                quantidade_emprestada,
+                quantidade_disponivel,
+                id_autor,
+                {
+                    nome: autor_nome,
+                    nacionalidade: autor_nacionalidade
+                }
+            ) as unknown as LivroCompletoModel;
+        });
+
     }
 
     public async buscarLivroPorIsbnRP(isbn:string): Promise<LivroCompletoModel[]> {

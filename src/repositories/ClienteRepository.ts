@@ -1,4 +1,4 @@
-import { ClienteModel, ClienteCadastro } from '../models/ClienteModel';
+import {ClienteModel, ClienteCadastro, Cliente} from '../models/ClienteModel';
 import { pool } from '../database/connection';
 
 export interface IClienteRepository {
@@ -18,13 +18,24 @@ export class ClienteRepository implements IClienteRepository {
 
     public async criarClienteRP(nome: string, email: string, telefone: string, data_nascimento: Date): Promise<ClienteModel> {
         const sql = `INSERT INTO clientes (nome, email, telefone, data_nascimento) VALUES ($1, $2, $3, $4) RETURNING *`;
-        const r = await this.conexao.query<ClienteModel>(sql, [nome, email, telefone, data_nascimento]);
+        const result = await this.conexao.query<ClienteModel>(sql, [nome, email, telefone, data_nascimento]);
 
-        if (!r.rows[0]) {
+        if (!result.rows[0]) {
             throw new Error("Falha ao registrar cliente no banco de dados.");
         }
 
-        return r.rows[0]
+        const {
+            id_cliente,
+            nome: nomeDb,
+            email: emailDb,
+            data_cadastro,
+            telefone: telefoneDb,
+            data_nascimento: dataNascimentoDb
+        } = result.rows[0];
+
+        return new Cliente(id_cliente, nomeDb, emailDb, data_cadastro, telefoneDb, dataNascimentoDb);
+
+
     }
 
     public async listarClientesRP(): Promise<ClienteModel[]> {

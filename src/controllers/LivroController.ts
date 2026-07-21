@@ -181,6 +181,7 @@ export class LivroController {
 
         const id_autor = await fazerPergunta("ID do Autor: ", {
             tipoRetorno: 'i_zero', valorOriginal: livroNoDb[0].id_autor});
+
         const ano_publicacao = await fazerPergunta("Ano de publicação (Opcional): ", {
             aceitarVazio: true, tipoRetorno: 'i_null', valorOriginal: livroNoDb[0].ano_publicacao ?? null});
 

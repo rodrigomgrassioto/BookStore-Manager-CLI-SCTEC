@@ -1,16 +1,41 @@
-import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
-import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, sucessoMsg, tituloMsg} from "../estilos/estilo";
-import {
-    buscarEmprestimoPorIdController,
-    criarEmprestimoController,
-    devolverEmprestimoController
-} from "../controllers/EmprestimoController";
+import { fazerPergunta } from "../utils/leitorFormatadorDeEntradas";
+import { divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg } from "../estilos/estilo";
+import { EmprestimoController } from "../controllers/EmprestimoController";
+import { EmprestimoService } from "../services/EmprestimoService";
+import { EmprestimoRepository } from "../repositories/EmprestimoRepository";
+import { ClienteService } from "../services/ClienteService";
+import { ClienteRepository } from "../repositories/ClienteRepository"; // Importação adicionada
+import { LivroService } from "../services/LivroService";
+import { LivroRepository } from "../repositories/LivroRepository";
 
-export class EmprestimoMenu {
+export interface Imenu {
+    subMenuEmprestimo(): Promise<void>;
+}
+
+export class EmprestimoMenu implements Imenu {
+    private readonly controller: EmprestimoController;
+
+    private static criarControllerPadrao(): EmprestimoController {
+        const emprestimoRepository = new EmprestimoRepository();
+        const livroService = new LivroService(new LivroRepository(), emprestimoRepository);
+        emprestimoRepository.definirLivroService(livroService);
+
+        const clienteService = new ClienteService(new ClienteRepository());
+        const emprestimoService = new EmprestimoService(emprestimoRepository, clienteService, livroService);
+
+        return new EmprestimoController(emprestimoService, livroService, clienteService);
+    }
+
+    constructor(
+        controller: EmprestimoController = EmprestimoMenu.criarControllerPadrao()
+    ) {
+        this.controller = controller;
+    }
+
     async subMenuEmprestimo(): Promise<void> {
         console.clear();
 
-        let noSubMenu = true;   
+        let noSubMenu = true;
         while (noSubMenu) {
             tituloMsg("BookStore Manager");
             subtituloMsg('Opções em empréstimo');
@@ -27,21 +52,21 @@ export class EmprestimoMenu {
                     console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Novo Empréstimo');
-                    await criarEmprestimoController();
+                    await this.controller.criarEmprestimoController();
                     break;
 
                 case '2':
                     console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Buscar Empréstimo por ID');
-                    await buscarEmprestimoPorIdController();
+                    await this.controller.buscarEmprestimoPorIdController();
                     break;
 
                 case '3':
                     console.clear();
                     tituloMsg('BookStore Manager');
                     subtituloMsg('Devolver Empréstimo');
-                    await devolverEmprestimoController();
+                    await this.controller.devolverEmprestimoController();
                     break;
 
                 case '0':
@@ -52,7 +77,7 @@ export class EmprestimoMenu {
                 default:
                     console.clear();
                     erroMsg('Opção inválida.');
-            };
-        };
-    };
-};
+            }
+        }
+    }
+}

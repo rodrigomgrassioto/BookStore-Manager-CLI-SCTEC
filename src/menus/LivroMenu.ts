@@ -1,9 +1,10 @@
 import {fazerPergunta} from "../utils/leitorFormatadorDeEntradas";
 import {divisor, erroMsg, opcaoSair, opcoes, subtituloMsg, tituloMsg} from "../estilos/estilo";
 import {LivroController} from "../controllers/LivroController";
-import {LivroService} from "../services/LivroService";
+import {ILivroService, LivroService} from "../services/LivroService";
 import {AutorService} from "../services/AutorService";
 import {LivroRepository} from "../repositories/LivroRepository";
+import {EmprestimoRepository} from "../repositories/EmprestimoRepository";
 
 export interface IMenu {
     subMenuLivro(): Promise<void>
@@ -11,16 +12,34 @@ export interface IMenu {
 
 export class LivroMenu implements IMenu {
     private readonly controller: LivroController
+    private readonly livroService: ILivroService
+
+    private static instanciaPadrao: { controller: LivroController; livroService: ILivroService } | undefined;
+
+    private static obterInstanciaPadrao(): { controller: LivroController; livroService: ILivroService } {
+        if (!LivroMenu.instanciaPadrao) {
+            const emprestimoRepository = new EmprestimoRepository();
+            const livroService = new LivroService(new LivroRepository(), emprestimoRepository);
+            emprestimoRepository.definirLivroService(livroService);
+
+            const controller = new LivroController(livroService, new AutorService());
+
+            LivroMenu.instanciaPadrao = { controller, livroService };
+        }
+        return LivroMenu.instanciaPadrao;
+    }
 
     constructor(
-        controller: LivroController = new LivroController(new LivroService(new LivroRepository()), new AutorService())
+        controller: LivroController = LivroMenu.obterInstanciaPadrao().controller,
+        livroService: ILivroService = LivroMenu.obterInstanciaPadrao().livroService
     ) {
         this.controller = controller;
+        this.livroService = livroService;
     }
 
     public async subMenuLivro(): Promise<void> {
         console.clear();
-        
+
         let noSubMenu = true;
         while (noSubMenu) {
             tituloMsg("BookStore Manager");
